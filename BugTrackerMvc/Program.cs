@@ -3,9 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-var services = builder.Services;
-
-
+IServiceCollection services = builder.Services;
 
 // Add services to the container.
 
@@ -28,7 +26,7 @@ services.AddAuthentication(options =>
 
 services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnect"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 var app = builder.Build();
