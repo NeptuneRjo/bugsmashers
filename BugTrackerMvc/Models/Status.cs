@@ -10,5 +10,13 @@
         public int IssueId { get; set; } // Required foreign key
         public Issue Issue { get; set; } = null!; // Required reference navigation to principle
 
+
+        public Status()
+        {
+            New = false;
+            Open = false;
+            Resolved = false;
+            Closed = false;
+        }
     }
 }
