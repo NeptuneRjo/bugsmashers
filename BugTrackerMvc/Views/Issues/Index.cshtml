@@ -1,0 +1,38 @@
+﻿@using BugTrackerMvc.Models;
+@model BugTrackerMvc.Models.Issue;
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Issues";
+    IList<Issue> issues = ViewData["Issues"] as IList<Issue>;
+
+    Issue issue = new Issue {};
+}
+
+<h2>Issues</h2>
+
+<a href="/issues/new">Create new issue</a>
+
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Solved</th>
+        <th>Poster</th>
+        <th>Options</th>
+    </tr>
+    <tr>
+        @foreach (var item in issues)
+        {
+            <td>@item.Title</td>
+            <td>@item.Solved</td>
+            <td>@item.Poster</td>
+            <td>
+                <a href="/issues/@(item.Id)">View</a>
+                <button>Edit</button>
+                <button>Delete</button>
+            </td>
+        }
+    </tr>
+
+</table>
