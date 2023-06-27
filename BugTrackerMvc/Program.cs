@@ -1,4 +1,4 @@
-using BugTracker.Data;
+using BugTrackerMvc.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
