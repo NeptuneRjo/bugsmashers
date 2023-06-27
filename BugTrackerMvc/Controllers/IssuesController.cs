@@ -1,7 +1,12 @@
-﻿using BugTracker.Data;
-using BugTracker.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using BugTrackerMvc.Data;
+using BugTrackerMvc.Models;
 
 namespace BugTrackerMvc.Controllers
 {
@@ -14,131 +19,145 @@ namespace BugTrackerMvc.Controllers
             _context = context;
         }
 
+        // GET: Issues
         public async Task<IActionResult> Index()
         {
-            if (_context.Issues == null)
+              return _context.Issues != null ? 
+                          View(await _context.Issues.ToListAsync()) :
+                          Problem("Entity set 'DataContext.Issues'  is null.");
+        }
+
+        // GET: Issues/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null || _context.Issues == null)
             {
                 return NotFound();
             }
 
-            ViewData["Issues"] = await _context.Issues.ToArrayAsync();
-
-            return View("Index");
-        }
-
-        [HttpGet("/issues/new-issue")]
-        public IActionResult NewIssue() => View("NewIssue");
-
-        [HttpGet("/issues/{id}")]
-        public async Task<ActionResult<Issue>> GetIssue(int id)
-        {
-            try
+            var issue = await _context.Issues
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (issue == null)
             {
-                if (_context.Issues == null)
-                {
-                    return NotFound();
-                }
-                var issue = await _context.Issues.FindAsync(id);
-
-                if (issue == null)
-                {
-                    return NotFound();
-                }
-                ViewData["Issue"] = issue;
-
-                return View("IssueDetails");
-            }
-            catch (Exception err)
-            {
-                return BadRequest(err);
-                throw;
+                return NotFound();
             }
 
+            return View(issue);
         }
 
-        [HttpPost("/issues/new")]
-        public async Task<ActionResult<Issue>> PostIssue(Issue issue)
+        // GET: Issues/Create
+        public IActionResult Create()
         {
-            try
+            return View();
+        }
+
+        // POST: Issues/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Solved,Poster")] Issue issue)
+        {
+            if (ModelState.IsValid)
             {
-                if (_context.Issues == null)
-                {
-                    return Problem("Entity set 'DataContext.Issues'  is null.");
-                }
-                _context.Issues.Add(issue);
+                _context.Add(issue);
                 await _context.SaveChangesAsync();
-
-                return CreatedAtAction("PostIssue", new { id = issue.Id }, issue);
+                return RedirectToAction(nameof(Index));
             }
-            catch (Exception err)
-            {
-                return BadRequest(err);
-                throw;
-            }
+            return View(issue);
         }
 
-        [HttpDelete("/issues/delete/{id}")]
-        public async Task<IActionResult> DeleteIssue(int id)
+        // GET: Issues/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            try
+            if (id == null || _context.Issues == null)
             {
-                if (_context.Issues == null)
-                {
-                    return NotFound();
-                }
-
-                Issue issue = await _context.Issues.FindAsync(id);
-                if (issue == null)
-                {
-                    return NotFound();
-                }
-
-                _context.Issues.Remove(issue);   
-                await _context.SaveChangesAsync();
-
-                return NoContent();
+                return NotFound();
             }
-            catch (Exception err)
+
+            var issue = await _context.Issues.FindAsync(id);
+            if (issue == null)
             {
-                return BadRequest(err);
-                throw;
+                return NotFound();
             }
+            return View(issue);
         }
 
-        [HttpPut("/issues/edit/{id}")]
-        public async Task<IActionResult> PutIssue(int id, Issue issue)
+        // POST: Issues/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Solved,Poster")] Issue issue)
         {
-            try
+            if (id != issue.Id)
             {
-                if (id != issue.Id)
-                {
-                    return BadRequest();
-                }
-
-                _context.Entry(issue).State = EntityState.Modified;
-
-                await _context.SaveChangesAsync();
-
-
-                return NoContent();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException err)
+
+            if (ModelState.IsValid)
             {
-                if (!IssueExists(id))
+                try
                 {
-                    return NotFound();
+                    _context.Update(issue);
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    return BadRequest(err);
-                    throw;
+                    if (!IssueExists(issue.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-            }           
+                return RedirectToAction(nameof(Index));
+            }
+            return View(issue);
+        }
+
+        // GET: Issues/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null || _context.Issues == null)
+            {
+                return NotFound();
+            }
+
+            var issue = await _context.Issues
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (issue == null)
+            {
+                return NotFound();
+            }
+
+            return View(issue);
+        }
+
+        // POST: Issues/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            if (_context.Issues == null)
+            {
+                return Problem("Entity set 'DataContext.Issues'  is null.");
+            }
+            var issue = await _context.Issues.FindAsync(id);
+            if (issue != null)
+            {
+                _context.Issues.Remove(issue);
+            }
+            
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         private bool IssueExists(int id)
         {
-            return (_context.Issues?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Issues?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
