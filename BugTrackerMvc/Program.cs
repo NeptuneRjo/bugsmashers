@@ -15,8 +15,8 @@ services.AddAuthentication(options =>
 })
     .AddCookie(options =>
     {
-        options.LoginPath = "/login";
-        options.LogoutPath = "/logout";
+        options.LoginPath = "/signin";
+        options.LogoutPath = "/signout";
     })
     .AddGitHub(options =>
     {
