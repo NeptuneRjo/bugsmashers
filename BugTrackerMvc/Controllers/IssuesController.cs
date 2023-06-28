@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerMvc.Data;
 using BugTrackerMvc.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BugTrackerMvc.Controllers
 {
@@ -46,6 +47,7 @@ namespace BugTrackerMvc.Controllers
         }
 
         // GET: Issues/Create
+        [Authorize]
         public IActionResult Create()
         {
             return View();
@@ -56,6 +58,7 @@ namespace BugTrackerMvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Title,Description,Solved,Poster")] Issue issue)
         {
             if (ModelState.IsValid)
