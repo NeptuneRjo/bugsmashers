@@ -10,9 +10,11 @@
 <div>
     <h5>@Model.Poster</h5>
     <hr />
-    <div class="my-2">
-        <h5>Issue:</h5>
-        <p class="my-4">@Model.Description</p>
+    <div class="p-2 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+            <h5>Issue:</h5>
+            <p class="col-md-8 fs-4">@Model.Description</p>
+        </div>
     </div>
     <hr />
     @if (User?.Identity?.IsAuthenticated ?? false)
