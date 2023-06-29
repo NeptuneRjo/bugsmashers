@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerMvc.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -43,6 +42,8 @@ namespace BugTrackerMvc.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["Comments"] = _issueRepository.GetComments(id);
 
             return View(issue);
         }
@@ -128,6 +129,28 @@ namespace BugTrackerMvc.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(issue);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Comment(int? id, Comment comment)
+        {
+            var issue = _issueRepository.GetIssueById(id);
+
+            if (issue == null)
+            {
+                return NotFound();
+            }
+
+            issue.Comments.Add(new Comment()
+            {
+                Author = comment.Author,
+                Content = comment.Content,
+            });
+
+            _issueRepository.UpdateIssue(issue);
+
+            return Redirect($"/issues/details/{id}");
         }
 
         // GET: Issues/Delete/5
