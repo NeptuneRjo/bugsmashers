@@ -1,4 +1,6 @@
 using BugTrackerMvc.Data;
+using BugTrackerMvc.Interfaces;
+using BugTrackerMvc.Repository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,8 @@ IServiceCollection services = builder.Services;
 // Add services to the container.
 
 services.AddControllersWithViews();
+
+services.AddScoped<IIssueRepository, IssueRepository>();
 
 services.AddAuthentication(options =>
 {
