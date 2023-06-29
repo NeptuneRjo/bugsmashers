@@ -47,5 +47,10 @@ namespace BugTrackerMvc.Repository
             _context.Entry(Issue).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
+        public IEnumerable<Comment> GetComments(int? id)
+        {
+            return _context.Comments.Where(c => c.IssueId == id).ToList();
+        }
     }
 }

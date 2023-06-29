@@ -10,5 +10,6 @@ namespace BugTrackerMvc.Interfaces
         bool IssueExists(int? id);
         void UpdateIssue(Issue issue);
         void DeleteIssue(int? id);
+        IEnumerable<Comment> GetComments(int? id);
     }
 }
