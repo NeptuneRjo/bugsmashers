@@ -1,43 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BugTrackerMvc.Data;
 using BugTrackerMvc.Models;
 using Microsoft.AspNetCore.Authorization;
+using BugTrackerMvc.Interfaces;
 
 namespace BugTrackerMvc.Controllers
 {
     public class IssuesController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IIssueRepository _issueRepository;
 
-        public IssuesController(DataContext context)
+        public IssuesController(IIssueRepository issueRepository)
         {
-            _context = context;
+            _issueRepository = issueRepository;
         }
 
         // GET: Issues
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return _context.Issues != null ? 
-                          View(await _context.Issues.ToListAsync()) :
-                          Problem("Entity set 'DataContext.Issues'  is null.");
+            var issues = _issueRepository.GetIssues();
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            return View(issues);
         }
 
         // GET: Issues/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
-            if (id == null || _context.Issues == null)
+            if (id == null)
             {
                 return NotFound();
-            }
+            } 
 
-            var issue = await _context.Issues
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var issue = _issueRepository.GetIssueById(id);
+
             if (issue == null)
             {
                 return NotFound();
@@ -59,30 +60,33 @@ namespace BugTrackerMvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Solved,Poster")] Issue issue)
+        public IActionResult Create([Bind("Id,Title,Description,Solved,Poster")] Issue issue)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(issue);
-                await _context.SaveChangesAsync();
+                _issueRepository.InsertIssue(issue);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(issue);
         }
 
         // GET: Issues/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Issues == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var issue = await _context.Issues.FindAsync(id);
+            var issue = _issueRepository.GetIssueById(id);
+
             if (issue == null)
             {
                 return NotFound();
             }
+
             return View(issue);
         }
 
@@ -91,23 +95,28 @@ namespace BugTrackerMvc.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Solved,Poster")] Issue issue)
+        [Authorize]
+        public IActionResult Edit(int id, [Bind("Id,Title,Description,Solved,Poster")] Issue issue)
         {
             if (id != issue.Id)
             {
                 return NotFound();
             }
 
+            if (User?.Claims?.ElementAt(1)?.Value != issue.Poster)
+            {
+                return Redirect("/issues");
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(issue);
-                    await _context.SaveChangesAsync();
+                    _issueRepository.UpdateIssue(issue);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!IssueExists(issue.Id))
+                    if (!_issueRepository.IssueExists(id))
                     {
                         return NotFound();
                     }
@@ -122,18 +131,24 @@ namespace BugTrackerMvc.Controllers
         }
 
         // GET: Issues/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [Authorize]
+        public IActionResult Delete(int? id)
         {
-            if (id == null || _context.Issues == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var issue = await _context.Issues
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var issue = _issueRepository.GetIssueById(id);
+
             if (issue == null)
             {
                 return NotFound();
+            }
+
+            if (User?.Claims?.ElementAt(1)?.Value != issue.Poster)
+            {
+                return Redirect("/issues");
             }
 
             return View(issue);
@@ -142,25 +157,22 @@ namespace BugTrackerMvc.Controllers
         // POST: Issues/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [Authorize]
+        public IActionResult DeleteConfirmed(int id)
         {
-            if (_context.Issues == null)
+            var issue = _issueRepository.GetIssueById(id);
+
+            if (User.Claims.ElementAt(1)?.Value != issue.Poster)
             {
-                return Problem("Entity set 'DataContext.Issues'  is null.");
+                return Redirect("/issues");
             }
-            var issue = await _context.Issues.FindAsync(id);
+
             if (issue != null)
             {
-                _context.Issues.Remove(issue);
+                _issueRepository.DeleteIssue(id);
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool IssueExists(int id)
-        {
-          return (_context.Issues?.Any(e => e.Id == id)).GetValueOrDefault();
+            return RedirectToAction(nameof(Index));
         }
     }
 }
