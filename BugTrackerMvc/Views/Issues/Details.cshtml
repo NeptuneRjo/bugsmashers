@@ -10,18 +10,20 @@
 <div>
     <h5>@Model.Poster</h5>
     <hr />
-    <h5>Issue:</h5>
-    <p>@Model.Description</p>
+    <div class="my-2">
+        <h5>Issue:</h5>
+        <p class="my-4">@Model.Description</p>
+    </div>
     <hr />
     @if (User?.Identity?.IsAuthenticated ?? false)
     {
-        <p>Add Comment</p>
+        <h5>Add Comment</h5>
         <form asp-action="Comment" asp-route-id="@Model.Id">
             <div class="form-group">
                 <input type="text" hidden value=@Model.Poster name="Author" />
                 <textarea name="Content" class="form-control"></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group py-2">
                 <input type="submit" value="Comment" class="btn btn-primary" />
             </div>
         </form>
@@ -41,9 +43,11 @@
     {
         @foreach (var comment in comments)
         {
-            <div>
-                <p>@comment.Content</p>
-                <span>@comment.Author</span>
+            <div class="p-2 mb-4 bg-light rounded-3">
+                <div class="container-fluid py-5">
+                    <p class="col-md-8 fs-4">@comment.Content</p>
+                    <strong>@comment.Author</strong>
+                </div>
             </div>
         }
     }
@@ -52,6 +56,13 @@
 </div>
 <hr />
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (User?.Identity?.IsAuthenticated ?? false && Model.Poster == Context?.User?.Claims?.ElementAt(1)?.Value)
+    {
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> 
+        <a asp-action="Index">Back to List</a>
+    } 
+    else
+    {
+        <a asp-action="Index">Back to List</a>
+    }
 </div>
