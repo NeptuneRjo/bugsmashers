@@ -9,6 +9,6 @@
         // Required foreign key
         public int IssueId { get; set; } 
         // Required reference navigation to principle
-        public Issue Issue { get; set; } = null!; 
+        public Issue Issue { get; set; }
     }
 }

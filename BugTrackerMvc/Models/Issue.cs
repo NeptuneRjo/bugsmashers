@@ -9,11 +9,12 @@ namespace BugTrackerMvc.Models
         public bool Solved { get; set; }
         public string Poster { get; set; }
 
-        public ICollection<Comment> Comments { get; } = new List<Comment>();
+        public ICollection<Comment> Comments { get; set; }
 
         public Issue()
         {
             Solved = false;
+            Comments = new List<Comment>();
         }
     }
 }
