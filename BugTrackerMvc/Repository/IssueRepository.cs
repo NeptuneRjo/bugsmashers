@@ -16,41 +16,112 @@ namespace BugTrackerMvc.Repository
 
         public void DeleteIssue(int? id)
         {
+            if (id == null) ThrowNullExcept(id);
+
             Issue issue = _context.Issues.Find(id);
-            _context.Issues.Remove(issue);
-            _context.SaveChanges();
+
+            if (issue == null)
+                ThrowNullExcept(issue);
+
+            _context.Issues.Remove(issue);            
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to delete issue.", ex);
+            }
         }
 
         public Issue GetIssueById(int? id)
         {
-            return _context.Issues.Find(id);
+            if (id == null) 
+                ThrowNullExcept(id);
+
+            Issue issue = _context.Issues.Find(id);
+
+            if (issue == null) 
+                ThrowArgumentExcept(id);
+
+            return issue;
         }
 
         public IEnumerable<Issue> GetIssues()
         {
-            return _context.Issues.ToList();
+            IEnumerable<Issue> issues = _context.Issues.ToList();
+
+            if (issues == null) 
+                ThrowArgumentExcept(null);
+
+            return issues;
         }
 
         public void InsertIssue(Issue issue)
         {
+            if (issue == null)
+                ThrowNullExcept(issue);
+
             _context.Issues.Add(issue);
-            _context.SaveChanges();
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to insert the issue.", ex); ;
+            }
         }
 
         public bool IssueExists(int? id)
         {
+            if (id == null)
+                ThrowNullExcept(id);
+
             return _context.Issues.Any(i => i.Id == id);
         }
 
-        public void UpdateIssue(Issue Issue)
+        public void UpdateIssue(Issue issue)
         {
-            _context.Entry(Issue).State = EntityState.Modified;
-            _context.SaveChanges();
+            if (issue == null) 
+                ThrowNullExcept(issue);
+
+            _context.Entry(issue).State = EntityState.Modified;
+
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to update the issue.", ex); ;
+            }
         }
 
         public IEnumerable<Comment> GetComments(int? id)
         {
-            return _context.Comments.Where(c => c.IssueId == id).ToList();
+            if (id == null) 
+                ThrowNullExcept(id);
+
+            var comments = _context.Comments
+                .Where(c => c.IssueId == id).ToList();
+
+            if (comments == null)
+                ThrowNullExcept(comments);
+
+            return comments;
+        }
+
+        private void ThrowNullExcept(dynamic val)
+        {
+            throw new ArgumentNullException(nameof(val), "Cannot be null");
+        }
+
+        private void ThrowArgumentExcept(dynamic val)
+        {
+            throw new ArgumentException(nameof(val), "Issue(s) not found");
         }
     }
 }
