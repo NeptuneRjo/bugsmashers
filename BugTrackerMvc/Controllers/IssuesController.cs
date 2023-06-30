@@ -8,7 +8,7 @@ namespace BugTrackerMvc.Controllers
 {
     public class IssuesController : Controller
     {
-        private readonly IIssueRepository _issueRepository;
+        private IIssueRepository _issueRepository;
 
         public IssuesController(IIssueRepository issueRepository)
         {
