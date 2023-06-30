@@ -18,14 +18,22 @@ namespace BugTrackerMvc.Controllers
         // GET: Issues
         public IActionResult Index()
         {
-            var issues = _issueRepository.GetIssues();
-
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                var issues = _issueRepository.GetIssues();
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                return View(issues);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            return View(issues);
         }
 
         // GET: Issues/Details/5
@@ -34,26 +42,30 @@ namespace BugTrackerMvc.Controllers
             if (id == null)
             {
                 return NotFound();
-            } 
-
-            var issue = _issueRepository.GetIssueById(id);
-
-            if (issue == null)
-            {
-                return NotFound();
             }
 
-            ViewData["Comments"] = _issueRepository.GetComments(id);
+            try
+            {
+                var issue = _issueRepository.GetIssueById(id);
 
-            return View(issue);
+                if (issue == null)
+                {
+                    return NotFound();
+                }
+
+                ViewData["Comments"] = _issueRepository.GetComments(id);
+
+                return View(issue);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // GET: Issues/Create
         [Authorize]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Issues/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -65,10 +77,16 @@ namespace BugTrackerMvc.Controllers
         {
             if (ModelState.IsValid)
             {
-                _issueRepository.InsertIssue(issue);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _issueRepository.InsertIssue(issue);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }                
             }
-
             return View(issue);
         }
 
@@ -81,14 +99,21 @@ namespace BugTrackerMvc.Controllers
                 return NotFound();
             }
 
-            var issue = _issueRepository.GetIssueById(id);
-
-            if (issue == null)
+            try
             {
-                return NotFound();
-            }
+                var issue = _issueRepository.GetIssueById(id);
 
-            return View(issue);
+                if (issue == null)
+                {
+                    return NotFound();
+                }
+
+                return View(issue);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // POST: Issues/Edit/5
@@ -142,15 +167,23 @@ namespace BugTrackerMvc.Controllers
                 return NotFound();
             }
 
-            issue.Comments.Add(new Comment()
+            try
             {
-                Author = comment.Author,
-                Content = comment.Content,
-            });
+                issue.Comments.Add(new Comment()
+                {
+                    Author = comment.Author,
+                    Content = comment.Content,
+                });
 
-            _issueRepository.UpdateIssue(issue);
+                _issueRepository.UpdateIssue(issue);
 
-            return Redirect($"/issues/details/{id}");
+                return Redirect($"/issues/details/{id}");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         // GET: Issues/Delete/5
@@ -162,19 +195,26 @@ namespace BugTrackerMvc.Controllers
                 return NotFound();
             }
 
-            var issue = _issueRepository.GetIssueById(id);
-
-            if (issue == null)
+            try
             {
-                return NotFound();
-            }
+                var issue = _issueRepository.GetIssueById(id);
 
-            if (User?.Claims?.ElementAt(1)?.Value != issue.Poster)
+                if (issue == null)
+                {
+                    return NotFound();
+                }
+
+                if (User?.Claims?.ElementAt(1)?.Value != issue.Poster)
+                {
+                    return Redirect("/issues");
+                }
+
+                return View(issue);
+            }
+            catch (Exception ex)
             {
-                return Redirect("/issues");
+                return BadRequest(ex.Message);
             }
-
-            return View(issue);
         }
 
         // POST: Issues/Delete/5
@@ -183,19 +223,27 @@ namespace BugTrackerMvc.Controllers
         [Authorize]
         public IActionResult DeleteConfirmed(int id)
         {
-            var issue = _issueRepository.GetIssueById(id);
-
-            if (User.Claims.ElementAt(1)?.Value != issue.Poster)
+            try
             {
-                return Redirect("/issues");
+                var issue = _issueRepository.GetIssueById(id);
+
+                if (User.Claims.ElementAt(1)?.Value != issue.Poster)
+                {
+                    return Redirect("/issues");
+                }
+
+                if (issue != null)
+                {
+                    _issueRepository.DeleteIssue(id);
+                }
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            if (issue != null)
-            {
-                _issueRepository.DeleteIssue(id);
-            }
-
-            return RedirectToAction(nameof(Index));
         }
     }
 }
