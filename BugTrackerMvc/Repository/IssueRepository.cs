@@ -7,9 +7,9 @@ namespace BugTrackerMvc.Repository
 {
     public class IssueRepository : IIssueRepository
     {
-        private readonly DataContext _context;
+        private readonly IDataContext _context;
 
-        public IssueRepository(DataContext context)
+        public IssueRepository(IDataContext context)
         {
             _context = context;
         }
@@ -88,7 +88,7 @@ namespace BugTrackerMvc.Repository
             if (issue == null) 
                 ThrowNullExcept(issue);
 
-            _context.Entry(issue).State = EntityState.Modified;
+            _context.Issues.Update(issue);
 
             try
             {
