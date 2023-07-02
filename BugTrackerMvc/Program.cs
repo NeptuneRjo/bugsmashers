@@ -12,6 +12,7 @@ IServiceCollection services = builder.Services;
 services.AddControllersWithViews();
 
 services.AddScoped<IIssueRepository, IssueRepository>();
+services.AddScoped<IDataContext, DataContext>();
 
 services.AddAuthentication(options =>
 {
