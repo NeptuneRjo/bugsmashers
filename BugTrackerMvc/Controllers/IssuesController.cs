@@ -20,14 +20,14 @@ namespace BugTrackerMvc.Controllers
         {
             try
             {
-                var issues = _issueRepository.GetIssues();
+            var issues = _issueRepository.GetIssues();
 
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-                return View(issues);
+            return View(issues);
             }
             catch (Exception ex)
             {
