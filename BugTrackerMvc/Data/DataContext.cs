@@ -19,6 +19,8 @@ namespace BugTrackerMvc.Data
                 .HasMany(e => e.Comments)
                 .WithOne(e => e.Issue)
                 .HasForeignKey(e => e.IssueId);
+
+            modelBuilder.Entity<Issue>().ToTable("Issues");
         }
     }
 }
