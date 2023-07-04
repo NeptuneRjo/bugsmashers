@@ -70,7 +70,7 @@ namespace BugTrackerMvc.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Issues");
+                    b.ToTable("Issues", (string)null);
                 });
 
             modelBuilder.Entity("BugTrackerMvc.Models.Comment", b =>

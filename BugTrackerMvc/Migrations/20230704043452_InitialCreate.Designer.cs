@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BugTrackerMvc.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230627063937_AddComments")]
-    partial class AddComments
+    [Migration("20230704043452_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,9 @@ namespace BugTrackerMvc.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MyProperty")
+                        .HasColumnType("int");
+
                     b.Property<string>("Poster")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -73,7 +76,7 @@ namespace BugTrackerMvc.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Issues");
+                    b.ToTable("Issues", (string)null);
                 });
 
             modelBuilder.Entity("BugTrackerMvc.Models.Comment", b =>

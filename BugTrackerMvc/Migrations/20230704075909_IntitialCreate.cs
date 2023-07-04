@@ -5,7 +5,7 @@
 namespace BugTrackerMvc.Migrations
 {
     /// <inheritdoc />
-    public partial class AddComments5 : Migration
+    public partial class IntitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

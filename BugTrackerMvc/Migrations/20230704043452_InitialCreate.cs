@@ -5,7 +5,7 @@
 namespace BugTrackerMvc.Migrations
 {
     /// <inheritdoc />
-    public partial class AddComments : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +19,8 @@ namespace BugTrackerMvc.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Solved = table.Column<bool>(type: "bit", nullable: false),
-                    Poster = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Poster = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MyProperty = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

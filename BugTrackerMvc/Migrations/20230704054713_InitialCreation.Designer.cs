@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BugTrackerMvc.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230628220426_AddComments2")]
-    partial class AddComments2
+    [Migration("20230704054713_InitialCreation")]
+    partial class InitialCreation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,7 +73,7 @@ namespace BugTrackerMvc.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Issues");
+                    b.ToTable("Issues", (string)null);
                 });
 
             modelBuilder.Entity("BugTrackerMvc.Models.Comment", b =>
