@@ -5,7 +5,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BugTrackerMvc.Repository
 {
-    public class IssueRepository : IIssueRepository
+    public class IssueRepositoryHelpers
+    {
+        public void ThrowNullExcept(dynamic val)
+        {
+            throw new ArgumentNullException(nameof(val), "Cannot be null");
+        }
+
+        public void ThrowArgumentExcept(dynamic val)
+        {
+            throw new ArgumentException(nameof(val), "Issue(s) not found");
+        }
+    }
+
+    public class IssueRepository : IssueRepositoryHelpers, IIssueRepository
     {
         private readonly IDataContext _context;
 
@@ -114,14 +127,32 @@ namespace BugTrackerMvc.Repository
             return comments;
         }
 
-        private void ThrowNullExcept(dynamic val)
+        public IEnumerable<Comment> GetCommentByPoster(string poster)
         {
-            throw new ArgumentNullException(nameof(val), "Cannot be null");
+            if (poster == null) 
+                ThrowNullExcept(poster);
+
+            var comments = _context.Comments
+                .Where(c => c.Author == poster).ToList();
+
+            if (comments == null)
+                ThrowNullExcept(comments);
+
+            return comments;
         }
 
-        private void ThrowArgumentExcept(dynamic val)
+        public IEnumerable<Issue> GetIssuesByPoster(string poster)
         {
-            throw new ArgumentException(nameof(val), "Issue(s) not found");
+            if (poster == null)
+                ThrowNullExcept(poster);
+
+            var issues = _context.Issues
+                .Where(i => i.Poster == poster).ToList();
+
+            if (issues == null)
+                ThrowNullExcept(issues);
+
+            return issues;
         }
     }
 }
