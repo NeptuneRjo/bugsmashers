@@ -31,6 +31,23 @@ namespace BugTrackerMvc.Controllers
             return Challenge(new AuthenticationProperties { RedirectUri = "/" }, provider);
         }
 
+        [HttpPost("~/user")]
+        public async Task<IActionResult> UserStorage()
+        {
+            if (!User.Claims.Any()) 
+                BadRequest();
+
+            var user = new Dictionary<string, string>();
+
+
+            foreach (var claim in HttpContext.User.Claims)
+            {
+                user.Add(claim.Subject.ToString(), claim.Value.ToString());
+            }
+
+            return Ok(user);
+        }
+
         [HttpGet("~/signout")]
         [HttpPost("~/signout")]
         public IActionResult SignOutCurrentUser()
