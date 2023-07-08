@@ -16,18 +16,18 @@ namespace BugTrackerMvc.Controllers
         }
 
         // GET: Issues
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             try
             {
-            var issues = _issueRepository.GetIssues();
+            var issues = await _issueRepository.GetIssues();
 
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return View(issues);
+            return Ok(issues);
             }
             catch (Exception ex)
             {
@@ -37,7 +37,7 @@ namespace BugTrackerMvc.Controllers
         }
 
         // GET: Issues/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -46,16 +46,20 @@ namespace BugTrackerMvc.Controllers
 
             try
             {
-                var issue = _issueRepository.GetIssueById(id);
+                var issue = await _issueRepository.GetIssueById(id);
 
-                if (issue == null)
-                {
-                    return NotFound();
-                }
+                if (issue == null) 
+                    NotFound();
 
-                ViewData["Comments"] = _issueRepository.GetComments(id);
+                //var comments = _issueRepository.GetComments(id);
 
-                return View(issue);
+                // Create copy of issue and set the comments to a collection
+                // instead of the object reference
+                var response = issue;
+                //response.Comments = (ICollection<Comment>)comments;
+                //Console.WriteLine(_issueRepository.GetComments(id));
+
+                return Ok(issue);
             }
             catch (Exception ex)
             {
@@ -63,9 +67,53 @@ namespace BugTrackerMvc.Controllers
             }
         }
 
-        // GET: Issues/Create
-        [Authorize]
-        public IActionResult Create() => View();
+        // GET: Issues/{user}/issues
+        [HttpGet("/{user}/issues")]
+        public async Task<IActionResult> GetUserIssues(string user)
+        {
+            if (user == null)
+                NotFound();
+
+            try
+            {
+                var issues = await _issueRepository.GetIssuesByPoster(user);
+
+                if (issues == null)
+                    NotFound();
+
+                return Ok(issues);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+        }
+
+        // GET: Issues/{user}/comments
+        [HttpGet("/{user}/comments")]
+        public async Task<IActionResult> GetUserComments(string user)
+        {
+            if (user == null)
+                NotFound();
+
+            try
+            {
+                var comments = await _issueRepository.GetCommentsByPoster(user);
+
+                if (comments == null)
+                    NotFound();
+
+                return Ok(comments);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+
+        }
 
         // POST: Issues/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -73,47 +121,20 @@ namespace BugTrackerMvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public IActionResult Create([Bind("Id,Title,Description,Solved,Poster")] Issue issue)
+        public IActionResult Create([Bind("Id,Title,Description,Solved,Poster,Status,Priority,Label")] Issue issue)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
                     _issueRepository.InsertIssue(issue);
-                    return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
                     return BadRequest(ex.Message);
                 }                
             }
-            return View(issue);
-        }
-
-        // GET: Issues/Edit/5
-        [Authorize]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                var issue = _issueRepository.GetIssueById(id);
-
-                if (issue == null)
-                {
-                    return NotFound();
-                }
-
-                return View(issue);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return Ok(issue);
         }
 
         // POST: Issues/Edit/5
@@ -122,7 +143,7 @@ namespace BugTrackerMvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public IActionResult Edit(int id, [Bind("Id,Title,Description,Solved,Poster")] Issue issue)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Solved,Poster,Status,Priority,Label")] Issue issue)
         {
             if (id != issue.Id)
             {
@@ -131,7 +152,7 @@ namespace BugTrackerMvc.Controllers
 
             if (User?.Claims?.ElementAt(1)?.Value != issue.Poster)
             {
-                return Redirect("/issues");
+                return Unauthorized();
             }
 
             if (ModelState.IsValid)
@@ -142,7 +163,7 @@ namespace BugTrackerMvc.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_issueRepository.IssueExists(id))
+                    if (!await _issueRepository.IssueExists(id))
                     {
                         return NotFound();
                     }
@@ -151,16 +172,15 @@ namespace BugTrackerMvc.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(issue);
+            return Ok(issue);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Comment(int? id, Comment comment)
+        public async Task<IActionResult> Comment(int? id, Comment comment)
         {
-            var issue = _issueRepository.GetIssueById(id);
+            var issue = await _issueRepository.GetIssueById(id);
 
             if (issue == null)
             {
@@ -177,59 +197,28 @@ namespace BugTrackerMvc.Controllers
 
                 _issueRepository.UpdateIssue(issue);
 
-                return Redirect($"/issues/details/{id}");
+                return Ok(issue);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
 
-        }
-
-        // GET: Issues/Delete/5
-        [Authorize]
-        public IActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                var issue = _issueRepository.GetIssueById(id);
-
-                if (issue == null)
-                {
-                    return NotFound();
-                }
-
-                if (User?.Claims?.ElementAt(1)?.Value != issue.Poster)
-                {
-                    return Redirect("/issues");
-                }
-
-                return View(issue);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
         }
 
         // POST: Issues/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public IActionResult DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
-                var issue = _issueRepository.GetIssueById(id);
+                var issue = await _issueRepository.GetIssueById(id);
 
                 if (User.Claims.ElementAt(1)?.Value != issue.Poster)
                 {
-                    return Redirect("/issues");
+                    return Unauthorized();
                 }
 
                 if (issue != null)
@@ -237,7 +226,7 @@ namespace BugTrackerMvc.Controllers
                     _issueRepository.DeleteIssue(id);
                 }
 
-                return RedirectToAction(nameof(Index));
+                return Ok();
             }
             catch (Exception ex)
             {
