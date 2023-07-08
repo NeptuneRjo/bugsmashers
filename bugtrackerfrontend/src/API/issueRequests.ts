@@ -1,49 +1,8 @@
+import { Issue, Comment } from "../typings"
+
 const url: string = "https://localhost:7104"
 let options: RequestInit = {
     method: 'GET'
-}
-
-enum LabelType {
-    Bug = "Bug",
-    Feature = "Feature",
-    Documentation = "Documentation",
-    NeedsInvestigation = "Needs Investigation",
-    Question = "Question",
-    HelpWanted = "Help Wanted"
-}
-
-enum StatusType {
-    Backlog = "Backlog",
-    Todo = "Todo",
-    InProgress = "In Progress",
-    Done = "Done",
-    Cancelled = "Cancelled"
-}
-
-enum PriorityType {
-    Low = "Low",
-    Medium = "Medium",
-    High = "High"
-}
-
-interface Issue {
-    Id: number,
-    Title: string,
-    Description: string,
-    Solved: boolean,
-    Poster: string,
-    Status: StatusType,
-    Label: LabelType,
-    Priority: PriorityType
-    Comments: Comment[]
-}
-
-interface Comment {
-    Id: number,
-    Content: string,
-    Author: string,
-    IssueId: number,
-    Issue: Issue
 }
 
 export const getIssues = async (): Promise<Issue | null> => {
