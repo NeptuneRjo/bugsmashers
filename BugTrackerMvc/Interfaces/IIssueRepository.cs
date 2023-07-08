@@ -5,13 +5,13 @@ namespace BugTrackerMvc.Interfaces
     public interface IIssueRepository
     {
         void InsertIssue(Issue Issue);
-        IEnumerable<Issue> GetIssues();
-        Issue GetIssueById(int? id);
-        IEnumerable<Issue> GetIssuesByPoster(string poster);
-        bool IssueExists(int? id);
+        Task<IEnumerable<Issue>> GetIssues();
+        Task<Issue> GetIssueById(int? id);
+        Task<IEnumerable<Issue>> GetIssuesByPoster(string poster);
+        Task<bool> IssueExists(int? id);
         void UpdateIssue(Issue issue);
         void DeleteIssue(int? id);
         IEnumerable<Comment> GetComments(int? id);
-        IEnumerable<Comment> GetCommentByPoster(string poster);
+        Task<IEnumerable<Comment>> GetCommentsByPoster(string poster);
     }
 }

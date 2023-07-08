@@ -27,11 +27,11 @@ namespace BugTrackerMvc.Repository
             _context = context;
         }
 
-        public void DeleteIssue(int? id)
+        public async void DeleteIssue(int? id)
         {
             if (id == null) ThrowNullExcept(id);
 
-            Issue issue = _context.Issues.Find(id);
+            Issue issue = await _context.Issues.FindAsync(id);
 
             if (issue == null)
                 ThrowNullExcept(issue);
@@ -48,12 +48,12 @@ namespace BugTrackerMvc.Repository
             }
         }
 
-        public Issue GetIssueById(int? id)
+        public async Task<Issue> GetIssueById(int? id)
         {
             if (id == null) 
                 ThrowNullExcept(id);
 
-            Issue issue = _context.Issues.Find(id);
+            Issue issue = await _context.Issues.FindAsync(id);
 
             if (issue == null) 
                 ThrowArgumentExcept(id);
@@ -61,9 +61,9 @@ namespace BugTrackerMvc.Repository
             return issue;
         }
 
-        public IEnumerable<Issue> GetIssues()
+        public async Task<IEnumerable<Issue>> GetIssues()
         {
-            IEnumerable<Issue> issues = _context.Issues.ToList();
+            IEnumerable<Issue> issues = await _context.Issues.ToListAsync();
 
             if (issues == null) 
                 ThrowArgumentExcept(null);
@@ -71,12 +71,12 @@ namespace BugTrackerMvc.Repository
             return issues;
         }
 
-        public void InsertIssue(Issue issue)
+        public async void InsertIssue(Issue issue)
         {
             if (issue == null)
                 ThrowNullExcept(issue);
 
-            _context.Issues.Add(issue);
+            await _context.Issues.AddAsync(issue);
 
             try
             {
@@ -88,12 +88,12 @@ namespace BugTrackerMvc.Repository
             }
         }
 
-        public bool IssueExists(int? id)
+        public async Task<bool> IssueExists(int? id)
         {
             if (id == null)
                 ThrowNullExcept(id);
 
-            return _context.Issues.Any(i => i.Id == id);
+            return await _context.Issues.AnyAsync(i => i.Id == id);
         }
 
         public void UpdateIssue(Issue issue)
@@ -127,13 +127,13 @@ namespace BugTrackerMvc.Repository
             return comments;
         }
 
-        public IEnumerable<Comment> GetCommentByPoster(string poster)
+        public async Task<IEnumerable<Comment>> GetCommentsByPoster(string poster)
         {
             if (poster == null) 
                 ThrowNullExcept(poster);
 
-            var comments = _context.Comments
-                .Where(c => c.Author == poster).ToList();
+            var comments = await _context.Comments
+                .Where(c => c.Author == poster).ToListAsync();
 
             if (comments == null)
                 ThrowNullExcept(comments);
@@ -141,13 +141,13 @@ namespace BugTrackerMvc.Repository
             return comments;
         }
 
-        public IEnumerable<Issue> GetIssuesByPoster(string poster)
+        public async Task<IEnumerable<Issue>> GetIssuesByPoster(string poster)
         {
             if (poster == null)
                 ThrowNullExcept(poster);
 
-            var issues = _context.Issues
-                .Where(i => i.Poster == poster).ToList();
+            var issues = await _context.Issues
+                .Where(i => i.Poster == poster).ToListAsync();
 
             if (issues == null)
                 ThrowNullExcept(issues);
