@@ -8,7 +8,21 @@ namespace BugTrackerMvc.Controllers
     public class AuthenticationController : Controller
     {
         [HttpGet("~/signin")]
-        public async Task<IActionResult> SignIn() => View("SignIn", await HttpContext.GetExternalProvidersAsync());
+        public async Task<IActionResult> SignIn()
+        {
+            var providers = new List<Dictionary<string, string>>();
+
+            foreach (var provider in await HttpContext.GetExternalProvidersAsync())
+            {
+                providers.Add(new Dictionary<string, string>()
+            {
+                { "Name", provider.Name },
+                { "DisplayName", provider.DisplayName }
+            });
+            }
+
+            return Ok(providers);
+        }
 
         [HttpPost("~/signin")]
         public async Task<IActionResult> SignIn([FromForm] string provider)
@@ -28,7 +42,7 @@ namespace BugTrackerMvc.Controllers
             // Instruct the middleware corresponding to the requested external identity
             // provider to redirect the user agent to its own authorization endpoint.
             // Note: the authenticationScheme parameter must match the value configured in Startup.cs
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, provider);
+            return Challenge(new AuthenticationProperties { RedirectUri = "https://localhost:3000" }, provider);
         }
 
         [HttpPost("~/user")]
@@ -38,7 +52,6 @@ namespace BugTrackerMvc.Controllers
                 BadRequest();
 
             var user = new Dictionary<string, string>();
-
 
             foreach (var claim in HttpContext.User.Claims)
             {
