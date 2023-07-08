@@ -67,10 +67,13 @@ namespace BugTrackerMvc.Controllers
             }
         }
 
-        // GET: Issues/{user}/issues
-        [HttpGet("/{user}/issues")]
-        public async Task<IActionResult> GetUserIssues(string user)
+        // GET: Issues/user-issues
+        [HttpGet("/user-issues")]
+        [Authorize]
+        public async Task<IActionResult> GetUserIssues()
         {
+            var user = HttpContext.User.Claims.ElementAt(1).Value;
+
             if (user == null)
                 NotFound();
 
@@ -91,10 +94,13 @@ namespace BugTrackerMvc.Controllers
 
         }
 
-        // GET: Issues/{user}/comments
-        [HttpGet("/{user}/comments")]
-        public async Task<IActionResult> GetUserComments(string user)
+        // GET: Issues/user-comments
+        [HttpGet("/user-comments")]
+        [Authorize]
+        public async Task<IActionResult> GetUserComments()
         {
+            var user = HttpContext.User.Claims.ElementAt(1).Value;
+
             if (user == null)
                 NotFound();
 
@@ -176,7 +182,7 @@ namespace BugTrackerMvc.Controllers
             return Ok(issue);
         }
 
-        [HttpPost]
+        [HttpPost("/{id}/comment")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Comment(int? id, Comment comment)
         {
