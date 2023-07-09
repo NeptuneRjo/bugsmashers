@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes, useNavigate, redirect, Navigate } from 'react-router-dom';
 import { getUserDetails } from './API/authRequests';
 import './App.css';
 
@@ -13,8 +13,6 @@ function App() {
     const [user, setUser] = useState<string | null>(null)
 
     useEffect(() => {
-        navigate("/dashboard")
-
         ; (async () => {
             const fetchedUser = await getUserDetails()
 
@@ -26,6 +24,7 @@ function App() {
         <div className="app">
             <Navbar user={user} setUser={setUser} />
             <Routes>
+                <Route path="/" element={ <Navigate to="/dashboard" />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/user/:id" element={<Profile /> } />
             </Routes>
