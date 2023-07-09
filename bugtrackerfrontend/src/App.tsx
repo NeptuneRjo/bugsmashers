@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { getUserDetails } from './API/authRequests';
 import './App.css';
+
 import Dashboard from './views/Dashboard';
 import Navbar from './views/Navbar';
+import Profile from './views/Profile';
 
 function App() {
     const navigate = useNavigate()
@@ -25,6 +27,7 @@ function App() {
             <Navbar user={user} setUser={setUser} />
             <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/user/:id" element={<Profile /> } />
             </Routes>
     </div>
     )

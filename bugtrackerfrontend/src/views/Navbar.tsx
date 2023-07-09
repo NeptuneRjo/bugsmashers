@@ -34,13 +34,13 @@ function Navbar({ user, setUser }: { user: string | null, setUser: React.Dispatc
 
     return (
         <nav className="navbar">
-            <h2 className="brand"><a href="#">Bug Smashers</a></h2>
+            <h2 className="brand"><a href="/dashboard">Bug Smashers</a></h2>
 
             <ul className="navigation">
                 {user ? (
                     <>
                         <li >
-                            <a href="#">My Dashboard</a>
+                            <a href={`/user/${user}`}>View Profile</a>
                         </li>
                         <li onClick={() => handleSignout()}>
                             Sign out
