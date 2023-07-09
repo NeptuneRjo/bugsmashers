@@ -27,10 +27,7 @@ function Profile() {
         ; (async () => {
             const userIssues = await getUserIssues()
 
-            if (userIssues === null) {
-                setIssueError(true)
-                return
-            }
+            if (userIssues === null) return setIssueError(true)
 
             setIssues(userIssues)
         })()
@@ -39,10 +36,7 @@ function Profile() {
     const handleGetComments = async () => {
         const userComments = await getUserComments()
 
-        if (userComments === null) {
-            setCommentError(true)
-            return
-        }
+        if (userComments === null) return setCommentError(true)
 
         setComments(userComments)
     }
