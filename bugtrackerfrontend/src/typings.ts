@@ -48,6 +48,6 @@ export interface Comment {
 }
 
 export interface Provider {
-    name: string,
-    displayName: string
+    Name: string,
+    DisplayName: string
 }

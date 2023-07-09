@@ -1,6 +1,7 @@
 ﻿using BugTrackerMvc.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugTrackerMvc.Controllers
@@ -45,18 +46,16 @@ namespace BugTrackerMvc.Controllers
             return Challenge(new AuthenticationProperties { RedirectUri = "https://localhost:3000" }, provider);
         }
 
-        [HttpPost("~/user")]
-        public async Task<IActionResult> UserStorage()
+        [HttpGet("~/user")]
+        public IActionResult UserStorage()
         {
             if (!User.Claims.Any()) 
                 BadRequest();
 
-            var user = new Dictionary<string, string>();
-
-            foreach (var claim in HttpContext.User.Claims)
+            var user = new Dictionary<string, string>()
             {
-                user.Add(claim.Subject.ToString(), claim.Value.ToString());
-            }
+            { "Name", HttpContext.User.Claims.ElementAt(1).Value.ToString() }
+            };
 
             return Ok(user);
         }

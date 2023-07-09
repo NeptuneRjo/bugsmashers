@@ -5,7 +5,7 @@ let options: RequestInit = {
     method: 'GET'
 }
 
-export const getProviders = async (): Promise<Provider | null> => {
+export const getProviders = async (): Promise<Provider[] | null> => {
     const response = await fetch(`${url}/signin`, options)
 
     if (response.ok) {
@@ -21,4 +21,18 @@ export const signOut = async () => {
     options.credentials = 'include'
 
     await fetch(`${url}/signout`, options)
+}
+
+export const getUserDetails = async (): Promise<string | null> => {
+    options.method = 'GET'
+    options.credentials = 'include'
+
+    const response = await fetch(`${url}/user`, options)
+
+    if (response.ok) {
+        const json = await response.json()
+        return json.Name
+    }
+
+    return null
 }
