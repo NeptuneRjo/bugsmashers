@@ -29,7 +29,8 @@ export const getIssueById = async (id: number): Promise<Issue | null> => {
     return null
 }
 
-export const getUserIssues = async (): Promise<Issue | null> => {
+export const getUserIssues = async (): Promise<Issue[] | null> => {
+    options.credentials = 'include'
     const response = await fetch(`${url}/issues/user-issues`, options)
 
     if (response.ok) {
@@ -41,7 +42,8 @@ export const getUserIssues = async (): Promise<Issue | null> => {
     return null
 }
 
-export const getUserComments = async (user: string): Promise<Comment | null> => {
+export const getUserComments = async (): Promise<Comment[] | null> => {
+    options.credentials = 'include'
     const response = await fetch(`${url}/issues/user-comments`, options)
 
     if (response.ok) {
