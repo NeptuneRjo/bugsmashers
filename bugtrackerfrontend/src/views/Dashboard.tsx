@@ -44,7 +44,6 @@ function Dashboard() {
             }
 
             setIssues(cleanseIssues(response))
-            console.log(cleanseIssues(response))
         })()
     }, [])
 
@@ -59,7 +58,7 @@ function Dashboard() {
                         <th>Status</th>
                         <th>Priority</th>
                     </tr>
-                    {issues.length < 0 ? (
+                    {issues.length > 0 ? (
                         issues.map((issue) => (
                             <tr className="table-content" onClick={() => navigate(`/issues/${issue.id}`)}>
                                 <td>
