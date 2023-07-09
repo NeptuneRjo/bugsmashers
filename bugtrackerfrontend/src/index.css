@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root {
+    /* Padding */
+    --p-ss: .125rem;
+    --p-sm: .625rem;
+    --p-s: 1rem;
+    --p-m: 1.5rem;
+    --p-l: 2rem;
+    /* Margin */
+    --m-s: 1rem;
+    --m-m: 1.5rem;
+    --m-l: 2rem;
+    /* Font Size */
+    --fs-s: .75ch;
+    --fs-m: 1ch;
+    --fs-l: 1.25ch;
+    /* Font Weight */
+    --fw-t: 100;
+    --fw-el: 200;
+    --fw-l: 300;
+    --fw-r: 400;
+    --fw-m: 500;
+    --fw-sb: 600;
+    --fw-b: 700;
+    --fw-eb: 800;
+    --fw-bl: 900;
+    /* Colors */
+    --background: hsl(240 10% 3.9%); /* black #09090b */
+    --foreground: hsl(0 0% 98%); /* seasalt #fafafa */
+    --muted-foreground: hsl(240 5% 64.9%); /* cadet gray #9f9fa8 */
+    --muted: hsl(240 3.7% 15.9%); /* raisin black #28282a */
+    --contrast: hsl(217 100% 56%); /* blue crayola #2176FF */
+    --muted-contrast: rgba(31, 117, 255, .7); /* blue crayola 75% */
+    /* Misc */
+    --radius: .5rem;
+}
+
+* {
+    background: var(--background);
+    color: var(--foreground);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Inter",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    height: 100vh;
+}
+
+@media (min-width: 768px) {
+    :root {
+        /* Padding */
+        --p-s: 1.25rem;
+        --p-m: 1.75rem;
+        --p-l: 2.25rem;
+        /* Margin */
+        --m-s: 1.25rem;
+        --m-m: 1.75rem;
+        --m-l: 2.25rem;
+        /* Font Size */
+        --fs-s: .90ch;
+        --fs-m: 1.15ch;
+        --fs-l: 1.40ch;
+    }
+}
+/* Desktop */
+@media (min-width: 1024px) {
+    :root {
+        /* Padding */
+        --p-s: 1.5rem;
+        --p-m: 2rem;
+        --p-l: 2.5rem;
+        /* Margin */
+        --m-s: 1.5rem;
+        --m-m: 2rem;
+        --m-l: 2.5rem;
+        /* Font Size */
+        --fs-s: 1ch;
+        --fs-m: 1.30ch;
+        --fs-l: 1.55ch;
+    }
+}
+

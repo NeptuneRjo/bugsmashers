@@ -5,10 +5,12 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTrackerMvc", "BugTrackerMvc\BugTrackerMvc.csproj", "{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTrackerMvcTesting", "BugTrackerMvcTesting\BugTrackerMvcTesting.csproj", "{09FA478C-CD2C-4364-B204-A1CA90BC1A41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTrackerMvcTesting", "BugTrackerMvcTesting\BugTrackerMvcTesting.csproj", "{09FA478C-CD2C-4364-B204-A1CA90BC1A41}"
 	ProjectSection(ProjectDependencies) = postProject
 		{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29} = {08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}
 	EndProjectSection
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "bugtrackerfrontend", "BugTrackerFrontend\bugtrackerfrontend.esproj", "{C8572A25-FF37-4B0E-9536-9DDC69C36AB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +26,12 @@ Global
 		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8572A25-FF37-4B0E-9536-9DDC69C36AB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8572A25-FF37-4B0E-9536-9DDC69C36AB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8572A25-FF37-4B0E-9536-9DDC69C36AB7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C8572A25-FF37-4B0E-9536-9DDC69C36AB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8572A25-FF37-4B0E-9536-9DDC69C36AB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8572A25-FF37-4B0E-9536-9DDC69C36AB7}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Details";
-    var comments = ViewData["Comments"] as IEnumerable<Comment>;
 }
 
 <h1>@Model.Title - @(Model.Solved ? "Solved" : "Unsolved")</h1>
@@ -35,7 +34,7 @@
         <div><a asp-controller="Authentication" asp-action="SignIn">Sign in</a> to comment</div>
     }
 
-    @if (comments == null || comments.Count() == 0)
+    @if (Model.Comments == null || Model.Comments.Count() == 0)
     {
         <div>
             <p>No comments yet...</p>
@@ -43,7 +42,7 @@
     }
     else
     {
-        @foreach (var comment in comments)
+        @foreach (var comment in Model.Comments)
         {
             <div class="p-2 mb-4 bg-light rounded-3">
                 <div class="container-fluid py-5">

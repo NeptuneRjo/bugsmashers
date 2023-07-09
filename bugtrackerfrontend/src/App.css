@@ -1,0 +1,62 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.text-muted-foreground {
+    color: var(--muted-foreground);
+}
+
+.font-bold {
+    font-weight: var(--fw-b);
+}
+
+.border-contrast-muted {
+    border: solid 1px var(--muted-contrast);
+    border-radius: 50%;
+}
+
+.bg-contrast-muted {
+    background-color: var(--muted-contrast);
+}
+
+.rounded-sm {
+    border-radius: calc(var(--radius) - 4px);
+}
+
+.rounded-md {
+    border-radius: calc(var(--radius) - 2px);
+}
+
+.rounded-lg {
+    border-radius: var(--radius);
+}
+
+.inline-flex {
+    display: inline-flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.px-s {
+    padding-left: var(--p-sm);
+    padding-right: var(--p-sm);
+}
+
+.px-ss {
+    padding-left: var(--p-ss);
+    padding-right: var(--p-ss);
+}
+
+.py-s {
+    padding-top: var(--p-s);
+    padding-bottom: var(--p-s);
+}
+
+.py-ss {
+    padding-top: var(--p-ss);
+    padding-bottom: var(--p-ss);
+}

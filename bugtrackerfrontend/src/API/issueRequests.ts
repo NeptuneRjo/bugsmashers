@@ -5,7 +5,7 @@ let options: RequestInit = {
     method: 'GET'
 }
 
-export const getIssues = async (): Promise<Issue | null> => {
+export const getIssues = async (): Promise<Issue[] | null> => {
     const response = await fetch(`${url}/issues`, options)
 
     if (response.ok) {

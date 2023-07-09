@@ -10,6 +10,8 @@
     "@types/node": "^16.18.38",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
+    "class-variance-authority": "^0.6.1",
+    "clsx": "^1.2.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -42,7 +44,11 @@
     ]
   },
   "devDependencies": {
+    "@types/react-router-dom": "^5.3.3",
     "eslint-config-react-app": "^7.0.1",
-    "jest-editor-support": "^31.1.0"
+    "i": "^0.3.7",
+    "jest-editor-support": "^31.1.0",
+    "npm": "^9.8.0",
+    "react-router-dom": "^6.14.1"
   }
 }

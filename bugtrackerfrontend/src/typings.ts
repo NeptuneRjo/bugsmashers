@@ -22,26 +22,32 @@ export enum PriorityType {
 }
 
 export interface Issue {
-    Id: number,
-    Title: string,
-    Description: string,
-    Solved: boolean,
-    Poster: string,
-    Status: StatusType,
-    Label: LabelType,
-    Priority: PriorityType
-    Comments: Comment[]
+    id: number,
+    title: string,
+    description: string,
+    solved: boolean,
+    poster: string,
+    status: number,
+    label: number,
+    priority: number
+    comments: Comment[]
+}
+
+export interface CleansedIssue extends Omit<Issue, "status" | "label" | "priority"> {
+    status: string,
+    label: string,
+    priority: string
 }
 
 export interface Comment {
-    Id: number,
-    Content: string,
-    Author: string,
-    IssueId: number,
-    Issue: Issue
+    id: number,
+    content: string,
+    author: string,
+    issueId: number,
+    issue: Issue
 }
 
 export interface Provider {
-    Name: string,
-    DisplayName: string
+    name: string,
+    displayName: string
 }
