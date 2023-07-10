@@ -1,48 +1,69 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getUserDetails } from '../API/authRequests';
-import { getUserComments, getUserIssues } from '../API/issueRequests';
-import { Issue, Comment } from '../typings';
+import { getUserIssues } from '../API/issueRequests';
+import { Issue } from '../typings';
 
-function Profile() {
+import "./styling/profile.css";
+
+function Profile({ user }: { user: string | null }) {
     const navigate = useNavigate()
     let { id } = useParams()
 
-    const [user, setUser] = useState<string | null>(null)
     const [issues, setIssues] = useState<Issue[]>([])
-    const [comments, setComments] = useState<Comment[]>([])
     const [issueError, setIssueError] = useState<boolean>(false)
-    const [commentError, setCommentError] = useState<boolean>(false)
 
     useEffect(() => {
         ; (async () => {
-            const fetchedUser = await getUserDetails()
+            if (id !== user) navigate("/dashboard")
 
-            if (id !== fetchedUser) navigate("/dashboard")
+            if (user !== null) {
+                const userIssues = await getUserIssues(user)
 
-            setUser(fetchedUser)
+                if (userIssues === null) return setIssueError(true)
+
+                setIssues(userIssues)
+            }
         })()
-        // The user's issues are rendered by default so they're fetched on page load
-        // Comments are fetched by handleGetComments() to prevent uneccessary API calls
-        ; (async () => {
-            const userIssues = await getUserIssues()
+    }, [user])
 
-            if (userIssues === null) return setIssueError(true)
-
-            setIssues(userIssues)
-        })()
-    }, [])
-
-    const handleGetComments = async () => {
-        const userComments = await getUserComments()
-
-        if (userComments === null) return setCommentError(true)
-
-        setComments(userComments)
-    }
-    
     return (
-        <div></div>
+        <div className="profile">
+            <div>
+                <h2>My Issues</h2>
+                <table className="table">
+                    <tr className="table-head">
+                        <th>Id</th>
+                        <th>Issue</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                    </tr>
+                    {issues.length > 0 ? (
+                        issues.map((issue) => (
+                            <tr className="table-content" onClick={() => navigate(`/issues/${issue.id}`)}>
+                                <td>
+                                    <div className="id">{issue.id}</div></td>
+                                <td>
+                                    <div className="title">
+                                        <div className="label">{issue.label}</div>
+                                        <span>{issue.title}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div className="status">{issue.status}</div>
+                                </td>
+                                <td>
+                                    <div className="priority">{issue.priority}</div>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr className="table-none">
+                            <td>No issues to display right now...</td>
+                        </tr>
+                    )}
+                </table>
+            </div>
+        </div>
     );
 }
 
