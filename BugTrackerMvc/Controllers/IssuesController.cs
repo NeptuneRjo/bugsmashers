@@ -68,14 +68,18 @@ namespace BugTrackerMvc.Controllers
         }
 
         // GET: Issues/user-issues
-        [HttpGet("/user-issues")]
+        [HttpGet]
+        [Route("~/{user}/issues")]
         [Authorize]
-        public async Task<IActionResult> GetUserIssues()
+        public async Task<IActionResult> GetUserIssues(string user)
         {
-            var user = HttpContext.User.Claims.ElementAt(1).Value;
+            var currentUser = HttpContext.User.Claims.ElementAt(1).Value;
 
-            if (user == null)
+            if (user == null | currentUser == null)
                 NotFound();
+
+            if (user != currentUser) 
+                Unauthorized();
 
             try
             {
@@ -95,11 +99,18 @@ namespace BugTrackerMvc.Controllers
         }
 
         // GET: Issues/user-comments
-        [HttpGet("/user-comments")]
+        [HttpGet]
+        [Route("~/{user}/comments")]
         [Authorize]
-        public async Task<IActionResult> GetUserComments()
+        public async Task<IActionResult> GetUserComments(string user)
         {
-            var user = HttpContext.User.Claims.ElementAt(1).Value;
+            var currentUser = HttpContext.User.Claims.ElementAt(1).Value;
+
+            if (user == null | currentUser == null)
+                NotFound();
+
+            if (user != currentUser)
+                Unauthorized();
 
             if (user == null)
                 NotFound();
