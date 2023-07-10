@@ -26,7 +26,7 @@ function App() {
             <Routes>
                 <Route path="/" element={ <Navigate to="/dashboard" />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/user/:id" element={<Profile /> } />
+                <Route path="/user/:id" element={<Profile user={user} /> } />
             </Routes>
     </div>
     )
