@@ -23,7 +23,8 @@
     @if (User?.Identity?.IsAuthenticated ?? false)
     {
         <h5>Add Comment</h5>
-        <form asp-action="Comment" asp-route-id="@Model.Id">
+        <form asp-action="Comment">
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <input type="text" hidden value=@Model.Poster name="Author" />
                 <textarea name="Content" class="form-control"></textarea>
