@@ -68,6 +68,11 @@ namespace BugTrackerMvc.Controllers
 
         }
 
+        // GET: Issues/Create
+        [HttpGet]
+        [Authorize]
+        public IActionResult Create() => View("Create");
+
         // POST: Issues/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -143,7 +148,7 @@ namespace BugTrackerMvc.Controllers
         }
 
         [HttpPost("/issues/{id}/comment")]
-        //[ValidateAntiForgeryToken]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Comment(int? id, Comment comment)
         {
             var issue = await _issueRepository.GetIssueById(id);
@@ -168,6 +173,22 @@ namespace BugTrackerMvc.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var issue = await _issueRepository.GetIssueById(id);
+
+            if (User.Claims.ElementAt(1)?.Value != issue.Poster)
+            {
+                return Unauthorized();
+            }
+
+            if (issue == null)
+                return NotFound();
+
+            return View(issue);
+        }
+
         // POST: Issues/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -188,7 +209,7 @@ namespace BugTrackerMvc.Controllers
                     _issueRepository.DeleteIssue(id);
                 }
 
-                return View("Index");
+                return Redirect("/");
             }
             catch (Exception ex)
             {
