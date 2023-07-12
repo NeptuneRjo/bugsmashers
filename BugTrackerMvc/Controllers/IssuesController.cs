@@ -16,25 +16,7 @@ namespace BugTrackerMvc.Controllers
         }
 
         // GET: Issues
-        public async Task<IActionResult> Index()
-        {
-            try
-            {
-            var issues = await _issueRepository.GetIssues();
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            return Ok(issues);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-        }
+        public async Task<IActionResult> Index() => View(await _issueRepository.GetIssues());
 
         // GET: Issues/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -51,15 +33,7 @@ namespace BugTrackerMvc.Controllers
                 if (issue == null) 
                     NotFound();
 
-                //var comments = _issueRepository.GetComments(id);
-
-                // Create copy of issue and set the comments to a collection
-                // instead of the object reference
-                var response = issue;
-                //response.Comments = (ICollection<Comment>)comments;
-                //Console.WriteLine(_issueRepository.GetComments(id));
-
-                return Ok(issue);
+                return View(issue);
             }
             catch (Exception ex)
             {
@@ -67,19 +41,15 @@ namespace BugTrackerMvc.Controllers
             }
         }
 
-        // GET: Issues/user-issues
-        [HttpGet]
-        [Route("~/{user}/issues")]
+        // GET: /issues/my-issues
+        [HttpGet("/my-issues")]
         [Authorize]
-        public async Task<IActionResult> GetUserIssues(string user)
+        public async Task<IActionResult> GetUserIssues()
         {
-            var currentUser = HttpContext.User.Claims.ElementAt(1).Value;
+            var user = HttpContext.User.Claims.ElementAt(1).Value;
 
-            if (user == null | currentUser == null)
+            if (user == null)
                 NotFound();
-
-            if (user != currentUser) 
-                Unauthorized();
 
             try
             {
@@ -88,41 +58,7 @@ namespace BugTrackerMvc.Controllers
                 if (issues == null)
                     NotFound();
 
-                return Ok(issues);
-            }
-            catch (Exception ex)
-            {
-
-                return BadRequest(ex.Message);
-            }
-
-        }
-
-        // GET: Issues/user-comments
-        [HttpGet]
-        [Route("~/{user}/comments")]
-        [Authorize]
-        public async Task<IActionResult> GetUserComments(string user)
-        {
-            var currentUser = HttpContext.User.Claims.ElementAt(1).Value;
-
-            if (user == null | currentUser == null)
-                NotFound();
-
-            if (user != currentUser)
-                Unauthorized();
-
-            if (user == null)
-                NotFound();
-
-            try
-            {
-                var comments = await _issueRepository.GetCommentsByPoster(user);
-
-                if (comments == null)
-                    NotFound();
-
-                return Ok(comments);
+                return View("Profile", issues);
             }
             catch (Exception ex)
             {
@@ -151,7 +87,20 @@ namespace BugTrackerMvc.Controllers
                     return BadRequest(ex.Message);
                 }                
             }
-            return Ok(issue);
+            return Redirect($"/issues/details/{issue.Id}");
+        }
+
+        // GET: Issues/Edit/5
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var issue = await _issueRepository.GetIssueById(id);
+
+            if (issue.Poster != HttpContext.User.Claims.ElementAt(1).Value)
+                Unauthorized();
+
+            return  View(await _issueRepository.GetIssueById(id));
         }
 
         // POST: Issues/Edit/5
@@ -190,11 +139,11 @@ namespace BugTrackerMvc.Controllers
                     }
                 }
             }
-            return Ok(issue);
+            return Redirect($"/issues/details/{issue.Id}");
         }
 
-        [HttpPost("/{id}/comment")]
-        [ValidateAntiForgeryToken]
+        [HttpPost("/issues/{id}/comment")]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Comment(int? id, Comment comment)
         {
             var issue = await _issueRepository.GetIssueById(id);
@@ -206,15 +155,11 @@ namespace BugTrackerMvc.Controllers
 
             try
             {
-                issue.Comments.Add(new Comment()
-                {
-                    Author = comment.Author,
-                    Content = comment.Content,
-                });
+                issue.Comments.Add(comment);
 
                 _issueRepository.UpdateIssue(issue);
 
-                return Ok(issue);
+                return Redirect($"/issues/details/{issue.Id}");
             }
             catch (Exception ex)
             {
@@ -243,7 +188,7 @@ namespace BugTrackerMvc.Controllers
                     _issueRepository.DeleteIssue(id);
                 }
 
-                return Ok();
+                return View("Index");
             }
             catch (Exception ex)
             {
