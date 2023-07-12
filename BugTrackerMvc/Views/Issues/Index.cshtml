@@ -24,10 +24,16 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Solved)
+                @Html.DisplayNameFor(model => model.Label)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Poster)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Priority)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th></th>
         </tr>
@@ -38,16 +44,17 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
-            @if (item.Solved)
-            {
-                <td>Solved</td>
-            }
-            else
-            {
-                <td>Unsolved</td>
-            }
+            <td>
+                @Html.DisplayFor(modelItem => item.Label)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Poster)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Priority)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
                 @if (User?.Identity?.IsAuthenticated ?? false && item.Poster == Context?.User?.Claims?.ElementAt(1)?.Value)
