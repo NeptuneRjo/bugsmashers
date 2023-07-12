@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace BugTrackerMvc.Models
 {
     public enum LabelType
@@ -6,8 +8,10 @@ namespace BugTrackerMvc.Models
         Bug,
         Feature,
         Documentation,
+        [Display(Name = "Needs Investigation")]
         NeedsInvestigation,
         Question,
+        [Display(Name = "Help Wanted")]
         HelpWanted,
     }
 
@@ -15,6 +19,7 @@ namespace BugTrackerMvc.Models
     {
         Backlog,
         Todo,
+        [Display(Name = "In Progress")]
         InProgress,
         Done,
         Cancelled
