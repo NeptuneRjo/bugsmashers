@@ -31,7 +31,7 @@ namespace BugTrackerMvc.Controllers
                 var issue = await _issueRepository.GetIssueById(id);
 
                 if (issue == null) 
-                    NotFound();
+                   return NotFound();
 
                 return View(issue);
             }
@@ -147,7 +147,7 @@ namespace BugTrackerMvc.Controllers
             return Redirect($"/issues/details/{issue.Id}");
         }
 
-        [HttpPost("/issues/{id}/comment")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Comment(int? id, Comment comment)
         {
@@ -160,7 +160,11 @@ namespace BugTrackerMvc.Controllers
 
             try
             {
-                issue.Comments.Add(comment);
+                issue.Comments.Add(new Comment()
+                {
+                    Author = comment.Author,
+                    Content = comment.Content,
+                });
 
                 _issueRepository.UpdateIssue(issue);
 
