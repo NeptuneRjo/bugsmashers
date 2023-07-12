@@ -29,17 +29,23 @@
             </div>
             <div class="form-group">
                 <label asp-for="Status" class="control-label"></label>
-                    @Html.DropDownList("IssueStatus", Html.GetEnumSelectList<StatusType>(), "Select Status", new { @class = "form-control" })
+                    <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<StatusType>()">
+                        <option>Select Status</option>
+                    </select>
                 <span asp-validation-for="Status" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Priority" class="control-label"></label>
-                    @Html.DropDownList("IssuePriority", Html.GetEnumSelectList<PriorityType>(), "Select Priority", new { @class = "form-control" })
+                    <select asp-for="Priority" class="form-control" asp-items="Html.GetEnumSelectList<PriorityType>()">
+                        <option>Select Priority</option>
+                    </select>
                 <span asp-validation-for="Priority" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Label" class="control-label"></label>
-                    @Html.DropDownList("IssueLabel", Html.GetEnumSelectList<LabelType>(), "Select Label", new { @class = "form-control" })
+                    <select asp-for="Label" class="form-control" asp-items="Html.GetEnumSelectList<LabelType>()">
+                        <option>Select Label</option>
+                    </select>
                 <span asp-validation-for="Label" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
