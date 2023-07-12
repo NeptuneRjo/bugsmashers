@@ -23,13 +23,28 @@
                 <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="Status"></label>
+                <select class="form-control" value=@Model.Status asp-for="Status" asp-items="Html.GetEnumSelectList<StatusType>()"></select>
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="Priority"></label>
+                <select class="form-control" value=@Model.Priority asp-for="Priority" asp-items="Html.GetEnumSelectList<PriorityType>()"></select>
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label" asp-for="Label"></label>
+                <select class="form-control" value=@Model.Label asp-for="Label" asp-items="Html.GetEnumSelectList<LabelType>()"></select>
+                <span asp-validation-for="Label" class="text-danger"></span>
+            </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Solved" /> @Html.DisplayNameFor(model => model.Solved)
                 </label>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
+            <div class="form-group">
+                <label class="control-label">
                     <input class="form-check-input" value=@Model.Poster asp-for="Poster" hidden />
                 </label>
             </div>
