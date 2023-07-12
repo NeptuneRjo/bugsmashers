@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTrackerMvc", "BugTrackerMvc\BugTrackerMvc.csproj", "{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTrackerMvcTesting", "BugTrackerMvcTesting\BugTrackerMvcTesting.csproj", "{09FA478C-CD2C-4364-B204-A1CA90BC1A41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTrackerMvcTesting", "BugTrackerMvcTesting\BugTrackerMvcTesting.csproj", "{09FA478C-CD2C-4364-B204-A1CA90BC1A41}"
 	ProjectSection(ProjectDependencies) = postProject
 		{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29} = {08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}
 	EndProjectSection

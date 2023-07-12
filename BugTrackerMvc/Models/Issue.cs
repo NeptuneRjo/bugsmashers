@@ -1,6 +1,32 @@
 ﻿
 namespace BugTrackerMvc.Models
 {
+    public enum LabelType
+    {
+        Bug,
+        Feature,
+        Documentation,
+        NeedsInvestigation,
+        Question,
+        HelpWanted,
+    }
+
+    public enum StatusType
+    {
+        Backlog,
+        Todo,
+        InProgress,
+        Done,
+        Cancelled
+    }
+
+    public enum PriorityType
+    {
+        Low,
+        Medium,
+        High
+    }
+
     public class Issue
     {
         public int Id { get; set; }
@@ -8,6 +34,10 @@ namespace BugTrackerMvc.Models
         public string Description { get; set; }
         public bool Solved { get; set; }
         public string Poster { get; set; }
+
+        public StatusType Status { get; set; }
+        public PriorityType Priority { get; set; }
+        public LabelType Label { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using BugTrackerMvc.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BugTrackerMvc.Controllers
@@ -8,7 +9,7 @@ namespace BugTrackerMvc.Controllers
     public class AuthenticationController : Controller
     {
         [HttpGet("~/signin")]
-        public async Task<IActionResult> SignIn() => View("SignIn", await HttpContext.GetExternalProvidersAsync());
+        public async Task<IActionResult> SignIn() => View(await HttpContext.GetExternalProvidersAsync());
 
         [HttpPost("~/signin")]
         public async Task<IActionResult> SignIn([FromForm] string provider)
@@ -29,6 +30,20 @@ namespace BugTrackerMvc.Controllers
             // provider to redirect the user agent to its own authorization endpoint.
             // Note: the authenticationScheme parameter must match the value configured in Startup.cs
             return Challenge(new AuthenticationProperties { RedirectUri = "/" }, provider);
+        }
+
+        [HttpGet("~/user")]
+        public IActionResult UserStorage()
+        {
+            if (!User.Claims.Any()) 
+                BadRequest();
+
+            var user = new Dictionary<string, string>()
+            {
+            { "Name", HttpContext.User.Claims.ElementAt(1).Value.ToString() }
+            };
+
+            return Ok(user);
         }
 
         [HttpGet("~/signout")]

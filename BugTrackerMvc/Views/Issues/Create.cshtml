@@ -1,4 +1,5 @@
 ﻿@model BugTrackerMvc.Models.Issue
+@using BugTrackerMvc.Models
 
 @{
     ViewData["Title"] = "Create";
@@ -19,21 +20,34 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" ></textarea>
+                <input asp-for="Description" class="form-control" />
                 <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Poster" class="form-control" hidden value=@Context.User.Claims.ElementAt(1).Value. />
+                <span asp-validation-for="Poster" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Status" class="control-label"></label>
+                    @Html.DropDownList("IssueStatus", Html.GetEnumSelectList<StatusType>(), "Select Status", new { @class = "form-control" })
+                <span asp-validation-for="Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Priority" class="control-label"></label>
+                    @Html.DropDownList("IssuePriority", Html.GetEnumSelectList<PriorityType>(), "Select Priority", new { @class = "form-control" })
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Label" class="control-label"></label>
+                    @Html.DropDownList("IssueLabel", Html.GetEnumSelectList<LabelType>(), "Select Label", new { @class = "form-control" })
+                <span asp-validation-for="Label" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="Solved" /> @Html.DisplayNameFor(model => model.Solved)
                 </label>
             </div>
-            <div class="form-group">
-                <input hidden value=@Context.User.Claims.ElementAt(1).Value asp-for="Poster" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input hidden asp-for="Comments" value="" class="form-control" />
-            </div>
-            <div class="form-group">
+            <div class="form-group my-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
