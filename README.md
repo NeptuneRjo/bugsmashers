@@ -7,8 +7,7 @@ Posters can edit their issues at any time, and marking as solved will not delete
 
 Discussions are open on each issue, and authenticated users can post comments.
 
-~Visit the demo at [https://neptunerjo-bugtracker.azurewebsites.net/issues](https://neptunerjo-bugtracker.azurewebsites.net/issues)~
-*Under Construction*
+Visit the demo at [https://neptunerjo-bugtracker.azurewebsites.net/issues](https://neptunerjo-bugtracker.azurewebsites.net/issues)
 
 ## Project Demos
 
