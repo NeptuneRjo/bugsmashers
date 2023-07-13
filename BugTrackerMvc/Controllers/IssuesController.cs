@@ -33,6 +33,10 @@ namespace BugTrackerMvc.Controllers
                 if (issue == null) 
                    return NotFound();
 
+                var comments = _issueRepository.GetComments(id);
+
+                ViewData["Comments"] = comments;
+
                 return View(issue);
             }
             catch (Exception ex)
