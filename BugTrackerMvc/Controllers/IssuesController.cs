@@ -32,6 +32,10 @@ namespace BugTrackerMvc.Controllers
 
                 ViewData["Comments"] = comments;
 
+                var comments = _issueRepository.GetComments(id);
+
+                ViewData["Comments"] = comments;
+
                 return View(issue);
             }
             catch (ArgumentException ex)
