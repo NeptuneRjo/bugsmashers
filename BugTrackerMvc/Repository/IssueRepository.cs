@@ -12,9 +12,14 @@ namespace BugTrackerMvc.Repository
             throw new ArgumentNullException(nameof(val), "Cannot be null");
         }
 
-        public void ThrowArgumentExcept(dynamic val)
+        public void ThrowArgumentExcept()
         {
-            throw new ArgumentException(nameof(val), "Issue(s) not found");
+            throw new ArgumentException("Issues not found");
+        }
+
+        public void ThrowArgumentExcept(int id)
+        {
+            throw new ArgumentException($"Issue with id: {id} not found");
         }
     }
 
@@ -27,7 +32,7 @@ namespace BugTrackerMvc.Repository
             _context = context;
         }
 
-        public async void DeleteIssue(int? id)
+        public async void DeleteIssue(int id)
         {
             if (id == null) ThrowNullExcept(id);
 
@@ -48,11 +53,8 @@ namespace BugTrackerMvc.Repository
             }
         }
 
-        public async Task<Issue> GetIssueById(int? id)
+        public async Task<Issue> GetIssueById(int id)
         {
-            if (id == null) 
-                ThrowNullExcept(id);
-
             Issue issue = await _context.Issues.FindAsync(id);
 
             if (issue == null) 
@@ -66,7 +68,7 @@ namespace BugTrackerMvc.Repository
             IEnumerable<Issue> issues = await _context.Issues.ToListAsync();
 
             if (issues == null) 
-                ThrowArgumentExcept(null);
+                ThrowArgumentExcept();
 
             return issues;
         }
@@ -88,7 +90,7 @@ namespace BugTrackerMvc.Repository
             }
         }
 
-        public async Task<bool> IssueExists(int? id)
+        public async Task<bool> IssueExists(int id)
         {
             if (id == null)
                 ThrowNullExcept(id);
@@ -113,7 +115,7 @@ namespace BugTrackerMvc.Repository
             }
         }
 
-        public IEnumerable<Comment> GetComments(int? id)
+        public IEnumerable<Comment> GetComments(int id)
         {
             if (id == null) 
                 ThrowNullExcept(id);

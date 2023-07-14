@@ -19,21 +19,26 @@ namespace BugTrackerMvc.Controllers
         public async Task<IActionResult> Index() => View(await _issueRepository.GetIssues());
 
         // GET: Issues/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             try
             {
                 var issue = await _issueRepository.GetIssueById(id);
 
-                if (issue == null) 
-                   return NotFound();
+                var comments = _issueRepository.GetComments(id);
+
+                ViewData["Comments"] = comments;
+
+
+                ViewData["Comments"] = comments;
 
                 return View(issue);
+            }
+            catch (ArgumentException ex)
+            {
+                ViewData["Error"] = ex.Message;
+
+                return View("Error");
             }
             catch (Exception ex)
             {
@@ -149,7 +154,7 @@ namespace BugTrackerMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Comment(int? id, Comment comment)
+        public async Task<IActionResult> Comment(int id, Comment comment)
         {
             var issue = await _issueRepository.GetIssueById(id);
 

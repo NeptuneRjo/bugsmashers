@@ -1,0 +1,9 @@
+﻿
+@{
+    var error = ViewData["Error"];
+}
+
+<div class="container-fluid d-flex align-items-center flex-column my-5">
+    <p>@error</p>
+    <a asp-action="Index">Back to List</a>
+</div>
