@@ -9,5 +9,6 @@ namespace BugTrackerMvc.Interfaces
         DbSet<Comment> Comments { get; set; }
 
         int SaveChanges();
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 }
