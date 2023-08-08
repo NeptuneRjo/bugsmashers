@@ -5,8 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BugTrackerMvc.Repository
 {
-    public class IssueRepositoryHelpers
+
+    public class IssueRepository : Repository<Issue>, IIssueRepository
     {
+        private readonly IDataContext _context;
+
+        public IssueRepository(IDataContext context) : base(context)
+        {
+            _context = context;
+        }
+
         public void ThrowNullExcept(dynamic val)
         {
             throw new ArgumentNullException(nameof(val), "Cannot be null");
@@ -15,16 +23,6 @@ namespace BugTrackerMvc.Repository
         public void ThrowArgumentExcept(dynamic val)
         {
             throw new ArgumentException(nameof(val), "Issue(s) not found");
-        }
-    }
-
-    public class IssueRepository : IssueRepositoryHelpers, IIssueRepository
-    {
-        private readonly IDataContext _context;
-
-        public IssueRepository(IDataContext context)
-        {
-            _context = context;
         }
 
         public async void DeleteIssue(int? id)
@@ -61,16 +59,6 @@ namespace BugTrackerMvc.Repository
             return issue;
         }
 
-        public async Task<IEnumerable<Issue>> GetIssues()
-        {
-            IEnumerable<Issue> issues = await _context.Issues.ToListAsync();
-
-            if (issues == null) 
-                ThrowArgumentExcept(null);
-
-            return issues;
-        }
-
         public async void InsertIssue(Issue issue)
         {
             if (issue == null)
@@ -86,14 +74,6 @@ namespace BugTrackerMvc.Repository
             {
                 throw new Exception("Failed to insert the issue.", ex); ;
             }
-        }
-
-        public async Task<bool> IssueExists(int? id)
-        {
-            if (id == null)
-                ThrowNullExcept(id);
-
-            return await _context.Issues.AnyAsync(i => i.Id == id);
         }
 
         public void UpdateIssue(Issue issue)
@@ -113,46 +93,22 @@ namespace BugTrackerMvc.Repository
             }
         }
 
-        public IEnumerable<Comment> GetComments(int? id)
+        public async Task<Issue> AddComment(int issueId, Comment comment)
         {
-            if (id == null) 
-                ThrowNullExcept(id);
+            Issue issue = await _context.Issues.FirstAsync(e => e.Id == issueId);
 
-            var comments = _context.Comments
-                .Where(c => c.IssueId == id).ToList();
+            comment.Issue = issue;
 
-            if (comments == null)
-                ThrowNullExcept(comments);
+            if (comment.IssueId == null)
+                comment.IssueId = issue.Id;
 
-            return comments;
-        }
+            await _context.Comments.AddAsync(comment);
 
-        public async Task<IEnumerable<Comment>> GetCommentsByPoster(string poster)
-        {
-            if (poster == null) 
-                ThrowNullExcept(poster);
+            issue.Comments.Add(comment);
 
-            var comments = await _context.Comments
-                .Where(c => c.Author == poster).ToListAsync();
+            _context.SaveChanges();
 
-            if (comments == null)
-                ThrowNullExcept(comments);
-
-            return comments;
-        }
-
-        public async Task<IEnumerable<Issue>> GetIssuesByPoster(string poster)
-        {
-            if (poster == null)
-                ThrowNullExcept(poster);
-
-            var issues = await _context.Issues
-                .Where(i => i.Poster == poster).ToListAsync();
-
-            if (issues == null)
-                ThrowNullExcept(issues);
-
-            return issues;
+            return issue;
         }
     }
 }
