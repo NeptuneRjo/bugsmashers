@@ -46,10 +46,22 @@ namespace BugTrackerMvc.Models
 
         public ICollection<Comment> Comments { get; set; }
 
-        public Issue()
-        {
-            Solved = false;
-            Comments = new List<Comment>();
-        }
+        //public Issue()
+        //{
+        //    Solved = false;
+        //    Comments = new List<Comment>();
+        //}
+    }
+
+    public class IssueModel
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public bool Solved { get; set; }
+        public string? Poster { get; set; }
+
+        public StatusType Status { get; set; }
+        public PriorityType Priority { get; set; }
+        public LabelType Label { get; set; }
     }
 }
