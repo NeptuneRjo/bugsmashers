@@ -42,11 +42,9 @@ namespace BugTrackerMvc.Repository
             return await query.FirstOrDefaultAsync(predicate);
         }
 
-        public async void Update(int id, TEntity entity)
+        public async void Update(TEntity entity)
         {
-            TEntity foundEntity = await _context.Set<TEntity>().FindAsync(id);
-
-            _context.Set<TEntity>().Entry(foundEntity).CurrentValues.SetValues(entity);
+            _context.Set<TEntity>().Update(entity);
             _context.SaveChanges();
         }
 
@@ -64,6 +62,11 @@ namespace BugTrackerMvc.Repository
 
             _context.Set<TEntity>().Remove(entity);
             _context.SaveChanges();
+        }
+    
+        public async Task<bool> Exists(int id)
+        {
+            return await _context.Set<TEntity>().FindAsync(id) != null;
         }
     }
 }
