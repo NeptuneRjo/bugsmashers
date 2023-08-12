@@ -85,15 +85,13 @@ namespace BugTrackerMvc.Controllers
             {
                 string poster = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                if (issueModel.Poster == null)
-                    issueModel.Poster = poster;
-
-                if (issueModel.Poster != poster)
-                    return BadRequest();
-
-                ProjectDto dto = await _service.AddIssue(id, issueModel);
+                ProjectDto dto = await _service.AddIssue(id, poster, issueModel);
 
                 return Ok(dto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (ObjectNotFoundException ex)
             {
