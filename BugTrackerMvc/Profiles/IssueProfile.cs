@@ -8,6 +8,7 @@ namespace BugTrackerMvc.Profiles
         public IssueProfile()
         {
             CreateMap<IssueModel, Issue>();
+            CreateMap<Issue, IssueDto>();
         }
     }
 }
