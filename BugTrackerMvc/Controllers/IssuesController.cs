@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BugTrackerMvc.CustomExceptions;
+using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
 using Microsoft.AspNetCore.Authorization;
-using BugTrackerMvc.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using BugTrackerMvc.CustomExceptions;
 
 namespace BugTrackerMvc.Controllers
 {
-    public class IssuesController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class IssuesController : ControllerBase
     {
         private readonly IIssueService _service;
 
@@ -16,83 +18,35 @@ namespace BugTrackerMvc.Controllers
             _service = service;
         }
 
-        // GET: Issues
-        public async Task<IActionResult> Index() => View(await _service.GetIssues());
+        // GET: api/<IssuesController>
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            return Ok(await _service.GetIssues());
+        }
 
-        // GET: Issues/Details/5
-        public async Task<IActionResult> Details(int id)
+        // GET api/<IssuesController>/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                Issue issue = await _service.GetIssue(id);
-
-                return View(issue);
+                return Ok(await _service.GetIssue(id));
             }
             catch (ObjectNotFoundException ex)
             {
-                return View("Notfound", ex.Message);
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
-        // GET: Issues/Create
-        [HttpGet]
-        public IActionResult Create() => View("Create");
-
-        // POST: Issues/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST api/<IssuesController>
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Title,Description,Solved,Status,Priority,Label")] IssueModel issueModel)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            
-            try
-            {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
-
-                if (issueModel.Poster == null)
-                    issueModel.Poster = poster;
-
-                Issue issue = await _service.CreateIssue(issueModel);
-
-                return RedirectToAction("Details", "Issues", new { id = issue.Id });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex);
-            }                
-        }
-
-        // GET: Issues/Edit/5
-        [HttpGet]
-        public async Task<IActionResult> Edit(int id)
-        {
-            try
-            {
-                Issue issue = await _service.GetIssue(id);
-
-                return View(issue);
-            }
-            catch (ObjectNotFoundException ex)
-            {
-                return View("Notfound", ex.Message);
-            }
-        }
-
-        // POST: Issues/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,Description,Solved,Status,Priority,Label")] IssueModel issueModel)
+        public async Task<IActionResult> Post([FromBody] IssueModel issueModel)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -101,16 +55,9 @@ namespace BugTrackerMvc.Controllers
             {
                 string poster = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                if (issueModel.Poster == null)
-                    issueModel.Poster = poster;
+                IssueDto dto = await _service.CreateIssue(poster, issueModel);
 
-                Issue issue = await _service.UpdateIssue(id, issueModel);
-
-                return RedirectToAction("Details", "Issues", new { id = issue.Id });
-            }
-            catch (ObjectNotFoundException ex)
-            {
-                return View("Notfound", ex.Message);
+                return Ok(dto);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -118,64 +65,69 @@ namespace BugTrackerMvc.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
-        [HttpPost]
+        [HttpPost("{id}")]
         [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Comment(int id, [Bind("Content")] CommentModel commentModel)
+        public async Task<IActionResult> PostComment(int id, [FromBody] CommentModel commentModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+
+                IssueDto dto = await _service.AddComment(id, poster, commentModel);
+
+                return Ok(dto);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        // PUT api/<IssuesController>/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] IssueModel issueModel)
         {
             try
             {
                 string poster = User.FindFirst(ClaimTypes.Name)?.Value;
-                
-                if (commentModel.Poster == null)
-                    commentModel.Poster = poster;
-                
-                Issue issue = await _service.AddComment(id, commentModel);
 
-                return RedirectToAction("Details", "Issues", new { id = id });
+                IssueDto dto = await _service.UpdateIssue(id, poster, issueModel);
+
+                return Ok(dto);
             }
             catch (ObjectNotFoundException ex)
             {
-                return View("Notfound", ex.Message);
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
-        [HttpGet]
+        // DELETE api/<IssuesController>/5
+        [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
-        {
-            try
-            {
-                Issue issue = await _service.GetIssue(id);
-
-                return View(issue);
-            }
-            catch (ObjectNotFoundException ex)
-            {
-                return View("Notfound", ex.Message);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        // POST: Issues/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
@@ -184,13 +136,13 @@ namespace BugTrackerMvc.Controllers
                 bool deleted = await _service.Delete(id, poster);
 
                 if (!deleted)
-                    return StatusCode(500, "Failed to delete item");
+                    return StatusCode(500, "Failed to delete object");
 
-                return RedirectToAction("Index", "Issues");
+                return Ok($"Successfully deleted issue {id}");
             }
             catch (ObjectNotFoundException ex)
             {
-                return View("Notfound", ex.Message);
+                return NotFound(ex.Message);
             }
             catch (UnauthorizedAccessException ex)
             {
@@ -198,9 +150,8 @@ namespace BugTrackerMvc.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
-
         }
     }
 }
