@@ -2,7 +2,6 @@
 using BugTrackerMvc.CustomExceptions;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
-using System.Reflection;
 
 namespace BugTrackerMvc.Services
 {
@@ -17,12 +16,18 @@ namespace BugTrackerMvc.Services
             _repository = repository;
         }
 
-        public async Task<Issue> AddComment(int id, CommentModel commentModel)
+        public async Task<IssueDto> AddComment(int id, string poster, CommentModel commentModel)
         {
             Issue issue = await _repository.GetByQuery(e => e.Id == id, e => e.Comments);
 
             if (issue == null)
                 throw new ObjectNotFoundException($"No issue with the id of {id} was found");
+
+            if (commentModel.Poster == null)
+                commentModel.Poster = poster;
+
+            if (commentModel.Poster != poster)
+                throw new ArgumentException("Model/Authorization parameters do not match");
 
             Comment comment = _mapper.Map<Comment>(commentModel);
 
@@ -30,18 +35,28 @@ namespace BugTrackerMvc.Services
 
             issue = await _repository.AddComment(issue.Id, comment);
 
-            return issue;
+            IssueDto dto = _mapper.Map<IssueDto>(issue);
+
+            return dto;
         }
 
-        public async Task<Issue> CreateIssue(IssueModel issueModel)
+        public async Task<IssueDto> CreateIssue(string poster, IssueModel issueModel)
         {
             Issue issue = _mapper.Map<Issue>(issueModel);
 
             issue.Comments = new List<Comment>();
 
-            _repository.Add(issue);
+            if (issue.Poster == null)
+                issue.Poster = poster;
 
-            return issue;
+            if (issue.Poster != poster)
+                throw new UnauthorizedAccessException("Credentials do not match");
+
+            await _repository.Add(issue);
+
+            IssueDto dto = _mapper.Map<IssueDto>(issue);
+
+            return dto;
         }
 
         public async Task<bool> Delete(int id, string poster)
@@ -65,47 +80,35 @@ namespace BugTrackerMvc.Services
             }
         }
 
-        public async Task<Issue> UpdateIssue(int id, IssueModel issueModel)
+        public async Task<IssueDto> UpdateIssue(int id, string poster, IssueModel issueModel)
         {
             Issue issue = await _repository.GetByQuery(e => e.Id == id, e => e.Comments);
 
             if (issue == null)
                 throw new ObjectNotFoundException($"No issue with the id of {id} was found");
 
-            if (issue.Poster != issueModel.Poster)
+            if (issue.Poster != poster)
                 throw new UnauthorizedAccessException("Credentials do not match");
 
-            Type modelType = issueModel.GetType();
-            PropertyInfo[] properties = modelType.GetProperties();
+            issue = _mapper.Map(issueModel, issue);
 
-            foreach (PropertyInfo property in properties)
-            {
-                string propertyName = property.Name;
-                object propertyValue = property.GetValue(issueModel);
+            _repository.Update(issue);
 
-                Type issueType = issue.GetType();
+            IssueDto dto = _mapper.Map<IssueDto>(issue);
 
-                if (propertyValue != null)
-                {
-                    PropertyInfo issueProp = issueType.GetProperty(propertyName);
-
-                    issueProp.SetValue(issue, propertyValue);
-                }
-            }
-
-            _repository.Update(issue.Id, issue);
-
-            return issue;
+            return dto;
         }
 
-        public async Task<Issue> GetIssue(int id)
+        public async Task<IssueDto> GetIssue(int id)
         {
             Issue issue = await _repository.GetByQuery(e => e.Id == id, e => e.Comments);
 
             if (issue == null)
                 throw new ObjectNotFoundException($"No issue with the id of {id} was found");
 
-            return issue;
+            IssueDto dto = _mapper.Map<IssueDto>(issue);
+
+            return dto;
         }
 
         public async Task<Issue> GetIssue(int id, string poster)
@@ -121,22 +124,18 @@ namespace BugTrackerMvc.Services
             return issue;
         }
 
-        public async Task<ICollection<Issue>> GetIssues()
+        public async Task<ICollection<IssueDto>> GetIssues()
         {
             ICollection<Issue> issues = await _repository.GetAllByQuery(e => e.Id > 0, e => e.Comments);
 
-            if (issues == null)
-                throw new ObjectNotFoundException($"No issues found");
+            ICollection<IssueDto> dtos = _mapper.Map<ICollection<IssueDto>>(issues);
 
-            return issues;
+            return dtos;
         }
 
         public async Task<ICollection<Issue>> GetIssues(string poster)
         {
             ICollection<Issue> issues = await _repository.GetAllByQuery(e => e.Poster == poster, e => e.Comments);
-
-            if (issues == null)
-                throw new ObjectNotFoundException($"No issues found");
 
             return issues;
 
