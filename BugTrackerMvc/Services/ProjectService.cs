@@ -19,19 +19,23 @@ namespace BugTrackerMvc.Services
             _mapper = mapper;
         }
 
-        public async Task<ProjectDto> AddIssue(int id, IssueModel model)
+        public async Task<ProjectDto> AddIssue(int id, string poster, IssueModel model)
         {
             Project project = await _repository.GetByQuery(e => e.Id == id, includes);
 
             if (project == null)
                 throw new ObjectNotFoundException($"No project with the id of {id} was found");
 
+
+            if (model.Poster == null)
+                model.Poster = poster;
+
+            if (model.Poster != poster)
+                throw new ArgumentException("Model/Authorization parameters do not match");
+
             Issue issue = _mapper.Map<Issue>(model);
 
-            //if (issue.Project == null)
-            //    issue.Project = project;
-
-            await _repository.AddIssue(project, issue);
+            await _repository.AddIssue(id, issue);
 
             ProjectDto dto = _mapper.Map<ProjectDto>(project);
 
