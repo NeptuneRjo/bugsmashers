@@ -12,7 +12,7 @@ namespace BugTrackerMvc.Repository
             _context = context;
         }
 
-        public async Task<Issue> AddIssue(Project project, Issue issue)
+        public async Task<Issue> AddIssue(int projectId, Issue issue)
         {
             //if (issue.Project == null)
             //    throw new Exception("Projet must be defined");
@@ -24,6 +24,8 @@ namespace BugTrackerMvc.Repository
             //_context.SaveChanges();
 
             //return issue;
+            Project project = _context.Projects.Find(projectId);
+
             project.Issues.Add(issue);
 
             _context.Projects.Update(project);
