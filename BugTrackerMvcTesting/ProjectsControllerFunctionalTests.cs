@@ -1,16 +1,10 @@
-﻿using AutoMapper;
-using BugTrackerMvc.Controllers;
+﻿using BugTrackerMvc.Controllers;
 using BugTrackerMvc.CustomExceptions;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.Testing;
 using NSubstitute;
-using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
 using System.Security.Claims;
 
 
@@ -269,7 +263,7 @@ namespace BugTrackerMvcTesting
             ProjectDto dto = new ProjectDto() { Poster = poster, Title = "Test", Issues =  new List<IssueDto>() };
             IssueModel model = new IssueModel();
 
-            _service.AddIssue(1, model).Returns(dto);
+            _service.AddIssue(1, poster, model).Returns(dto);
 
             ProjectsController controller = new ProjectsController(_service);
 
@@ -303,7 +297,7 @@ namespace BugTrackerMvcTesting
             IssueModel model = new IssueModel();
             Task<ProjectDto> exception = Task.FromException<ProjectDto>(new ObjectNotFoundException());
 
-            _service.AddIssue(1, model).Returns(exception);
+            _service.AddIssue(1, poster, model).Returns(exception);
 
             ProjectsController controller = new ProjectsController(_service);
 
