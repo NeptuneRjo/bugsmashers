@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BugTrackerMvc.DTOs;
 using BugTrackerMvc.Models;
 
 namespace BugTrackerMvc.Profiles

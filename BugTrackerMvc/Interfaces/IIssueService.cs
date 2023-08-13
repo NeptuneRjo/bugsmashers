@@ -1,4 +1,5 @@
-﻿using BugTrackerMvc.Models;
+﻿using BugTrackerMvc.DTOs;
+using BugTrackerMvc.Models;
 
 namespace BugTrackerMvc.Interfaces
 {
