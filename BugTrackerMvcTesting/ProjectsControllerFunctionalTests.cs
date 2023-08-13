@@ -1,5 +1,6 @@
 ﻿using BugTrackerMvc.Controllers;
 using BugTrackerMvc.CustomExceptions;
+using BugTrackerMvc.DTOs;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
 using Microsoft.AspNetCore.Http;
