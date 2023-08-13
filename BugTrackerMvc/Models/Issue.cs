@@ -46,11 +46,8 @@ namespace BugTrackerMvc.Models
 
         public ICollection<Comment> Comments { get; set; }
 
-        //public Issue()
-        //{
-        //    Solved = false;
-        //    Comments = new List<Comment>();
-        //}
+        public Project Project { get; set; }
+        public int ProjectId { get; set; }
     }
 
     public class IssueModel
@@ -64,4 +61,5 @@ namespace BugTrackerMvc.Models
         public PriorityType Priority { get; set; }
         public LabelType Label { get; set; }
     }
+
 }
