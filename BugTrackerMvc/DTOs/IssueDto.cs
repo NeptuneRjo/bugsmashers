@@ -1,4 +1,5 @@
 ﻿using BugTrackerMvc.Models;
+using System.Text.Json.Serialization;
 
 namespace BugTrackerMvc.DTOs
 {
@@ -13,7 +14,7 @@ namespace BugTrackerMvc.DTOs
         public StatusType Status { get; set; }
         public PriorityType Priority { get; set; }
         public LabelType Label { get; set; }
-
+        [JsonPropertyName("project_id")]
         public int ProjectId { get; set; }
 
         public ICollection<CommentDto> Comments { get; set; }
