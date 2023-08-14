@@ -11,12 +11,12 @@ export interface Project {
 }
 
 export interface IssueModel {
-    title: string | null
-    description: string | null
-    solved: boolean | null
-    status: Status | null
-    label: Label | null
-    priority: Priority | null
+    title: string
+    description?: string | null
+    solved: boolean
+    status: Status
+    label: Label
+    priority: Priority
 }
 
 export interface Issue {
@@ -37,6 +37,11 @@ export interface Comment {
     content: string
     poster: string
     issue_id: number
+}
+
+export interface CommentModel {
+    content: string
+    poster?: string | null
 }
 
 export enum Status {
@@ -69,4 +74,12 @@ export interface IProjects {
     update(id: number, projectModel: ProjectModel): Promise<any>
     add(id: number, issueModel: IssueModel): Promise<any>
     delete(id: number): Promise<any>
+}
+
+export interface IIssues {
+    getAll(): Promise<any>
+    get(id: number): Promise<any>
+    update(id: number, model: IssueModel): Promise<any>
+    delete(id: number): Promise<any>
+    add(id: number, comment: CommentModel): Promise<any>
 }
