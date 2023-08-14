@@ -1,9 +1,9 @@
-import Projects from "../../APIs/Projects"
+import Projects from "../../src/APIs/Projects"
 import { IssueModel, Label, Priority, Project, Status } from "../../types"
 
 const unmockedFetch = global.fetch
 
-const mockFetch = async (data: object, status: number = 200) => {
+const mockFetch = async (data: object | string, status: number = 200) => {
     global.fetch = jest
         .fn()
         .mockImplementation(
@@ -55,12 +55,12 @@ describe("Project API Tests", () => {
         expect(response.status).not.toEqual(400)
     })
 
-    test("Projects.getAll returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch([MOCK_PROJECT], 400)
+    test("Projects.getAll returns error and 400 BAD REQUEST", async () => {
+        mockFetch("Error", 400)
 
         const response = await projects.getAll()
 
-        expect(response.data).toEqual(undefined)
+        expect(response.data).toEqual("Error")
         expect(response.status).toEqual(400)
         expect(response.status).not.toEqual(200)
     })
@@ -75,12 +75,12 @@ describe("Project API Tests", () => {
         expect(response.status).not.toEqual(400)
     })
 
-    test("Projects.get returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_PROJECT, 400)
+    test("Projects.get returns error and 400 BAD REQUEST", async () => {
+        mockFetch("Error", 400)
 
         const response = await projects.get(1)
 
-        expect(response.data).toEqual(undefined)
+        expect(response.data).toEqual("Error")
         expect(response.status).toEqual(400)
         expect(response.status).not.toEqual(200)
     })
@@ -95,12 +95,12 @@ describe("Project API Tests", () => {
         expect(response.status).not.toEqual(400)
     })
 
-    test("Projects.create returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_PROJECT, 400)
+    test("Projects.create returns error and 400 BAD REQUEST", async () => {
+        mockFetch("Error", 400)
 
         const response = await projects.create(MOCK_PROJECT)
 
-        expect(response.data).toEqual(undefined)
+        expect(response.data).toEqual("Error")
         expect(response.status).toEqual(400)
         expect(response.status).not.toEqual(200)
     })
@@ -115,12 +115,12 @@ describe("Project API Tests", () => {
         expect(response.status).not.toEqual(400)
     })
 
-    test("Projects.update returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_PROJECT, 400)
+    test("Projects.update returns error and 400 BAD REQUEST", async () => {
+        mockFetch("Error", 400)
 
         const response = await projects.update(1, { title: "test" })
 
-        expect(response.data).toEqual(undefined)
+        expect(response.data).toEqual("Error")
         expect(response.status).toEqual(400)
         expect(response.status).not.toEqual(200)
     })
@@ -135,12 +135,12 @@ describe("Project API Tests", () => {
         expect(response.status).not.toEqual(400)
     })
 
-    test("Projects.delete returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_PROJECT, 400)
+    test("Projects.delete returns error and 400 BAD REQUEST", async () => {
+        mockFetch("Error", 400)
 
         const response = await projects.delete(1)
 
-        expect(response.data).toEqual(undefined)
+        expect(response.data).toEqual("Error")
         expect(response.status).toEqual(400)
         expect(response.status).not.toEqual(200)
     })
@@ -155,12 +155,12 @@ describe("Project API Tests", () => {
         expect(response.status).not.toEqual(400)
     })
 
-    test("Projects.add returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_PROJECT, 400)
+    test("Projects.add returns error and 400 BAD REQUEST", async () => {
+        mockFetch("Error", 400)
 
         const response = await projects.add(1, MOCK_ISSUE)
 
-        expect(response.data).toEqual(undefined)
+        expect(response.data).toEqual("Error")
         expect(response.status).toEqual(400)
         expect(response.status).not.toEqual(200)
     })

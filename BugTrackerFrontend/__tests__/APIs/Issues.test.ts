@@ -1,4 +1,4 @@
-import Issues from "../../APIs/Issues"
+import Issues from "../../src/APIs/Issues"
 import { IssueModel, Label, Priority, Status } from "../../types"
 
 const unmockedFetch = global.fetch
