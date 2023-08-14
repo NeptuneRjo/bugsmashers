@@ -91,6 +91,7 @@ export default class Projects implements IProjects {
         const options: RequestInit = this.options
 
         options.method = "POST"
+        options.body = JSON.stringify(issueModel)
         options.credentials = "include"
 
         const response = await fetch(`${this.baseURL}/api/projects/${id}`, options)
