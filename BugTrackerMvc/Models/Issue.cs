@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace BugTrackerMvc.Models
 {
@@ -9,9 +10,11 @@ namespace BugTrackerMvc.Models
         Feature,
         Documentation,
         [Display(Name = "Needs Investigation")]
+        [JsonPropertyName("needs_investigation")]
         NeedsInvestigation,
         Question,
         [Display(Name = "Help Wanted")]
+        [JsonPropertyName("help_wanted")]
         HelpWanted,
     }
 
@@ -20,6 +23,7 @@ namespace BugTrackerMvc.Models
         Backlog,
         Todo,
         [Display(Name = "In Progress")]
+        [JsonPropertyName("in_progress")]
         InProgress,
         Done,
         Cancelled
