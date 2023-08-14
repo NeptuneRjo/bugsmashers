@@ -1,4 +1,4 @@
-import { IProjects, IssueModel, ProjectModel } from "../types"
+import { IProjects, IssueModel, Project, ProjectModel } from "../../types"
 
 export default class Projects implements IProjects {
     private options: RequestInit = {
@@ -11,30 +11,30 @@ export default class Projects implements IProjects {
     baseURL: string
 
     constructor(baseURL: string) {
-        this.baseURL = baseURL
+        // Remove slash if it exists
+        if (baseURL[-1] === "/") {
+            baseURL = baseURL.substring(0, baseURL.length-1)
+        }
 
+        this.baseURL = baseURL
     }
 
     async getAll() {
         const response = await fetch(`${this.baseURL}/api/projects`, this.options)
-        let data: Response | undefined = undefined
+        let data: Project[] | undefined = undefined
 
-        if (response.ok) {
-            data = await response.json()
-        }
+        data = await response.json()        
 
-        return { status: response.status, data }
+        return { status: response.status, ok: response.ok, data }
     }
 
     async get(id: number) { 
         const response = await fetch(`${this.baseURL}/api/projects/${id}`, this.options)
-        let data: Response | undefined = undefined
+        let data: Project | undefined = undefined
 
-        if (response.ok) {
-            data = await response.json()
-        }
+        data = await response.json()        
 
-        return { status: response.status, data }
+        return { status: response.status, ok: response.ok, data }
     }
 
     async create(model: ProjectModel) {
@@ -45,13 +45,11 @@ export default class Projects implements IProjects {
         options.body = JSON.stringify(model)
 
         const response = await fetch(`${this.baseURL}/api/projects`, options)
-        let data: Response | undefined = undefined
+        let data: Project | undefined = undefined
 
-        if (response.ok) {
-            data = await response.json()
-        }
+        data = await response.json()
 
-        return { status: response.status, data }
+        return { status: response.status, ok: response.ok, data }
     }
 
     async update(id: number, model: ProjectModel): Promise<any> {
@@ -62,13 +60,11 @@ export default class Projects implements IProjects {
         options.body = JSON.stringify(model)
 
         const response = await fetch(`${this.baseURL}/api/projects/${id}`, options)
-        let data: Response | undefined = undefined
-
-        if (response.ok) {
-            data = await response.json()
-        }
-
-        return { status: response.status, data }
+        let data: Project | undefined = undefined
+        
+        data = await response.json()
+        
+        return { status: response.status, ok: response.ok, data }
     }
 
     async delete(id: number): Promise<any> {
@@ -79,12 +75,10 @@ export default class Projects implements IProjects {
 
         const response = await fetch(`${this.baseURL}/api/projects/${id}`, options)
         let data: Response | undefined = undefined
-
-        if (response.ok) {
-            data = await response.json()
-        }
-
-        return { status: response.status, data }
+        
+        data = await response.json()
+        
+        return { status: response.status, ok: response.ok, data }
     }
 
     async add(id: number, issueModel: IssueModel): Promise<any> {
@@ -95,13 +89,11 @@ export default class Projects implements IProjects {
         options.credentials = "include"
 
         const response = await fetch(`${this.baseURL}/api/projects/${id}`, options)
-        let data: Response | undefined = undefined
+        let data: Project | undefined = undefined
+        
+        data = await response.json()
 
-        if (response.ok) {
-            data = await response.json()
-        }
-
-        return { status: response.status, data }
+        return { status: response.status, ok: response.ok, data }
     }
 }
 

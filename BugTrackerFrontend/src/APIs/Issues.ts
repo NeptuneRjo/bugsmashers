@@ -1,4 +1,4 @@
-import { CommentModel, IIssues, IssueModel } from "../types";
+import { CommentModel, IIssues, IssueModel } from "../../types";
 
 export default class Issues implements IIssues {
     private options: RequestInit = {
