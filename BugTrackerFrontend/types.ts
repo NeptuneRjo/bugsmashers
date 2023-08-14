@@ -11,12 +11,12 @@ export interface Project {
 }
 
 export interface IssueModel {
-    title: string
-    description: string
-    solved: boolean
-    status: Status
-    label: Label
-    priority: Priority
+    title: string | null
+    description: string | null
+    solved: boolean | null
+    status: Status | null
+    label: Label | null
+    priority: Priority | null
 }
 
 export interface Issue {
@@ -64,9 +64,9 @@ export enum Priority {
 
 export interface IProjects {
     getAll(): Promise<any>
-    getOne(id: number): Promise<any>
-    createOne(model: ProjectModel): Promise<any>
-    updateOne(id: number, model: ProjectModel): Promise<any>
-    deleteOne(id: number): Promise<any>
-    newIssue(id: number, model: IssueModel): Promise<any>
+    get(id: number): Promise<any>
+    create(model: ProjectModel): Promise<any>
+    update(id: number, projectModel: ProjectModel): Promise<any>
+    add(id: number, issueModel: IssueModel): Promise<any>
+    delete(id: number): Promise<any>
 }
