@@ -18,9 +18,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": [ "reflect-metadata", "jest" ],
+    "typeRoots": [ "./types", "./node_modules/@types" ],
+    "baseUrl": ".",
+    "paths": {
+      "@App/*": [ "src/*" ],
+      "lib/*": [ "common/*" ]
+    }
   },
-  "include": [
-    "src"
-  ]
 }
