@@ -3,20 +3,17 @@ import { IProjects, IssueModel, Project, ProjectModel } from "../../types"
 export default class Projects implements IProjects {
     private options: RequestInit = {
         method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-        },
     }
 
     baseURL: string
 
     constructor(baseURL: string) {
         // Remove slash if it exists
-        if (baseURL[-1] === "/") {
-            baseURL = baseURL.substring(0, baseURL.length-1)
+        if (baseURL.endsWith("/")) {
+            this.baseURL = baseURL.slice(0, -1)
+        } else {
+            this.baseURL = baseURL
         }
-
-        this.baseURL = baseURL
     }
 
     async getAll() {
