@@ -44,32 +44,6 @@ namespace BugTrackerMvc.Controllers
             }
         }
 
-        // POST api/<IssuesController>
-        [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Post([FromBody] IssueModel issueModel)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            try
-            {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
-
-                IssueDto dto = await _service.CreateIssue(poster, issueModel);
-
-                return Ok(dto);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
-
         [HttpPost("{id}")]
         [Authorize]
         public async Task<IActionResult> PostComment(int id, [FromBody] CommentModel commentModel)
