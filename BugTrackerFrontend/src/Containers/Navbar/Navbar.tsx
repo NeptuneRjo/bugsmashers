@@ -32,13 +32,13 @@ function Navbar({ poster }: { poster: string | undefined }) {
                     {providers.map((provider, key) => (
                         <form action={url} method="post" key={key}>
                             <input type="hidden" name="Provider" value={provider.name} />
-                    <button type="submit">Connect using {provider.display_name}</button>
+                            <button type="submit">Connect using {provider.display_name}</button>
                         </form>
                     ))}
                 </>
             ) : (
                 <a href="/profile">My Profile</a>
-            )}  
+            )}
         </nav>
     );
 }

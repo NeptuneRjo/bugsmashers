@@ -3,6 +3,9 @@ import { CommentModel, IIssues, Issue, IIssueModel } from "../types";
 export default class Issues implements IIssues {
     private options: RequestInit = {
         method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
     }
 
     baseURL: string
@@ -11,15 +14,17 @@ export default class Issues implements IIssues {
         if (baseURL.endsWith("/")) {
             this.baseURL = baseURL.slice(0, -1)
         } else {
-            this.baseURL = baseURL
-        }
+        this.baseURL = baseURL
+    }
     }
 
     async getAll() {
         const response = await fetch(`${this.baseURL}/api/issues`, this.options)
         let data: Issue[] | undefined = undefined
 
-        data = await response.json()
+        if (response.ok) {
+            data = await response.json()
+        }
 
         return { status: response.status, ok: response.ok, data }
     }
@@ -28,7 +33,9 @@ export default class Issues implements IIssues {
         const response = await fetch(`${this.baseURL}/api/issues/${id}`, this.options)
         let data: Issue | undefined = undefined
 
-        data = await response.json()
+        if (response.ok) {
+            data = await response.json()
+        }
 
         return { status: response.status, ok: response.ok, data }
     }
@@ -43,7 +50,9 @@ export default class Issues implements IIssues {
         const response = await fetch(`${this.baseURL}/api/issues/${id}`, options)
         let data: Response | undefined = undefined
 
-        data = await response.json()
+        if (response.ok) {
+            data = await response.json()
+        }
 
         return { status: response.status, ok: response.ok, data }
     }
@@ -57,7 +66,9 @@ export default class Issues implements IIssues {
         const response = await fetch(`${this.baseURL}/api/issues/${id}`, options)
         let data: Response | undefined = undefined
 
-        data = await response.json()
+        if (response.ok) {
+            data = await response.json()
+        }
 
         return { status: response.status, ok: response.ok, data }
     }
@@ -72,12 +83,14 @@ export default class Issues implements IIssues {
         const response = await fetch(`${this.baseURL}/api/issues/${id}`, options)
         let data: Response | undefined = undefined
 
-        data = await response.json()
+        if (response.ok) {
+            data = await response.json()
 
         return { status: response.status, ok: response.ok, data }
-    }
+        }
 
-}
+        return { status: response.status, data }
+    }
 
 const url = process.env.REACT_APP_BASE_URL
 const instance = new Issues(url ? url : "https://localhost:7104")

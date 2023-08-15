@@ -26,8 +26,8 @@ function App() {
         })()
     }, [])
 
-    return (
-        <div className="app">
+  return (
+    <div className="app">
             <Navbar poster={ poster } />
             <Routes>
                 <Route path="/dashboard" element={<Home />} />
@@ -41,8 +41,8 @@ function App() {
 
                 <Route path="/issue/{id}" element={<IssueDetails />} />
             </Routes>
-        </div>
-    );
+    </div>
+  );
 }
 
 export default App;
