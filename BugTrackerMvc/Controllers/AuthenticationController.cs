@@ -3,13 +3,26 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BugTrackerMvc.Controllers
 {
     public class AuthenticationController : Controller
     {
         [HttpGet("~/signin")]
-        public async Task<IActionResult> SignIn() => View(await HttpContext.GetExternalProvidersAsync());
+        public async Task<IActionResult> SignIn() {
+            List<Dictionary<string, string>> providers = new();
+
+            foreach (var provider in await HttpContext.GetExternalProvidersAsync())
+            {
+                providers.Add(new Dictionary<string, string>() {
+                    { "name", provider.Name },
+                    { "display_name", provider.DisplayName }
+                });
+            }
+
+            return Ok(providers);
+        }
 
         [HttpPost("~/signin")]
         public async Task<IActionResult> SignIn([FromForm] string provider)
@@ -29,18 +42,18 @@ namespace BugTrackerMvc.Controllers
             // Instruct the middleware corresponding to the requested external identity
             // provider to redirect the user agent to its own authorization endpoint.
             // Note: the authenticationScheme parameter must match the value configured in Startup.cs
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, provider);
+            return Challenge(new AuthenticationProperties { RedirectUri = "https://localhost:3000/" }, provider);
         }
 
         [HttpGet("~/user")]
         public IActionResult UserStorage()
         {
-            if (!User.Claims.Any()) 
-                BadRequest();
+            //if (!User.Claims.Any()) 
+            //    BadRequest();
 
             var user = new Dictionary<string, string>()
             {
-            { "Name", HttpContext.User.Claims.ElementAt(1).Value.ToString() }
+            { "Name", User.FindFirst(ClaimTypes.Name).Value }
             };
 
             return Ok(user);
