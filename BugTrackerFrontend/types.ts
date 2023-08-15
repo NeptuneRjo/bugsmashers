@@ -5,7 +5,7 @@ export interface ProjectModel {
 export interface Project {
     id: number,
     title: string
-    issues: object[]
+    issues: Issue[]
     created_at: Date
     poster: string
 }
