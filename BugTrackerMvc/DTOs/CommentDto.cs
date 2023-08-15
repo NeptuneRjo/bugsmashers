@@ -1,11 +1,13 @@
-﻿namespace BugTrackerMvc.DTOs
+﻿using System.Text.Json.Serialization;
+
+namespace BugTrackerMvc.DTOs
 {
     public class CommentDto
     {
         public int Id { get; set; }
         public string Content { get; set; }
         public string Poster { get; set; }
-
+        [JsonPropertyName("issue_id")]
         public int IssueId { get; set; }
     }
 }
