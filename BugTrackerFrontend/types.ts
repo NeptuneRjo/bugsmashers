@@ -10,7 +10,7 @@ export interface Project {
     poster: string
 }
 
-export interface IssueModel {
+export interface IIssueModel {
     title: string
     description?: string | null
     solved: boolean
@@ -72,14 +72,14 @@ export interface IProjects {
     get(id: number): Promise<any>
     create(model: ProjectModel): Promise<any>
     update(id: number, projectModel: ProjectModel): Promise<any>
-    add(id: number, issueModel: IssueModel): Promise<any>
+    add(id: number, issueModel: IIssueModel): Promise<any>
     delete(id: number): Promise<any>
 }
 
 export interface IIssues {
     getAll(): Promise<any>
     get(id: number): Promise<any>
-    update(id: number, model: IssueModel): Promise<any>
+    update(id: number, model: IIssueModel): Promise<any>
     delete(id: number): Promise<any>
     add(id: number, comment: CommentModel): Promise<any>
 }
