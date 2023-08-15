@@ -1,0 +1,7 @@
+export { default as Home } from "./Home/Home"
+export { default as IssueDetails } from "./IssueDetails/IssueDetails"
+export { default as ProjectDetails } from "./ProjectDetails/ProjectDetails"
+export { default as ProfileIssues } from "./Profile/ProfileIssues"
+export { default as ProfileProjects } from "./Profile/ProfileProjects"
+export { default as CreateIssue } from "./Create/CreateIssue"
+export { default as CreateProject } from "./Create/CreateProject"
