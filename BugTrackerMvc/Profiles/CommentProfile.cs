@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BugTrackerMvc.DTOs;
 using BugTrackerMvc.Models;
 
 namespace BugTrackerMvc.Profiles
@@ -8,6 +9,7 @@ namespace BugTrackerMvc.Profiles
         public CommentProfile()
         {
             CreateMap<CommentModel, Comment>();
+            CreateMap<Comment, CommentDto>();
         }
     }
 }
