@@ -1,18 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Form, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import IssueModel from '../../Models/IssueModel';
 import { Label, Priority, Status } from '../../types';
 import { instance } from "../../APIs/Projects"
+import { formDataToObject } from '../../utils';
 
-const formDataToObject = (formData: FormData) => {
-    let formObject: any = {}
 
-    for (const [key, value] of Object.entries(formData)) {
-        formObject[key] = value
-    }
-
-    return formObject
-}
 
 
 function CreateIssue({ poster }: { poster: string | undefined }) {
@@ -37,7 +30,7 @@ function CreateIssue({ poster }: { poster: string | undefined }) {
         const response = await instance.add(Number(id), issueModel)
 
         if (response.ok && response.data !== undefined) {
-            navigate(`/projects/${id}`)
+            navigate(`/issue/${id}`)
         }
     }
 
