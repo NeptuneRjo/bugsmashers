@@ -18,9 +18,6 @@ function CreateProject({ poster }: { poster: string | undefined }) {
         }
 
         const projectModel = new ProjectModel({ title })
-
-        console.log(projectModel)
-
         const response = await instance.create(projectModel)
 
         if (response.ok && response.data !== undefined) {
