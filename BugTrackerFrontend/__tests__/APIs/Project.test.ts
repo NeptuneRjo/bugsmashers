@@ -1,5 +1,5 @@
 import Projects from "../../src/APIs/Projects"
-import { IssueModel, Label, Priority, Project, Status } from "../../types"
+import { IIssueModel, Label, Priority, Project, Status } from "../../types"
 
 const unmockedFetch = global.fetch
 
@@ -25,7 +25,7 @@ const MOCK_PROJECT: Project = {
     poster: "test"
 }
 
-const MOCK_ISSUE: IssueModel = {
+const MOCK_ISSUE: IIssueModel = {
     title: "test",
     description: "test",
     solved: false,
