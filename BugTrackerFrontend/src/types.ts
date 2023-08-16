@@ -2,7 +2,7 @@ export interface Project {
     id: number,
     title: string
     issues: Issue[]
-    created_at: Date
+    created_at: string
     poster: string
 }
 
