@@ -33,7 +33,7 @@ function App() {
                 <Route path="/dashboard" element={<Home />} />
 
                 <Route path="/profile/projects" element={<ProfileProjects />} />
-                <Route path="/profile/issues" element={<ProfileIssues poster={poster} />} />
+                <Route path="/profile/issues" element={<ProfileIssues />} />
 
               <Route path="/project/new-project" element={<CreateProject poster={poster} />} />
                 <Route path="/project/:id/new-issue" element={<CreateIssue poster={poster} /> } />
