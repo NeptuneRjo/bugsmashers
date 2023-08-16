@@ -95,7 +95,7 @@ namespace BugTrackerMvc.Repository
 
         public async Task<Issue> AddComment(int issueId, Comment comment)
         {
-            Issue issue = await _context.Issues.FirstAsync(e => e.Id == issueId);
+            Issue issue = await _context.Issues.Include(e => e.Comments).FirstAsync(e => e.Id == issueId);
 
             comment.Issue = issue;
 
