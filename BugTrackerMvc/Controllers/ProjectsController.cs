@@ -23,8 +23,16 @@ namespace BugTrackerMvc.Controllers
 
         // GET: api/<ProjectsController>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Get()
         {
+            string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            if (poster != null)
+            {
+                return Ok(await _service.GetProjects(poster));
+            }
+
             return Ok(await _service.GetProjects());
         }
 
