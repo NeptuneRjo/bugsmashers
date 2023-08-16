@@ -32,7 +32,7 @@ function App() {
             <Routes>
                 <Route path="/dashboard" element={<Home />} />
 
-                <Route path="/profile/projects" element={<ProfileProjects poster={poster} />} />
+                <Route path="/profile/projects" element={<ProfileProjects />} />
                 <Route path="/profile/issues" element={<ProfileIssues poster={poster} />} />
 
               <Route path="/project/new-project" element={<CreateProject poster={poster} />} />
