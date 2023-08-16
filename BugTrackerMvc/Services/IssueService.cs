@@ -3,6 +3,8 @@ using BugTrackerMvc.CustomExceptions;
 using BugTrackerMvc.DTOs;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BugTrackerMvc.Services
 {
@@ -43,8 +45,15 @@ namespace BugTrackerMvc.Services
 
         public async Task<IssueDto> CreateIssue(string poster, IssueModel issueModel)
         {
-            Issue issue = _mapper.Map<Issue>(issueModel);
+            StatusType status = Enum.Parse<StatusType>(issueModel.Status);
+            LabelType label = Enum.Parse<LabelType>(issueModel.Label);
+            PriorityType priority = Enum.Parse<PriorityType>(issueModel.Priority);
 
+            Issue issue = _mapper.Map<Issue>(issueModel);
+            
+            issue.Status = status;
+            issue.Label = label;
+            issue.Priority = priority;
             issue.Comments = new List<Comment>();
 
             if (issue.Poster == null)
