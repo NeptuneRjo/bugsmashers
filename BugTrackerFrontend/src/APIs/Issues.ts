@@ -27,6 +27,19 @@ export default class Issues implements IIssues {
         return { status: response.status, ok: response.ok, data }
     }
 
+    async getProfile() {
+        const options = { ...this.options }
+
+        options.credentials = "include"
+
+        const response = await fetch(`${this.baseURL}/api/issues`, options)
+        let data: Issue[] | undefined = undefined
+
+        data = await response.json()
+
+        return { status: response.status, ok: response.ok, data }
+    }
+
     async get(id: number) {
         const response = await fetch(`${this.baseURL}/api/issues/${id}`, this.options)
         let data: Issue | undefined = undefined

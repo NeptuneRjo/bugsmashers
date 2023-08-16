@@ -28,6 +28,19 @@ export default class Projects implements IProjects {
         return { status: response.status, ok: response.ok, data }
     }
 
+    async getProfile() {
+        const options = { ...this.options }
+
+        options.credentials = "include"
+
+        const response = await fetch(`${this.baseURL}/api/projects`, options)
+        let data: Project[] | undefined = undefined
+
+        data = await response.json()
+
+        return { status: response.status, ok: response.ok, data }
+    }
+
     async get(id: number) { 
         const response = await fetch(`${this.baseURL}/api/projects/${id}`, this.options)
         let data: Project | undefined = undefined

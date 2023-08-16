@@ -69,6 +69,7 @@ export enum Priority {
 
 export interface IProjects {
     getAll(): Promise<any>
+    getProfile(): Promise<any>
     get(id: number): Promise<any>
     create(model: IProjectModel): Promise<any>
     update(id: number, projectModel: IProjectModel): Promise<any>
@@ -78,6 +79,7 @@ export interface IProjects {
 
 export interface IIssues {
     getAll(): Promise<any>
+    getProfile(): Promise<any>
     get(id: number): Promise<any>
     update(id: number, model: IIssueModel): Promise<any>
     delete(id: number): Promise<any>
