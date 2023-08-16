@@ -52,6 +52,7 @@ namespace BugTrackerMvc.Services
                 throw new UnauthorizedAccessException("Credentials do not match");
 
             Project project = _mapper.Map<Project>(projectModel);
+            project.CreatedAt = DateTime.UtcNow;
 
             await _repository.Add(project);
 
