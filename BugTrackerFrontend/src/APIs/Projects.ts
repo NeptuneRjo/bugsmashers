@@ -3,6 +3,9 @@ import { IProjects, IIssueModel, Project, IProjectModel } from "../types"
 export default class Projects implements IProjects {
     private options: RequestInit = {
         method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
     }
 
     baseURL: string

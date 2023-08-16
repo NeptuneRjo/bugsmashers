@@ -3,6 +3,9 @@ import { CommentModel, IIssues, Issue, IIssueModel } from "../types";
 export default class Issues implements IIssues {
     private options: RequestInit = {
         method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
     }
 
     baseURL: string
