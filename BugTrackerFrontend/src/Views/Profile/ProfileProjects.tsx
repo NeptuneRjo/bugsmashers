@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Project } from '../../types';
 import { instance } from "../../APIs/Projects"
+import { ProjectTable } from '../../Components/exports';
 
 function ProfileProjects() {
 
@@ -18,22 +19,14 @@ function ProfileProjects() {
         })()
     }, [])
 
+    if (loading) {
+        return (
+            <div>Loading...</div>
+        )
+    }
+
     return (
-        <table>
-            <tr>
-                <th>Title</th>
-                <th>Issues</th>
-                <th>Created At</th>
-            </tr>
-            {projects.map((project, key) => (
-                <tr key={key}>
-                    <td>{project.title}</td>
-                    <td>{project.issues.length}</td>
-                    <td>{project.created_at.split("T")[0]}</td>
-                    <td><a href={`/project/${project.id}`}>Details</a></td>
-                </tr>
-            ))}
-        </table>
+        <ProjectTable projects={projects} />
     )
 }
 

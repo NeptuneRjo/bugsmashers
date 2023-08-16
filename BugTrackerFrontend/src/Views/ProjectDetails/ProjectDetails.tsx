@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Label, Priority, Project, Status } from '../../types';
+import { Project } from '../../types';
 import { instance } from '../../APIs/Projects';
-import { getEnumValueByIndex } from '../../utils';
+import { IssueTable } from '../../Components/exports';
 
 function ProjectDetails() {
 
@@ -37,27 +37,7 @@ function ProjectDetails() {
             </div>
             <hr />
             <h4>Issues</h4>
-            <table>
-                <tr>
-                    <th>Title</th>
-                    <th>Label</th>
-                    <th>Poster</th>
-                    <th>Priority</th>
-                    <th>Status</th>
-                    <th>Comments</th>
-                </tr>
-                {project?.issues.map((issue, key) => (
-                    <tr key={key}>
-                        <td>{issue.title}</td>
-                        <td>{getEnumValueByIndex(Label, Number(issue?.label))}</td>
-                        <td>{issue.poster}</td>
-                        <td>{getEnumValueByIndex(Priority, Number(issue?.priority))}</td>
-                        <td>{getEnumValueByIndex(Status, Number(issue?.status))}</td>
-                        <td>{issue.comments.length}</td>
-                        <td><a href={`/issue/${issue.id}`}>Details</a></td>
-                    </tr>
-                ))}
-            </table>
+            <IssueTable issues={project?.issues!} />
         </div>
     )
   
