@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { instance } from "../../APIs/Issues"
-import { Issue } from '../../types';
+import { Issue, Label, Priority, Status } from '../../types';
+import { getEnumValueByIndex } from '../../utils';
 function ProfileIssues({ poster }: { poster: string | undefined }) {
 
     const [loading, setLoading] = useState<boolean>(true)
@@ -8,11 +9,10 @@ function ProfileIssues({ poster }: { poster: string | undefined }) {
 
     useEffect(() => {
         ; (async () => {
-            const response = await instance.getAll()
+            const response = await instance.getProfile()
 
             if (response.ok && response.data !== undefined) {
-                const filteredProjects = response.data.filter(project => project.poster === poster)
-                setIssues(filteredProjects)
+                setIssues(response.data)
                 setLoading(false)
             }
         })()
@@ -23,7 +23,6 @@ function ProfileIssues({ poster }: { poster: string | undefined }) {
             <tr>
                 <th>Title</th>
                 <th>Comments</th>
-                <th>Solved</th>
                 <th>Status</th>
                 <th>Priority</th>
                 <th>Label</th>
@@ -32,10 +31,9 @@ function ProfileIssues({ poster }: { poster: string | undefined }) {
                 <tr key={key}>
                     <td>{issue.title}</td>
                     <td>{issue.comments.length}</td>
-                    <td>{issue.solved}</td>
-                    <td>{issue.status}</td>
-                    <td>{issue.priority}</td>
-                    <td>{issue.label}</td>
+                    <td>{getEnumValueByIndex(Status, Number(issue?.status))}</td>
+                    <td>{getEnumValueByIndex(Priority, Number(issue?.priority))}</td>
+                    <td>{getEnumValueByIndex(Label, Number(issue?.label))}</td>
                     <td><a href={`/issue/${issue.id}`}>Details</a></td>
                 </tr>
             ))}

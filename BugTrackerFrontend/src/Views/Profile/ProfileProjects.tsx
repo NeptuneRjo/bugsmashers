@@ -2,18 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Project } from '../../types';
 import { instance } from "../../APIs/Projects"
 
-function ProfileProjects({ poster }: { poster: string | undefined }) {
+function ProfileProjects() {
 
     const [loading, setLoading] = useState<boolean>(true)
     const [projects, setProjects] = useState<Project[]>([])
 
     useEffect(() => {
         ; (async () => {
-            const response = await instance.getAll()
+            const response = await instance.getProfile()
 
             if (response.ok && response.data !== undefined) {
-                const filteredProjects = response.data.filter(project => project.poster === poster)
-                setProjects(filteredProjects)
+                setProjects(response.data)
                 setLoading(false)
             }
         })()
