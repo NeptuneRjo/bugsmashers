@@ -61,9 +61,9 @@ namespace BugTrackerMvc.Models
         public bool Solved { get; set; }
         public string? Poster { get; set; }
 
-        public StatusType Status { get; set; }
-        public PriorityType Priority { get; set; }
-        public LabelType Label { get; set; }
+        public string Status { get; set; }
+        public string Priority { get; set; }
+        public string Label { get; set; }
     }
 
 }
