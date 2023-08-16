@@ -13,24 +13,26 @@ function CreateIssue({ poster }: { poster: string | undefined }) {
     const { id } = useParams()
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (poster === undefined) {
-            navigate("/dashboard")
-        }
-    }, [])
+    const [title, setTitle] = useState<string>("")
+    const [description, setDescription] = useState<string>("")
+    const [status, setStatus] = useState<Status>(Status.backlog)
+    const [label, setLabel] = useState<Label>(Label.bug)
+    const [priority, setPriority] = useState<Priority>(Priority.low)
+    const [solved, setSolved] = useState<boolean>(false)
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
 
-        const data = new FormData(event.target)
+        if (poster === undefined) {
+            navigate("/dashboard")
+        }
 
-        const formObject = formDataToObject(data)
-        const issueModel = new IssueModel(formObject)
+        const issueModel = new IssueModel({ title, description, status, label, priority, solved })
 
         const response = await instance.add(Number(id), issueModel)
 
         if (response.ok && response.data !== undefined) {
-            navigate(`/issue/${id}`)
+            navigate(`/project/${id}`)
         }
     }
 
@@ -39,15 +41,15 @@ function CreateIssue({ poster }: { poster: string | undefined }) {
         <form onSubmit={(event) => handleSubmit(event)}>
             <div>
                 <label htmlFor="title">Title</label>
-                <input type="text" name="title" />
+                <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <div>
                 <label htmlFor="description">Description</label>
-                <input type="text" name="description" />
+                <input required type="text" name="description" value={description} onChange={(e) => setDescription(e.target.value)} />
             </div>
             <div>
                 <label htmlFor="status">Status</label>
-                <select name="status">
+                <select name="status" value={status} onChange={(e) => setStatus(e.target.value as Status)}>
                     {Object.values(Status).map((value, key) => (
                         <option value={value} key={key}>{value}</option>
                     )) }
@@ -55,7 +57,7 @@ function CreateIssue({ poster }: { poster: string | undefined }) {
             </div>
             <div>
                 <label htmlFor="label">Label</label>
-                <select name="label">
+                <select name="label" value={label} onChange={(e) => setLabel(e.target.value as Label)}>
                     {Object.values(Label).map((value, key) => (
                         <option value={value} key={key}>{value}</option>
                     )) }
@@ -63,7 +65,7 @@ function CreateIssue({ poster }: { poster: string | undefined }) {
             </div>
             <div>
                 <label htmlFor="priority">Priority</label>
-                <select name="priority">
+                <select name="priority" value={priority} onChange={(e) => setPriority(e.target.value as Priority)}>
                     {Object.values(Priority).map((value, key) => (
                         <option value={value} key={key}>{value}</option>
                     ))}
