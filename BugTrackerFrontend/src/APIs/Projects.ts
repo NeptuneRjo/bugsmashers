@@ -38,7 +38,7 @@ export default class Projects implements IProjects {
     }
 
     async create(model: IProjectModel) {
-        const options: RequestInit = this.options
+        const options = { ...this.options }
 
         options.method = "POST"
         options.credentials = "include"
@@ -53,7 +53,7 @@ export default class Projects implements IProjects {
     }
 
     async update(id: number, model: IProjectModel) {
-        const options: RequestInit = this.options
+        const options = { ...this.options }
 
         options.method = "PUT"
         options.credentials = "include"
@@ -68,7 +68,7 @@ export default class Projects implements IProjects {
     }
 
     async delete(id: number) {
-        const options: RequestInit = this.options
+        const options = { ...this.options }
 
         options.method = "DELETE"
         options.credentials = "include"
@@ -82,7 +82,7 @@ export default class Projects implements IProjects {
     }
 
     async add(id: number, issueModel: IIssueModel) {
-        const options: RequestInit = this.options
+        const options = { ...this.options }
 
         options.method = "POST"
         options.body = JSON.stringify(issueModel)

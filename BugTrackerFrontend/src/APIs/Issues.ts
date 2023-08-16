@@ -37,14 +37,14 @@ export default class Issues implements IIssues {
     }
 
     async update(id: number, model: IIssueModel) {
-        const options = this.options
+        const options = { ...this.options }
 
         options.method = "PUT"
         options.body = JSON.stringify(model)
         options.credentials = "include"
 
         const response = await fetch(`${this.baseURL}/api/issues/${id}`, options)
-        let data: Response | undefined = undefined
+        let data: Issue | undefined = undefined
 
         data = await response.json()
 
@@ -52,7 +52,7 @@ export default class Issues implements IIssues {
     }
 
     async delete(id: number) {
-        const options = this.options
+        const options = { ...this.options }
 
         options.method = "DELETE"
         options.credentials = "include"
@@ -66,14 +66,14 @@ export default class Issues implements IIssues {
     }
 
     async add(id: number, comment: CommentModel) {
-        const options = this.options
+        const options = { ...this.options }
 
         options.method = "POST"
         options.body = JSON.stringify(comment)
         options.credentials = "include"
 
         const response = await fetch(`${this.baseURL}/api/issues/${id}`, options)
-        let data: Response | undefined = undefined
+        let data: Issue | undefined = undefined
 
         data = await response.json()
 
