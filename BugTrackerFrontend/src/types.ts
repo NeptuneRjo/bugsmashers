@@ -1,13 +1,13 @@
-export interface ProjectModel {
-    title: string
-}
-
 export interface Project {
     id: number,
     title: string
     issues: Issue[]
     created_at: Date
     poster: string
+}
+
+export interface IProjectModel {
+    title: string
 }
 
 export interface IIssueModel {
@@ -70,8 +70,8 @@ export enum Priority {
 export interface IProjects {
     getAll(): Promise<any>
     get(id: number): Promise<any>
-    create(model: ProjectModel): Promise<any>
-    update(id: number, projectModel: ProjectModel): Promise<any>
+    create(model: IProjectModel): Promise<any>
+    update(id: number, projectModel: IProjectModel): Promise<any>
     add(id: number, issueModel: IIssueModel): Promise<any>
     delete(id: number): Promise<any>
 }
