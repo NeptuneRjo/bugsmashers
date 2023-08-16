@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Projects';
 import ProjectModel from '../../Models/ProjectModel';
@@ -8,19 +8,18 @@ function CreateProject({ poster }: { poster: string | undefined }) {
     const { id } = useParams()
     const navigate = useNavigate()
 
-    useEffect(() => {
-        if (poster === undefined) {
-            navigate("/dashboard")
-        }
-    }, [])
+    const [title, setTitle] = useState<string>("")
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
 
-        const data = new FormData(event.target)
+        if (poster === undefined) {
+            navigate("/dashboard")
+        }
 
-        const formObject = formDataToObject(data)
-        const projectModel = new ProjectModel(formObject)
+        const projectModel = new ProjectModel({ title })
+
+        console.log(projectModel)
 
         const response = await instance.create(projectModel)
 
@@ -34,7 +33,7 @@ function CreateProject({ poster }: { poster: string | undefined }) {
         <form onSubmit={(event) => handleSubmit(event)}>
             <div>
                 <label htmlFor="title">Title</label>
-                <input type="text" name="title" />
+                <input type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <button type="submit">Create Project</button>
         </form>
