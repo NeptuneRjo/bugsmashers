@@ -1,4 +1,4 @@
-import { IProjects, IIssueModel, Project, ProjectModel } from "../types"
+import { IProjects, IIssueModel, Project, IProjectModel } from "../types"
 
 export default class Projects implements IProjects {
     private options: RequestInit = {
@@ -34,7 +34,7 @@ export default class Projects implements IProjects {
         return { status: response.status, ok: response.ok, data }
     }
 
-    async create(model: ProjectModel) {
+    async create(model: IProjectModel) {
         const options: RequestInit = this.options
 
         options.method = "POST"
@@ -49,7 +49,7 @@ export default class Projects implements IProjects {
         return { status: response.status, ok: response.ok, data }
     }
 
-    async update(id: number, model: ProjectModel): Promise<any> {
+    async update(id: number, model: IProjectModel) {
         const options: RequestInit = this.options
 
         options.method = "PUT"
@@ -64,7 +64,7 @@ export default class Projects implements IProjects {
         return { status: response.status, ok: response.ok, data }
     }
 
-    async delete(id: number): Promise<any> {
+    async delete(id: number) {
         const options: RequestInit = this.options
 
         options.method = "DELETE"
@@ -78,7 +78,7 @@ export default class Projects implements IProjects {
         return { status: response.status, ok: response.ok, data }
     }
 
-    async add(id: number, issueModel: IIssueModel): Promise<any> {
+    async add(id: number, issueModel: IIssueModel) {
         const options: RequestInit = this.options
 
         options.method = "POST"
