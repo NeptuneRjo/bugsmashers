@@ -30,7 +30,7 @@ function ProfileProjects({ poster }: { poster: string | undefined }) {
                 <tr key={key}>
                     <td>{project.title}</td>
                     <td>{project.issues.length}</td>
-                    <td>{project.created_at.getDate()}</td>
+                    <td>{project.created_at.split("T")[0]}</td>
                     <td><a href={`/project/${project.id}`}>Details</a></td>
                 </tr>
             ))}
