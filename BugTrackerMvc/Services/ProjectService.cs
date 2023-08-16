@@ -104,6 +104,15 @@ namespace BugTrackerMvc.Services
             return dtos;
         }
 
+        public async Task<ICollection<ProjectDto>> GetProjects(string poster)
+        {
+            ICollection<Project> projects = await _repository.GetAllByQuery(e => e.Poster == poster, includes);
+
+            ICollection<ProjectDto> dtos = _mapper.Map<ICollection<ProjectDto>>(projects);
+
+            return dtos;
+        }
+
         public async Task<ProjectDto> UpdateProject(int id, string poster, ProjectModel projectModel)
         {
             Project project = await _repository.GetByQuery(e => e.Id == id);
