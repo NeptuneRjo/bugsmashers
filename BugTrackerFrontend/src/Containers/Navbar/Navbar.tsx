@@ -37,7 +37,11 @@ function Navbar({ poster }: { poster: string | undefined }) {
                     ))}
                 </>
             ) : (
-                <a href="/profile">My Profile</a>
+                <>
+                    <a href="/profile">My Profile</a>                
+                    <a href="/project/new-project">Create Project</a>
+                </>
+
             )}
         </nav>
     );
