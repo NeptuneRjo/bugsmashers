@@ -7,7 +7,7 @@ namespace BugTrackerMvc.DTOs
         public int Id { get; set; }
         public string Title { get; set; }
         public ICollection<IssueDto> Issues { get; set; }
-        [JsonPropertyName("createed_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt { get; set; }
         public string Poster { get; set; }
     }
