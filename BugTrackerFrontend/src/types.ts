@@ -14,9 +14,11 @@ export interface IIssueModel {
     title: string
     description?: string | null
     solved: boolean
-    status: Status
-    label: Label
-    priority: Priority
+    // Use numbers instead of the enums...
+    // Using enums causes errors due to type differences between typescript and C#.
+    status: number
+    label: number
+    priority: number
 }
 
 export interface Issue {
