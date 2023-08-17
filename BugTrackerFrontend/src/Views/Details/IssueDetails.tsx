@@ -55,6 +55,9 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
             <hr />
             <p>{issue?.description}</p>
             <hr />
+            {(poster !== undefined && poster === issue?.poster) && (
+                <a href={`/issue/${id}/edit`}>Edit Issue</a>
+            ) }
             <h4>Comments</h4>
             {poster === undefined ? (
                 <div>Sign in to post a comment</div>

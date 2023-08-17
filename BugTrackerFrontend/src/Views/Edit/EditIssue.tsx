@@ -109,6 +109,8 @@ function EditIssue() {
                 </select>
             </div>
             <button type="submit">Save Changes</button>
+            <a href={`/issue/${id}/delete`}>Delete issue</a>
+            <a href={`/issue/${id}`}>Back to issue</a>
         </form>
     )
 }
