@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route } from "react-router-dom"
 import './App.css';
-import { Home, ProfileProjects, ProfileIssues, IssueDetails, ProjectDetails, CreateProject, CreateIssue } from './Views/exports';
+import {
+    Home,
+    ProfileProjects,
+    ProfileIssues,
+    IssueDetails,
+    ProjectDetails,
+    CreateProject,
+    CreateIssue,
+    EditIssue,
+    EditProject
+} from './Views/exports';
 import { Navbar } from "./Containers/exports"
 
 function App() {
@@ -35,11 +45,13 @@ function App() {
                 <Route path="/profile/projects" element={<ProfileProjects />} />
                 <Route path="/profile/issues" element={<ProfileIssues />} />
 
-              <Route path="/project/new-project" element={<CreateProject poster={poster} />} />
+                <Route path="/project/new-project" element={<CreateProject poster={poster} />} />
+              <Route path="/project/:id/edit" element={<EditProject />} />
                 <Route path="/project/:id/new-issue" element={<CreateIssue poster={poster} /> } />
                 <Route path="/project/:id" element={<ProjectDetails />} />
 
-              <Route path="/issue/:id" element={<IssueDetails poster={poster} />} />
+                <Route path="/issue/:id/edit" element={<EditIssue />} />     
+                <Route path="/issue/:id" element={<IssueDetails poster={poster} />} />
             </Routes>
     </div>
   );
