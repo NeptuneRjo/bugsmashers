@@ -1,5 +1,6 @@
 ﻿using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BugTrackerMvc.Repository
 {
@@ -14,16 +15,6 @@ namespace BugTrackerMvc.Repository
 
         public async Task<Issue> AddIssue(int projectId, Issue issue)
         {
-            //if (issue.Project == null)
-            //    throw new Exception("Projet must be defined");
-
-            //_context.Issues.Add(issue);
-
-            //project.Issues.Add(issue);
-
-            //_context.SaveChanges();
-
-            //return issue;
             Project project = _context.Projects.Find(projectId);
 
             project.Issues.Add(issue);
@@ -32,6 +23,26 @@ namespace BugTrackerMvc.Repository
             _context.SaveChanges();
 
             return issue;
+        }
+
+        public async Task<ICollection<Project>> GetAllWithComments()
+        {
+            ICollection<Project> projects = await _context.Projects
+                .Include(e => e.Issues)
+                .ThenInclude(e => e.Comments)
+                .ToListAsync();
+
+            return projects;
+        }
+
+        public async Task<Project> GetOneWithComments(int id)
+        {
+            Project project = await _context.Projects
+                .Include(e => e.Issues)
+                .ThenInclude(e => e.Comments)
+                .FirstAsync(e => e.Id == id);
+
+            return project;
         }
     }
 }
