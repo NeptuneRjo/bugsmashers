@@ -16,9 +16,8 @@
     <Folder Include="src\Components\ProjectTable\" />
     <Folder Include="src\Containers\Navbar\" />
     <Folder Include="src\Views\Home\" />
-    <Folder Include="src\Views\IssueDetails\" />
     <Folder Include="src\Views\Create\" />
+    <Folder Include="src\Views\Edit\" />
     <Folder Include="src\Views\Profile\" />
-    <Folder Include="src\Views\ProjectDetails\" />
   </ItemGroup>
 </Project>
