@@ -4,7 +4,7 @@ import { Project } from '../../types';
 import { instance } from '../../APIs/Projects';
 import { IssueTable } from '../../Components/exports';
 
-function ProjectDetails() {
+function ProjectDetails({ poster }: { poster: string | undefined }) {
 
     const { id } = useParams()
 
@@ -34,6 +34,9 @@ function ProjectDetails() {
             <div>
                 <p>{project?.issues.length} Current Issues</p>
                 <a href={`/project/${project?.id}/new-issue`}>Create a new issue</a>
+                {(poster !== undefined && poster === project?.poster) && (
+                    <a href={`/project/${project?.id}/edit`}>Edit project</a>
+                ) }
             </div>
             <hr />
             <h4>Issues</h4>

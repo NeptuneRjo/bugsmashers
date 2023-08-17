@@ -55,6 +55,8 @@ function EditProject() {
                 <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <button type="submit">Save Changes</button>
+            <a href={`/project/${id}/delete`}>Delete project</a>
+            <a href={`/project/${id}`}>Go back</a>
         </form>
     )
 }
