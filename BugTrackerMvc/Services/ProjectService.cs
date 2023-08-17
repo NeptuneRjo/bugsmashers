@@ -85,7 +85,7 @@ namespace BugTrackerMvc.Services
 
         public async Task<ProjectDto> GetProject(int id)
         {
-            Project project = await _repository.GetByQuery(e => e.Id == id, includes);
+            Project project = await _repository.GetOneWithComments(id);
 
             if (project == null)
                 throw new ObjectNotFoundException($"No project with the id of {id} was found");
@@ -97,7 +97,7 @@ namespace BugTrackerMvc.Services
 
         public async Task<ICollection<ProjectDto>> GetProjects()
         {
-            ICollection<Project> projects = await _repository.GetAllByQuery(e => e.Id > 0, includes);
+            ICollection<Project> projects = await _repository.GetAllWithComments();
 
             ICollection<ProjectDto> dtos = _mapper.Map<ICollection<ProjectDto>>(projects);
 
