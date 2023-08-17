@@ -3,8 +3,6 @@ using BugTrackerMvc.CustomExceptions;
 using BugTrackerMvc.DTOs;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace BugTrackerMvc.Services
 {
@@ -45,15 +43,8 @@ namespace BugTrackerMvc.Services
 
         public async Task<IssueDto> CreateIssue(string poster, IssueModel issueModel)
         {
-            StatusType status = Enum.Parse<StatusType>(issueModel.Status);
-            LabelType label = Enum.Parse<LabelType>(issueModel.Label);
-            PriorityType priority = Enum.Parse<PriorityType>(issueModel.Priority);
-
             Issue issue = _mapper.Map<Issue>(issueModel);
             
-            issue.Status = status;
-            issue.Label = label;
-            issue.Priority = priority;
             issue.Comments = new List<Comment>();
 
             if (issue.Poster == null)
@@ -100,6 +91,9 @@ namespace BugTrackerMvc.Services
             if (issue.Poster != poster)
                 throw new UnauthorizedAccessException("Credentials do not match");
 
+            if (issueModel.Poster == null)
+                issueModel.Poster = poster;
+
             issue = _mapper.Map(issueModel, issue);
 
             _repository.Update(issue);
@@ -143,11 +137,13 @@ namespace BugTrackerMvc.Services
             return dtos;
         }
 
-        public async Task<ICollection<Issue>> GetIssues(string poster)
+        public async Task<ICollection<IssueDto>> GetIssues(string poster)
         {
             ICollection<Issue> issues = await _repository.GetAllByQuery(e => e.Poster == poster, e => e.Comments);
 
-            return issues;
+            ICollection<IssueDto> dtos = _mapper.Map<ICollection<IssueDto>>(issues);
+
+            return dtos;
 
         }
     }
