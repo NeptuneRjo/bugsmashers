@@ -48,7 +48,7 @@ function App() {
                 <Route path="/project/new-project" element={<CreateProject poster={poster} />} />
               <Route path="/project/:id/edit" element={<EditProject />} />
                 <Route path="/project/:id/new-issue" element={<CreateIssue poster={poster} /> } />
-                <Route path="/project/:id" element={<ProjectDetails />} />
+              <Route path="/project/:id" element={<ProjectDetails poster={poster} />} />
 
                 <Route path="/issue/:id/edit" element={<EditIssue />} />     
                 <Route path="/issue/:id" element={<IssueDetails poster={poster} />} />
