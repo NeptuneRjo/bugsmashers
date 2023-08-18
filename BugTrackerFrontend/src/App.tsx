@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, Navigate } from "react-router-dom"
 import './App.css';
 import {
     Home,
@@ -36,25 +36,34 @@ function App() {
         })()
     }, [])
 
-  return (
-    <div className="app">
-            <Navbar poster={ poster } />
+    return (
+        <div className="app">
+            <Navbar poster={poster} setPoster={setPoster} />
             <Routes>
-                <Route path="/dashboard" element={<Home />} />
+                <Route path="/" element={<Home />} />
+                {poster !== undefined
+                    ? (
+                        <>
+                            <Route path="/new-project" element={<CreateProject poster={poster} />} />
 
-                <Route path="/profile/projects" element={<ProfileProjects />} />
-                <Route path="/profile/issues" element={<ProfileIssues />} />
+                            <Route path="/project/:projId/edit" element={<EditProject />} />
+                            <Route path="/project/:projId/new" element={<CreateIssue poster={poster} />} />
+                            <Route path="/project/:projId/issue/:issueId/edit" element={<EditIssue poster={poster} />} />
 
-                <Route path="/project/new-project" element={<CreateProject poster={poster} />} />
-              <Route path="/project/:id/edit" element={<EditProject />} />
-                <Route path="/project/:id/new-issue" element={<CreateIssue poster={poster} /> } />
-              <Route path="/project/:id" element={<ProjectDetails poster={poster} />} />
+                            <Route path="/profile/projects" element={<ProfileProjects />} />
+                            <Route path="/profile/issues" element={<ProfileIssues />} />
+                        </>
 
-                <Route path="/issue/:id/edit" element={<EditIssue />} />     
-                <Route path="/issue/:id" element={<IssueDetails poster={poster} />} />
+                    )
+                    : <Route path="/new-project" element={<Navigate to="/" />} />
+                }
+                <Route path="/project/:projId" element={<ProjectDetails poster={poster} />} />
+                <Route path="/project/:projId/issue/:issueId" element={<IssueDetails poster={poster} />} />
+
+
             </Routes>
-    </div>
-  );
+        </div>
+    );
 }
 
 export default App;
