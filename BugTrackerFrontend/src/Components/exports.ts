@@ -1,2 +1,2 @@
-export { default as IssueTable } from "./IssueTable/IssueTable"
-export { default as ProjectTable } from "./ProjectTable/ProjectTable"
+export { default as IssueTable } from "./Tables/IssueTable"
+export { default as ProjectTable } from "./Tables/ProjectTable"

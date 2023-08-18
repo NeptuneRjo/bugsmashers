@@ -1,6 +1,5 @@
 import React from 'react';
-import { Issue, Label, Priority, Status } from '../../types';
-import { getEnumValueByIndex } from '../../utils';
+import { Issue } from '../../types';
 
 function IssueTable({ issues }: { issues: Issue[] }) {
 
@@ -20,7 +19,7 @@ function IssueTable({ issues }: { issues: Issue[] }) {
                     <td>{issue?.status}</td>
                     <td>{issue?.priority}</td>
                     <td>{issue?.label}</td>
-                    <td><a href={`/issue/${issue.id}`}>Details</a></td>
+                    <td><a href={`/project/${issue.project_id}/issue/${issue.id}`}>Details</a></td>
                 </tr>
             ))}
         </table>
