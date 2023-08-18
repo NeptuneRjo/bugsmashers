@@ -36,7 +36,8 @@ namespace BugTrackerMvc.Services
 
             Issue issue = _mapper.Map<Issue>(model);
 
-            await _repository.AddIssue(id, issue);
+            issue = await _repository.AddIssue(id, issue);
+            project.Issues.Add(issue);
 
             ProjectDto dto = _mapper.Map<ProjectDto>(project);
 
