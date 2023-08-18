@@ -5,25 +5,22 @@ import IssueModel from '../../Models/IssueModel';
 import { Label, Priority, Status } from '../../types';
 import { getEnumValueByIndex } from '../../utils';
 
-function EditIssue() {
+function EditIssue({ poster }: { poster: string | undefined }) {
 
     const { id } = useParams()
     const navigate = useNavigate()
 
     const [title, setTitle] = useState<string>("")
     const [description, setDescription] = useState<string>("")
-    const [status, setStatus] = useState<number>(0)
-    const [label, setLabel] = useState<number>(0)
-    const [priority, setPriority] = useState<number>(0)
+    const [status, setStatus] = useState<string>(Object.values(Status)[0])
+    const [label, setLabel] = useState<string>(Object.values(Label)[0])
+    const [priority, setPriority] = useState<string>(Object.values(Priority)[0])
     const [solved, setSolved] = useState<boolean>(false)
 
-    const [loading, setLoading] = useState<boolean>(true)
+    const [issuePoster, setIssuePoster] = useState<string | undefined>(undefined)
+    const [projectId, setProjectId] = useState<number | undefined>(undefined)
 
-    // Array of strings containing the keys of each enum...
-    // Used to map out the selects and their options
-    const statusKeys: string[] = Object.keys(Status)
-    const labelKeys: string[] = Object.keys(Label)
-    const priorityKeys: string[] = Object.keys(Priority)
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         ; (async () => {
@@ -34,10 +31,13 @@ function EditIssue() {
 
                 setTitle(issue.title)
                 setDescription(issue.description)
-                setStatus(Number(issue.status))
-                setLabel(Number(issue.label))
-                setPriority(Number(issue.priority))
+                setStatus(issue.status)
+                setLabel(issue.label)
+                setPriority(issue.priority)
                 setSolved(issue.solved)
+
+                setIssuePoster(issue.poster)
+                setProjectId(issue.project_id)
 
                 setLoading(false)
             }
@@ -59,6 +59,17 @@ function EditIssue() {
         }
     }
 
+    const handleDelete = async () => {
+        if (poster !== undefined && poster === issuePoster) {
+            setLoading(true)
+
+            const response = await instance.delete(Number(id))
+
+            navigate(`/project/${projectId}`)
+
+        }
+    }
+
     if (loading) {
         return (
             <div>Loading...</div>
@@ -77,39 +88,30 @@ function EditIssue() {
             </div>
             <div>
                 <label htmlFor="status">Status</label>
-                <select name="status" value={status} onChange={(e) => setStatus(Number(e.target.value))}>
-                    {statusKeys.map((key, mapKey) => (
-                        // Map out the keys of the enum and set the
-                        // value to the index of this key in the array of enumKeys.
-                        // Extract the enum's property value using the index of the key.
-                        <option key={mapKey} value={statusKeys.indexOf(key)}>
-                            {getEnumValueByIndex(Status, statusKeys.indexOf(key))}
-                        </option>
+                <select name="status" value={status} onChange={(e) => setStatus(e.target.value)}>
+                    {Object.values(Status).map((value, key) => (
+                        <option key={key} value={value}>{value}</option>
                     )) }
                 </select>
             </div>
             <div>
                 <label htmlFor="label">Label</label>
-                <select name="label" value={label} onChange={(e) => setLabel(Number(e.target.value))}>
-                    {labelKeys.map((key, mapKey) => (
-                        <option key={mapKey} value={labelKeys.indexOf(key)}>
-                            {getEnumValueByIndex(Label, labelKeys.indexOf(key))}
-                        </option>
+                <select name="label" value={label} onChange={(e) => setLabel(e.target.value)}>
+                    {Object.values(Label).map((value, key) => (
+                        <option key={key} value={value}>{value}</option>
                     ))}
                 </select>
             </div>
             <div>
                 <label htmlFor="priority">Priority</label>
-                <select name="priority" value={priority} onChange={(e) => setPriority(Number(e.target.value))}>
-                    {priorityKeys.map((key, mapKey) => (
-                        <option key={mapKey} value={priorityKeys.indexOf(key)}>
-                            {getEnumValueByIndex(Priority, priorityKeys.indexOf(key))}
-                        </option>
+                <select name="priority" value={priority} onChange={(e) => setPriority(e.target.value)}>
+                    {Object.values(Priority).map((value, key) => (
+                        <option key={key} value={value}>{value}</option>
                     ))}
                 </select>
             </div>
             <button type="submit">Save Changes</button>
-            <a href={`/issue/${id}/delete`}>Delete issue</a>
+            <button type="button" onClick={() => handleDelete()}>Delete Issue</button>
             <a href={`/issue/${id}`}>Back to issue</a>
         </form>
     )
