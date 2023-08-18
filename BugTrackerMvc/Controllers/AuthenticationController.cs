@@ -46,17 +46,24 @@ namespace BugTrackerMvc.Controllers
         }
 
         [HttpGet("~/user")]
+        [AllowAnonymous]
         public IActionResult UserStorage()
         {
             //if (!User.Claims.Any()) 
             //    BadRequest();
+            var name = User.FindFirst(ClaimTypes.Name);
 
-            var user = new Dictionary<string, string>()
+            if (name != null)
             {
-            { "Name", User.FindFirst(ClaimTypes.Name).Value }
-            };
+                var user = new Dictionary<string, string>()
+                {
+                    { "Name", name.Value }
+                };
 
-            return Ok(user);
+                return Ok(user);
+            }
+
+            return BadRequest("User must be signed in");
         }
 
         [HttpGet("~/signout")]
@@ -66,7 +73,7 @@ namespace BugTrackerMvc.Controllers
             // Instruct the cookies middleware to delete the local cookie created
             // when the user agent is redirected from the external identity provider
             // after a successful authentication flow (e.g Google or Facebook).
-            return SignOut(new AuthenticationProperties { RedirectUri = "/" },
+            return SignOut(new AuthenticationProperties {  },
                 CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
