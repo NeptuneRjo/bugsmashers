@@ -44,10 +44,10 @@ function App() {
                 {poster !== undefined
                     ? (
                         <>
-                            <Route path="/new-project" element={<CreateProject poster={poster} />} />
+                            <Route path="/new-project" element={<CreateProject />} />
 
-                            <Route path="/project/:projId/edit" element={<EditProject />} />
-                            <Route path="/project/:projId/new" element={<CreateIssue poster={poster} />} />
+                            <Route path="/project/:projId/edit" element={<EditProject poster={poster} />} />
+                            <Route path="/project/:projId/new" element={<CreateIssue />} />
                             <Route path="/project/:projId/issue/:issueId/edit" element={<EditIssue poster={poster} />} />
 
                             <Route path="/profile/projects" element={<ProfileProjects />} />
