@@ -6,14 +6,14 @@ import { IssueTable } from '../../Components/exports';
 
 function ProjectDetails({ poster }: { poster: string | undefined }) {
 
-    const { id } = useParams()
+    const { projId } = useParams()
 
     const [project, setProject] = useState<Project | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
         ; (async () => {
-            const response = await instance.get(Number(id))
+            const response = await instance.get(Number(projId))
 
             if (response.ok && response.data !== undefined) {
                 setProject(response.data)
@@ -33,7 +33,7 @@ function ProjectDetails({ poster }: { poster: string | undefined }) {
             <h3>{project?.title.toUpperCase()}</h3>
             <div>
                 <p>{project?.issues.length} Current Issues</p>
-                <a href={`/project/${project?.id}/new-issue`}>Create a new issue</a>
+                <a href={`/project/${project?.id}/new`}>Create a new issue</a>
                 {(poster !== undefined && poster === project?.poster) && (
                     <a href={`/project/${project?.id}/edit`}>Edit project</a>
                 ) }

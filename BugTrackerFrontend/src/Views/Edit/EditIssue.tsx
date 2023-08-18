@@ -3,11 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Issues';
 import IssueModel from '../../Models/IssueModel';
 import { Label, Priority, Status } from '../../types';
-import { getEnumValueByIndex } from '../../utils';
 
 function EditIssue({ poster }: { poster: string | undefined }) {
 
-    const { id } = useParams()
+    const { issueId } = useParams()
     const navigate = useNavigate()
 
     const [title, setTitle] = useState<string>("")
@@ -24,7 +23,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
 
     useEffect(() => {
         ; (async () => {
-            const response = await instance.get(Number(id))
+            const response = await instance.get(Number(issueId))
 
             if (response.ok && response.data !== undefined) {
                 const issue = response.data
@@ -49,11 +48,11 @@ function EditIssue({ poster }: { poster: string | undefined }) {
 
         const issueModel = new IssueModel({ title, description, status, label, priority, solved })
 
-        const response = await instance.update(Number(id), issueModel)
+        const response = await instance.update(Number(issueId), issueModel)
         setLoading(true)
 
         if (response.ok && response.data !== undefined) {
-            navigate(`/issue/${id}`)
+            navigate(`/project/${projectId}/issue/${issueId}`)
         } else {
             setLoading(false)
         }
@@ -63,10 +62,13 @@ function EditIssue({ poster }: { poster: string | undefined }) {
         if (poster !== undefined && poster === issuePoster) {
             setLoading(true)
 
-            const response = await instance.delete(Number(id))
+            const response = await instance.delete(Number(issueId))
 
-            navigate(`/project/${projectId}`)
-
+            if (response.ok) {
+                navigate(`/project/${projectId}`)
+            } else {
+                setLoading(false)
+            }
         }
     }
 
@@ -112,7 +114,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
             </div>
             <button type="submit">Save Changes</button>
             <button type="button" onClick={() => handleDelete()}>Delete Issue</button>
-            <a href={`/issue/${id}`}>Back to issue</a>
+            <a href={`/project/${projectId}/issue/${issueId}`}>Back to issue</a>
         </form>
     )
 }

@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { instance } from '../../APIs/Projects';
 import ProjectModel from '../../Models/ProjectModel';
-import { formDataToObject } from '../../utils';
 
-function CreateProject({ poster }: { poster: string | undefined }) {
-    const { id } = useParams()
+function CreateProject() {
     const navigate = useNavigate()
 
     const [title, setTitle] = useState<string>("")
@@ -13,15 +11,11 @@ function CreateProject({ poster }: { poster: string | undefined }) {
     const handleSubmit = async (event: any) => {
         event.preventDefault()
 
-        if (poster === undefined) {
-            navigate("/dashboard")
-        }
-
         const projectModel = new ProjectModel({ title })
         const response = await instance.create(projectModel)
 
         if (response.ok && response.data !== undefined) {
-            navigate(`/projects/${id}`)
+            navigate(`/projects/${response.data.id}`)
         }
     }
 

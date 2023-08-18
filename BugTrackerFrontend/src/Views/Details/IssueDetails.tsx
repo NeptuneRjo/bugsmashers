@@ -6,7 +6,7 @@ import { getEnumValueByIndex } from '../../utils';
 
 function IssueDetails({ poster }: { poster: string | undefined }) {
 
-    const { id } = useParams()
+    const { issueId } = useParams()
 
     const [issue, setIssue] = useState<Issue | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
@@ -15,7 +15,7 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
 
     useEffect(() => {
         ; (async () => {
-            const response = await instance.get(Number(id))
+            const response = await instance.get(Number(issueId))
 
             if (response.ok && response.data !== undefined) {
                 setIssue(response.data)
@@ -26,7 +26,7 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
 
     const handleAddComment = async () => {
         if (poster !== undefined && content.length > 0) {
-            const response = await instance.add(Number(id), { content, poster })
+            const response = await instance.add(Number(issueId), { content, poster })
 
             if (response.ok && response.data !== undefined) {
                 setIssue(response.data)
@@ -56,7 +56,7 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
             <p>{issue?.description}</p>
             <hr />
             {(poster !== undefined && poster === issue?.poster) && (
-                <a href={`/issue/${id}/edit`}>Edit Issue</a>
+                <a href={`/project/${issue.project_id}/issue/${issueId}/edit`}>Edit Issue</a>
             ) }
             <h4>Comments</h4>
             {poster === undefined ? (

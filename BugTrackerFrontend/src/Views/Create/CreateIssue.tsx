@@ -4,9 +4,9 @@ import IssueModel from '../../Models/IssueModel';
 import { Label, Priority, Status } from '../../types';
 import { instance } from "../../APIs/Projects"
 
-function CreateIssue({ poster }: { poster: string | undefined }) {
+function CreateIssue() {
 
-    const { id } = useParams()
+    const { projId } = useParams()
     const navigate = useNavigate()
 
     const [title, setTitle] = useState<string>("")
@@ -19,16 +19,15 @@ function CreateIssue({ poster }: { poster: string | undefined }) {
     const handleSubmit = async (event: any) => {
         event.preventDefault()
 
-        if (poster === undefined) {
-            navigate("/dashboard")
-        }
-
         const issueModel = new IssueModel({ title, description, status, label, priority, solved })
 
-        const response = await instance.add(Number(id), issueModel)
+        const response = await instance.add(Number(projId), issueModel)
 
         if (response.ok && response.data !== undefined) {
-            navigate(`/project/${id}`)
+            const project = response.data
+            const issuesCopy = [...project.issues]
+
+            navigate(`/project/${project.id}/issue/${issuesCopy.pop()!.id}`)
         }
     }
 

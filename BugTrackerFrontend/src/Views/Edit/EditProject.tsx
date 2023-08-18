@@ -3,9 +3,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Projects';
 import ProjectModel from '../../Models/ProjectModel';
 
-function EditProject() {
+function EditProject({ poster }: { poster: string | undefined }) {
 
-    const { id } = useParams()
+    const { projId } = useParams()
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState<boolean>(true)
@@ -14,10 +14,14 @@ function EditProject() {
 
     useEffect(() => {
         ; (async () => {
-            const response = await instance.get(Number(id))
+            const response = await instance.get(Number(projId))
 
             if (response.ok && response.data !== undefined) {
                 const project = response.data
+
+                if (poster != project.poster) {
+                    navigate(`/project/${projId}`)
+                }
 
                 setTitle(project.title)
 
@@ -33,10 +37,10 @@ function EditProject() {
 
         setLoading(true)
 
-        const response = await instance.update(Number(id), projectModel)
+        const response = await instance.update(Number(projId), projectModel)
 
         if (response.ok && response.data !== undefined) {
-            navigate(`/project/${id}`)
+            navigate(`/project/${projId}`)
         } else {
             setLoading(false)
         }
@@ -55,8 +59,8 @@ function EditProject() {
                 <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <button type="submit">Save Changes</button>
-            <a href={`/project/${id}/delete`}>Delete project</a>
-            <a href={`/project/${id}`}>Go back</a>
+            <a href={`/project/${projId}/delete`}>Delete project</a>
+            <a href={`/project/${projId}`}>Go back</a>
         </form>
     )
 }
