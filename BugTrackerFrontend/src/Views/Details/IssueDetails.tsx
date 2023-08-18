@@ -44,11 +44,11 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
     return (
         <div>
             <h3>{issue?.title}</h3>
-            <p>{getEnumValueByIndex(Label, Number(issue?.label))}</p>
+            <p>{issue?.label}</p>
             <div>
                 <ul>
-                    <li>Status: {getEnumValueByIndex(Status, Number(issue?.status))}</li>
-                    <li>Priority: {getEnumValueByIndex(Priority, Number(issue?.priority))}</li>
+                    <li>Status: {issue?.status}</li>
+                    <li>Priority: {issue?.priority}</li>
                 </ul>
                 <p>Posted by {issue?.poster}</p>
             </div>
@@ -65,7 +65,7 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
                 <>
                     <p>Add a comment</p>
                     <div>
-                            <textarea name="content" onChange={(e) => setContent(e.target.value)} value={content}></textarea>
+                        <textarea name="content" onChange={(e) => setContent(e.target.value)} value={content}></textarea>
                         <button type="submit" onClick={() => handleAddComment()}>Add</button>
                     </div>
                 </>
