@@ -73,7 +73,7 @@ export default class Issues implements IIssues {
         const response = await fetch(`${this.baseURL}/api/issues/${id}`, options)
         let data: Response | undefined = undefined
 
-        data = await response.json()
+        //data = await response.json()
 
         return { status: response.status, ok: response.ok, data }
     }

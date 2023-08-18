@@ -89,7 +89,7 @@ export default class Projects implements IProjects {
         const response = await fetch(`${this.baseURL}/api/projects/${id}`, options)
         let data: Response | undefined = undefined
         
-        data = await response.json()
+        //data = await response.json()
         
         return { status: response.status, ok: response.ok, data }
     }
