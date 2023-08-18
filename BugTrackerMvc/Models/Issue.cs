@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace BugTrackerMvc.Models
@@ -44,9 +45,12 @@ namespace BugTrackerMvc.Models
         public bool Solved { get; set; }
         public string Poster { get; set; }
 
-        public StatusType Status { get; set; }
-        public PriorityType Priority { get; set; }
-        public LabelType Label { get; set; }
+        //public StatusType Status { get; set; }
+        //public PriorityType Priority { get; set; }
+        //public LabelType Label { get; set; }
+        public string Status { get; set; }
+        public string Priority { get; set; }
+        public string Label { get; set; }
 
         public ICollection<Comment> Comments { get; set; }
 
@@ -61,9 +65,12 @@ namespace BugTrackerMvc.Models
         public bool Solved { get; set; }
         public string? Poster { get; set; }
 
-        public StatusType Status { get; set; }
-        public PriorityType Priority { get; set; }
-        public LabelType Label { get; set; }
+        //public StatusType Status { get; set; }
+        //public PriorityType Priority { get; set; }
+        //public LabelType Label { get; set; }
+        public string Status { get; set; }
+        public string Priority { get; set; }
+        public string Label { get; set; }
     }
 
 }
