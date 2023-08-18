@@ -17,9 +17,9 @@ function IssueTable({ issues }: { issues: Issue[] }) {
                 <tr key={key}>
                     <td>{issue.title}</td>
                     <td>{issue.comments.length}</td>
-                    <td>{getEnumValueByIndex(Status, Number(issue?.status))}</td>
-                    <td>{getEnumValueByIndex(Priority, Number(issue?.priority))}</td>
-                    <td>{getEnumValueByIndex(Label, Number(issue?.label))}</td>
+                    <td>{issue?.status}</td>
+                    <td>{issue?.priority}</td>
+                    <td>{issue?.label}</td>
                     <td><a href={`/issue/${issue.id}`}>Details</a></td>
                 </tr>
             ))}
