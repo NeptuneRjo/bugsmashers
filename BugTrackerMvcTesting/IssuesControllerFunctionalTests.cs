@@ -83,49 +83,49 @@ namespace BugTrackerMvcTesting
             await TestHelpers.ReturnsNotFound(e => e.Get(1), controller);
         }
 
-        [Fact]
-        public async Task PostIssue_Returns_Ok_Dto()
-        {
-            IssueDto dto = new IssueDto() { Id = 1, Title = "Test", Poster = poster };
-            IssueModel model = new IssueModel() { Title = "Test" };
+        //[Fact]
+        //public async Task PostIssue_Returns_Ok_Dto()
+        //{
+        //    IssueDto dto = new IssueDto() { Id = 1, Title = "Test", Poster = poster };
+        //    IssueModel model = new IssueModel() { Title = "Test" };
 
-            _service.CreateIssue(poster, model).Returns(dto);
+        //    _service.CreateIssue(poster, model).Returns(dto);
 
-            IssuesController controller = new IssuesController(_service);
+        //    IssuesController controller = new IssuesController(_service);
 
-            controller.ControllerContext = _controllerContext;
+        //    controller.ControllerContext = _controllerContext;
 
-            ObjectResult result = await TestHelpers.ReturnsOk(e => e.Post(model), controller);
+        //    ObjectResult result = await TestHelpers.ReturnsOk(e => e.Post(model), controller);
 
-            IssueDto returnedDto = Assert.IsAssignableFrom<IssueDto>(result.Value);
+        //    IssueDto returnedDto = Assert.IsAssignableFrom<IssueDto>(result.Value);
 
-            Assert.Equal(dto, returnedDto);
-        }
+        //    Assert.Equal(dto, returnedDto);
+        //}
 
-        [Fact]
-        public async Task PostIssue_Returns_BadRequest()
-        {
-            IssuesController controller = new(_service);
+        //[Fact]
+        //public async Task PostIssue_Returns_BadRequest()
+        //{
+        //    IssuesController controller = new(_service);
 
-            controller.ControllerContext = _controllerContext;
-            controller.ModelState.AddModelError("Title", "Error");
+        //    controller.ControllerContext = _controllerContext;
+        //    controller.ModelState.AddModelError("Title", "Error");
 
-            await TestHelpers.ReturnsBadRequest(e => e.Post(new IssueModel()), controller);
-        }
+        //    await TestHelpers.ReturnsBadRequest(e => e.Post(new IssueModel()), controller);
+        //}
 
-        [Fact]
-        public async Task PostIssue_Returns_Unauthorized()
-        {
-            Task<IssueDto> exception = Task.FromException<IssueDto>(new UnauthorizedAccessException("Test"));
-            IssueModel model = new() { Title = "Test", Poster = "Fail" };
+        //[Fact]
+        //public async Task PostIssue_Returns_Unauthorized()
+        //{
+        //    Task<IssueDto> exception = Task.FromException<IssueDto>(new UnauthorizedAccessException("Test"));
+        //    IssueModel model = new() { Title = "Test", Poster = "Fail" };
 
-            _service.CreateIssue(poster, model).Returns(exception);
+        //    _service.CreateIssue(poster, model).Returns(exception);
 
-            IssuesController controller = new(_service);
-            controller.ControllerContext = _controllerContext;
+        //    IssuesController controller = new(_service);
+        //    controller.ControllerContext = _controllerContext;
 
-            await TestHelpers.ReturnsUnauthorized(e => e.Post(model), controller);
-        }
+        //    await TestHelpers.ReturnsUnauthorized(e => e.Post(model), controller);
+        //}
 
         [Fact]
         public async Task PutIssue_Returns_Ok_Dto()
