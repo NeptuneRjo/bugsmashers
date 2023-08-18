@@ -1,5 +1,5 @@
 import Issues from "../../src/APIs/Issues"
-import { IssueModel, Label, Priority, Status } from "../../types"
+import { IIssueModel, Label, Priority, Status } from "../../src/types"
 
 const unmockedFetch = global.fetch
 
@@ -17,7 +17,7 @@ const mockFetch = async (data: object, status: number = 200) => {
         )
 }
 
-const MOCK_ISSUE: IssueModel = {
+const MOCK_ISSUE: IIssueModel = {
     title: "test",
     description: "test",
     solved: false,
