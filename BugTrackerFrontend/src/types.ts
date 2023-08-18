@@ -16,9 +16,9 @@ export interface IIssueModel {
     solved: boolean
     // Use numbers instead of the enums...
     // Using enums causes errors due to type differences between typescript and C#.
-    status: number
-    label: number
-    priority: number
+    status: string
+    label: string
+    priority: string
 }
 
 export interface Issue {
@@ -27,9 +27,9 @@ export interface Issue {
     description: string
     solved: boolean
     poster: string
-    status: Status
-    priority: Priority
-    label: Label
+    status: string
+    label: string
+    priority: string
     project_id: number
     comments: Comment[]
 }
