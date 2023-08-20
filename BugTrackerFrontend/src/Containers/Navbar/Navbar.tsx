@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import "../../Styles/NavbarContainer.css"
 
 function Navbar({ poster, setPoster }: { poster: string | undefined, setPoster: React.Dispatch<React.SetStateAction<string | undefined>> }) {
 
@@ -38,9 +37,8 @@ function Navbar({ poster, setPoster }: { poster: string | undefined, setPoster: 
     }
 
     return (
-        <nav>
-            <h3><a href="/">Bug Smashers</a></h3>
-            <a href="/">Projects</a>
+        <nav id="nav">
+            <h1><a href="/">Bug Smashers</a></h1>
             {poster === undefined ? (
                 <>
                     {providers.map((provider, key) => (
@@ -51,12 +49,13 @@ function Navbar({ poster, setPoster }: { poster: string | undefined, setPoster: 
                     ))}
                 </>
             ) : (
-                <>
+                <div id="nav-content">
+                    <a href="/">Projects</a>
                     <a href="/profile/projects">My Projects</a>                
                     <a href="/profile/issues">My Issues</a> 
                     <a href="/new-project">Create Project</a>
                     <button onClick={() => handleSignout()}>Signout</button>
-                </>
+                </div>
 
             )}
         </nav>
