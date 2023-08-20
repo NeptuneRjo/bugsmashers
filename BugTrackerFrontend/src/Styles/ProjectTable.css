@@ -43,6 +43,7 @@
     font-size: 3ch;
     width: fit-content;
     margin-bottom: 8px;
+    font-weight: bold;
 }
 
 #project a:hover {
