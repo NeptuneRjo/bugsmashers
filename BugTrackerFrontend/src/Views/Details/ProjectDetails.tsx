@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Project } from '../../types';
 import { instance } from '../../APIs/Projects';
 import { IssueTable } from '../../Components/exports';
+import "../../Styles/ProjectDetails.css"
 
 function ProjectDetails({ poster }: { poster: string | undefined }) {
 
@@ -29,17 +30,15 @@ function ProjectDetails({ poster }: { poster: string | undefined }) {
     }
 
     return (
-        <div>
+        <div id="project-details">
             <h3>{project?.title.toUpperCase()}</h3>
-            <div>
-                <p>{project?.issues.length} Current Issues</p>
+            <div id="project-details-tools">
+                <p>{project?.issues.length} Issues</p>
                 <a href={`/project/${project?.id}/new`}>Create a new issue</a>
                 {(poster !== undefined && poster === project?.poster) && (
                     <a href={`/project/${project?.id}/edit`}>Edit project</a>
                 ) }
             </div>
-            <hr />
-            <h4>Issues</h4>
             <IssueTable issues={project?.issues!} />
         </div>
     )

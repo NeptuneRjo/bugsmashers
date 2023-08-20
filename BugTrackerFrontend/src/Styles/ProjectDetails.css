@@ -1,0 +1,31 @@
+#project-details {
+    /*border: solid 1px white;*/
+}
+
+#project-details h3 {
+    padding: 1.5rem;
+}
+
+#project-details-tools {
+    margin-bottom: -3rem;
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+    border-bottom: solid 1px var(--platinum-faded);
+}
+
+#project-details-tools a {
+    text-decoration: none;
+    color: var(--platinum);
+    border-bottom: solid 1px var(--celestial-blue);
+}
+
+#project-details-tools a:hover {
+    border-bottom: solid 1px var(--white);
+    color: var(--white);
+}
+
+#project-details p {
+    margin: 0;
+}
