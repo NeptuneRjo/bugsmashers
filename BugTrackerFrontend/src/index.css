@@ -1,0 +1,39 @@
+:root {
+    --black: hsla(0, 0%, 0%, 1);
+    --oxford-blue: hsla(221, 51%, 16%, 1);
+    --celestial-blue: hsla(201, 95%, 44%, 1);
+    --platinum: hsla(0, 0%, 90%, 1);
+    --platinum-faded: hsla(0, 0%, 90%, .5);
+    --white: hsla(0, 0%, 100%, 1);
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--black);
+    color: var(--platinum);
+}
+
+input[type=search] {
+    padding: 8px;
+    border: solid 1px var(--platinum);
+    background-color: var(--platinum);
+}
+
+input[type=search]:focus {
+    border: solid 1px var(--platinum);
+    outline: none !important;
+}
+
+button {
+    border: none;
+    padding: 0 8px;
+    background-color: var(--celestial-blue);
+    color: var(--white);
+    font-weight: bold;
+    font-size: 1.6ch;
+}
+
+button:hover {
+    cursor: pointer;
+}
