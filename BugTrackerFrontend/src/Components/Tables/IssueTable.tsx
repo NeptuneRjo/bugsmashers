@@ -1,28 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Issue } from '../../types';
+import { search } from '../../utils';
+import "../../Styles/IssueTable.css"
 
 function IssueTable({ issues }: { issues: Issue[] }) {
 
+    const [searchParams] = useState<string[]>(["title"])
+    const [query, setQuery] = useState<string>("")
+
+
     return (
-        <table>
-            <tr>
-                <th>Title</th>
-                <th>Comments</th>
-                <th>Status</th>
-                <th>Priority</th>
-                <th>Label</th>
-            </tr>
-            {issues.map((issue, key) => (
-                <tr key={key}>
-                    <td>{issue.title}</td>
-                    <td>{issue.comments.length}</td>
-                    <td>{issue?.status}</td>
-                    <td>{issue?.priority}</td>
-                    <td>{issue?.label}</td>
-                    <td><a href={`/project/${issue.project_id}/issue/${issue.id}`}>Details</a></td>
-                </tr>
-            ))}
-        </table>
+        <div id="issues">
+            <div id="issues-tools">
+                <input
+                    type="search"
+                    placeholder="Find an issue"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                />
+            </div>
+            <div id="issues-grid">
+                {search(issues, searchParams, query).map((issue, key) => (
+                    <div key={key} id="issue">
+                        <a href={`/prroject/${issue.project_id}/issues/${issue.id}`}>{issue.title}</a>
+                        <ul>
+                            <li id="label">{issue.label}</li>
+                            <li>Status: {issue.status}</li>
+                            <li>Priority: {issue.priority}</li>
+                        </ul>
+                        <span>Opened by {issue.poster}</span>
+                    </div>
+                )) }
+            </div>
+        </div>
     )
 }
 
