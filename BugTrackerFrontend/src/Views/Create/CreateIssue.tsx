@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import IssueModel from '../../Models/IssueModel';
 import { Label, Priority, Status } from '../../types';
 import { instance } from "../../APIs/Projects"
+import "../../Styles/CreateIssue.css"
 
 function CreateIssue() {
 
@@ -32,14 +33,15 @@ function CreateIssue() {
     }
 
     return (
-        <form onSubmit={(event) => handleSubmit(event)}>
+        <form onSubmit={(event) => handleSubmit(event)} id="create-issue">
+            <h3>Create a new issue</h3>
             <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <div>
                 <label htmlFor="description">Description</label>
-                <input required type="text" name="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+                <textarea required name="description" value={description} onChange={(e) => setDescription(e.target.value)} ></textarea>
             </div>
             <div>
                 <label htmlFor="status">Status</label>
