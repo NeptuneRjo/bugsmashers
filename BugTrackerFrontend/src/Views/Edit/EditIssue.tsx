@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Issues';
 import IssueModel from '../../Models/IssueModel';
-import { Label, Priority, Status } from '../../types';
+import { Issue, Label, Priority, Status } from '../../types';
 import "../../Styles/EditIssue.css"
 
 function EditIssue({ poster }: { poster: string | undefined }) {
@@ -10,16 +10,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
     const { issueId } = useParams()
     const navigate = useNavigate()
 
-    const [title, setTitle] = useState<string>("")
-    const [description, setDescription] = useState<string>("")
-    const [status, setStatus] = useState<string>(Object.values(Status)[0])
-    const [label, setLabel] = useState<string>(Object.values(Label)[0])
-    const [priority, setPriority] = useState<string>(Object.values(Priority)[0])
-    const [solved, setSolved] = useState<boolean>(false)
-
-    const [issuePoster, setIssuePoster] = useState<string | undefined>(undefined)
-    const [projectId, setProjectId] = useState<number | undefined>(undefined)
-
+    const [issue, setIssue] = useState<Issue | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
@@ -29,16 +20,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
             if (response.ok && response.data !== undefined) {
                 const issue = response.data
 
-                setTitle(issue.title)
-                setDescription(issue.description)
-                setStatus(issue.status)
-                setLabel(issue.label)
-                setPriority(issue.priority)
-                setSolved(issue.solved)
-
-                setIssuePoster(issue.poster)
-                setProjectId(issue.project_id)
-
+                setIssue(issue)
                 setLoading(false)
             }
         })()
@@ -47,33 +29,35 @@ function EditIssue({ poster }: { poster: string | undefined }) {
     const handleUpdate = async (event: any) => {
         event.preventDefault()
 
-        const issueModel = new IssueModel({ title, description, status, label, priority, solved })
+        if (issue !== undefined) {
+            const issueModel = new IssueModel({ ...issue })
 
-        const response = await instance.update(Number(issueId), issueModel)
-        setLoading(true)
-
-        if (response.ok && response.data !== undefined) {
-            navigate(`/project/${projectId}/issue/${issueId}`)
-        } else {
-            setLoading(false)
-        }
-    }
-
-    const handleDelete = async () => {
-        if (poster !== undefined && poster === issuePoster) {
+            const response = await instance.update(Number(issueId), issueModel)
             setLoading(true)
 
-            const response = await instance.delete(Number(issueId))
-
-            if (response.ok) {
-                navigate(`/project/${projectId}`)
+            if (response.ok && response.data !== undefined) {
+                navigate(`/project/${issue.project_id}/issue/${issueId}`)
             } else {
                 setLoading(false)
             }
         }
     }
 
-    if (loading) {
+    const handleDelete = async () => {
+        if (poster !== undefined && poster === issue?.poster) {
+            setLoading(true)
+
+            const response = await instance.delete(Number(issueId))
+
+            if (response.ok) {
+                navigate(`/project/${issue.project_id}`)
+            } else {
+                setLoading(false)
+            }
+        }
+    }
+
+    if (loading || issue === undefined) {
         return (
             <div>Loading...</div>
         )
@@ -83,15 +67,15 @@ function EditIssue({ poster }: { poster: string | undefined }) {
         <form onSubmit={(event) => handleUpdate(event)} id="edit-issue">
             <div>
                 <label htmlFor="title">Title</label>
-                <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <input required type="text" name="title" value={issue.title} onChange={(e) => setIssue({ ...issue, title: e.target.value })} />
             </div>
             <div>
                 <label htmlFor="description">Description</label>
-                <textarea required name="description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                <textarea required name="description" value={issue.description} onChange={(e) => setIssue({ ...issue, description: e.target.value })}></textarea>
             </div>
             <div>
                 <label htmlFor="status">Status</label>
-                <select name="status" value={status} onChange={(e) => setStatus(e.target.value)}>
+                <select name="status" value={issue.status} onChange={(e) => setIssue({ ...issue, status: e.target.value })}>
                     {Object.values(Status).map((value, key) => (
                         <option key={key} value={value}>{value}</option>
                     )) }
@@ -99,7 +83,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
             </div>
             <div>
                 <label htmlFor="label">Label</label>
-                <select name="label" value={label} onChange={(e) => setLabel(e.target.value)}>
+                <select name="label" value={issue.label} onChange={(e) => setIssue({ ...issue, label: e.target.value })}>
                     {Object.values(Label).map((value, key) => (
                         <option key={key} value={value}>{value}</option>
                     ))}
@@ -107,7 +91,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
             </div>
             <div>
                 <label htmlFor="priority">Priority</label>
-                <select name="priority" value={priority} onChange={(e) => setPriority(e.target.value)}>
+                <select name="priority" value={issue.priority} onChange={(e) => setIssue({ ...issue, priority: e.target.value })}>
                     {Object.values(Priority).map((value, key) => (
                         <option key={key} value={value}>{value}</option>
                     ))}
@@ -117,7 +101,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
                 <button type="submit">Save Changes</button>
                 <button type="button" onClick={() => handleDelete()}>Delete Issue</button>
             </div>
-            <a href={`/project/${projectId}/issue/${issueId}`}>Back to issue</a>
+            <a href={`/project/${issue.project_id}/issue/${issueId}`}>Back to issue</a>
         </form>
     )
 }
