@@ -22,7 +22,7 @@ function IssueTable({ issues }: { issues: Issue[] }) {
             <div id="issues-grid">
                 {search(issues, searchParams, query).map((issue, key) => (
                     <div key={key} id="issue">
-                        <a href={`/prroject/${issue.project_id}/issues/${issue.id}`}>{issue.title}</a>
+                        <a href={`/project/${issue.project_id}/issue/${issue.id}`}>{issue.title}</a>
                         <ul>
                             <li id="label">{issue.label}</li>
                             <li>Status: {issue.status}</li>
