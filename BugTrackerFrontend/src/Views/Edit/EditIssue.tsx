@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Issues';
 import IssueModel from '../../Models/IssueModel';
 import { Label, Priority, Status } from '../../types';
+import "../../Styles/EditIssue.css"
 
 function EditIssue({ poster }: { poster: string | undefined }) {
 
@@ -79,14 +80,14 @@ function EditIssue({ poster }: { poster: string | undefined }) {
     }
 
     return (
-        <form onSubmit={(event) => handleUpdate(event)}>
+        <form onSubmit={(event) => handleUpdate(event)} id="edit-issue">
             <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <div>
                 <label htmlFor="description">Description</label>
-                <input required type="text" name="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+                <textarea required name="description" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
             </div>
             <div>
                 <label htmlFor="status">Status</label>
@@ -112,8 +113,10 @@ function EditIssue({ poster }: { poster: string | undefined }) {
                     ))}
                 </select>
             </div>
-            <button type="submit">Save Changes</button>
-            <button type="button" onClick={() => handleDelete()}>Delete Issue</button>
+            <div id="edit-issue-controls">
+                <button type="submit">Save Changes</button>
+                <button type="button" onClick={() => handleDelete()}>Delete Issue</button>
+            </div>
             <a href={`/project/${projectId}/issue/${issueId}`}>Back to issue</a>
         </form>
     )
