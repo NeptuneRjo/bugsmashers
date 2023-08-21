@@ -47,6 +47,10 @@ function EditProject({ poster }: { poster: string | undefined }) {
         }
     }
 
+    const handleDelete = async () => {
+
+    }
+
     if (loading) {
         return (
             <div>Loading...</div>
@@ -55,15 +59,15 @@ function EditProject({ poster }: { poster: string | undefined }) {
 
     return (
         <form onSubmit={(event) => handleUpdate(event)} id="edit-project">
-            <div id="edit-project-content">
+            <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
-            <button type="submit">Save Changes</button>
-            <div id="edit-project-routes">
-                <a href={`/project/${projId}/delete`}>Delete project</a>
-                <a href={`/project/${projId}`}>Go back</a>
+            <div id="edit-project-controls">
+                <button type="submit">Save Changes</button>
+                <button type="button" onClick={() => handleDelete()}>Delete project</button>
             </div>
+            <a href={`/project/${projId}`}>Go back</a>
         </form>
     )
 }

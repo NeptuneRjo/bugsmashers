@@ -1,13 +1,12 @@
 #edit-project {
     display: flex;
     flex-direction: column;
-
     margin: 5rem 0;
     gap: 1rem;
     width: 60vw;
 }
 
-#edit-project-content {
+#edit-project div {
     display: flex;
     flex-direction: column;
 }
@@ -17,15 +16,18 @@
     width: 25%;
 }
 
-#edit-project-routes {
+#edit-project-controls {
     display: flex;
+    flex-direction: row !important;
+    width: 100%;
     gap: 1rem;
 }
 
 #edit-project a {
-    text-decoration: none;
     color: var(--platinum);
     border-bottom: solid 1px var(--celestial-blue);
+    width: fit-content;
+    text-decoration: none;
 }
 
 #edit-project a:hover {
