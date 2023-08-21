@@ -1,0 +1,101 @@
+#issue-details {
+    width: 60vw;
+    display: flex;
+    flex-direction: column;
+    margin: 5rem 0;
+    padding: 8px;
+    height: fit-content;
+}
+
+#issue-details h2 {
+    padding: 0 1rem;
+}
+
+#issue-properties {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+#issue-properties ul {
+    margin: 0;
+    margin-bottom: 1rem;
+    list-style-type: none;
+    display: flex;
+    padding: 0;
+    gap: 1rem;
+}
+
+#issue-properties p {
+    margin: 0;
+    color: var(--platinum-faded);
+    display: flex;
+    gap: 1rem;
+}
+
+#issue-properties a {
+    text-decoration: none;
+    color: var(--platinum);
+    border-bottom: solid 1px var(--celestial-blue);
+}
+
+#issue-properties a:hover {
+    border-bottom: solid 1px var(--white);
+    color: var(--white);
+}
+
+#issue-description {
+    padding: 1rem;
+    font-size: 2.5ch;
+    border: solid 1px var(--platinum);
+}
+
+#issue-comments-controls {
+    display: flex;
+    flex-direction: column;
+}
+
+#issue-comments-controls h4 {
+    padding: 1rem;
+}
+
+#issue-comments-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#issue-comments-form textarea {
+    resize: none;
+    padding: 1rem;
+    height: 10vh;
+}
+
+#issue-comments-form button {
+    width: 25%;
+    padding: 8px;
+}
+
+#issue-comments {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin: 3rem 0;
+}
+
+#comment {
+    display: flex;
+    flex-direction: column;
+    border: solid 1px var(--platinum);
+    width: 100%;
+    padding: 1rem;
+}
+
+#comment p {
+    font-size: 2.25ch;
+    margin: 8px 0;
+}
+
+#comment span {
+    color: var(--platinum-faded);
+}
