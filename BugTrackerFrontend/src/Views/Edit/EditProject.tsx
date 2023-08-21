@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Projects';
 import ProjectModel from '../../Models/ProjectModel';
 import "../../Styles/EditProject.css"
+import { Project } from '../../types';
 
 function EditProject({ poster }: { poster: string | undefined }) {
 
@@ -11,7 +12,7 @@ function EditProject({ poster }: { poster: string | undefined }) {
 
     const [loading, setLoading] = useState<boolean>(true)
 
-    const [title, setTitle] = useState<string>("")
+    const [project, setProject] = useState<Project | undefined>(undefined)
 
     useEffect(() => {
         ; (async () => {
@@ -24,7 +25,7 @@ function EditProject({ poster }: { poster: string | undefined }) {
                     navigate(`/project/${projId}`)
                 }
 
-                setTitle(project.title)
+                setProject(project)
 
                 setLoading(false)
             }
@@ -34,24 +35,36 @@ function EditProject({ poster }: { poster: string | undefined }) {
     const handleUpdate = async (event: any) => {
         event.preventDefault()
 
-        const projectModel = new ProjectModel({ title })
+        if (project !== undefined) {
+            const projectModel = new ProjectModel({ title: project.title })
 
-        setLoading(true)
+            setLoading(true)
 
-        const response = await instance.update(Number(projId), projectModel)
+            const response = await instance.update(Number(projId), projectModel)
 
-        if (response.ok && response.data !== undefined) {
-            navigate(`/project/${projId}`)
-        } else {
-            setLoading(false)
+            if (response.ok && response.data !== undefined) {
+                navigate(`/project/${projId}`)
+            } else {
+                setLoading(false)
+            }
         }
     }
 
     const handleDelete = async () => {
+        if (poster !== undefined && poster === project?.poster) {
+            setLoading(true)
 
+            const response = await instance.delete(Number(projId))
+
+            if (response.ok) {
+                navigate("/")
+            } else {
+                setLoading(false)
+            }
+        }
     }
 
-    if (loading) {
+    if (loading || project === undefined) {
         return (
             <div>Loading...</div>
         )
@@ -61,7 +74,7 @@ function EditProject({ poster }: { poster: string | undefined }) {
         <form onSubmit={(event) => handleUpdate(event)} id="edit-project">
             <div>
                 <label htmlFor="title">Title</label>
-                <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                <input required type="text" name="title" value={project.title} onChange={(e) => setProject({ ...project, title: e.target.value })} />
             </div>
             <div id="edit-project-controls">
                 <button type="submit">Save Changes</button>
