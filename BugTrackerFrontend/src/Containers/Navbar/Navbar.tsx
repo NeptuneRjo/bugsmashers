@@ -40,14 +40,15 @@ function Navbar({ poster, setPoster }: { poster: string | undefined, setPoster: 
         <nav id="nav">
             <h1><a href="/">Bug Smashers</a></h1>
             {poster === undefined ? (
-                <>
+                <div id="nav-content">
+                    <a href="/">Projects</a>
                     {providers.map((provider, key) => (
                         <form action={`${url}signin`} method="post" key={key}>
                             <input type="hidden" name="Provider" value={provider.name} />
                             <button type="submit">Connect using {provider.display_name}</button>
                         </form>
                     ))}
-                </>
+                </div>
             ) : (
                 <div id="nav-content">
                     <a href="/">Projects</a>
