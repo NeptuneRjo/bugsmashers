@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { instance } from '../../APIs/Projects';
 import ProjectModel from '../../Models/ProjectModel';
+import "../../Styles/CreateProject.css"
 
 function CreateProject() {
     const navigate = useNavigate()
@@ -21,7 +22,7 @@ function CreateProject() {
 
 
     return (
-        <form onSubmit={(event) => handleSubmit(event)}>
+        <form onSubmit={(event) => handleSubmit(event)} id="create-project">
             <div>
                 <label htmlFor="title">Title</label>
                 <input type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
