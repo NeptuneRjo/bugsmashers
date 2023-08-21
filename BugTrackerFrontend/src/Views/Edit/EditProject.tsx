@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Projects';
 import ProjectModel from '../../Models/ProjectModel';
+import "../../Styles/EditProject.css"
 
 function EditProject({ poster }: { poster: string | undefined }) {
 
@@ -19,7 +20,7 @@ function EditProject({ poster }: { poster: string | undefined }) {
             if (response.ok && response.data !== undefined) {
                 const project = response.data
 
-                if (poster != project.poster) {
+                if (poster !== project.poster) {
                     navigate(`/project/${projId}`)
                 }
 
@@ -53,14 +54,16 @@ function EditProject({ poster }: { poster: string | undefined }) {
     }
 
     return (
-        <form onSubmit={(event) => handleUpdate(event)}>
-            <div>
+        <form onSubmit={(event) => handleUpdate(event)} id="edit-project">
+            <div id="edit-project-content">
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
             </div>
             <button type="submit">Save Changes</button>
-            <a href={`/project/${projId}/delete`}>Delete project</a>
-            <a href={`/project/${projId}`}>Go back</a>
+            <div id="edit-project-routes">
+                <a href={`/project/${projId}/delete`}>Delete project</a>
+                <a href={`/project/${projId}`}>Go back</a>
+            </div>
         </form>
     )
 }

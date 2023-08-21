@@ -1,0 +1,34 @@
+#edit-project {
+    display: flex;
+    flex-direction: column;
+
+    margin: 5rem 0;
+    gap: 1rem;
+    width: 60vw;
+}
+
+#edit-project-content {
+    display: flex;
+    flex-direction: column;
+}
+
+#edit-project button {
+    padding: 8px;
+    width: 25%;
+}
+
+#edit-project-routes {
+    display: flex;
+    gap: 1rem;
+}
+
+#edit-project a {
+    text-decoration: none;
+    color: var(--platinum);
+    border-bottom: solid 1px var(--celestial-blue);
+}
+
+#edit-project a:hover {
+    color: var(--white);
+    border-bottom: solid 1px var(--white);
+}
