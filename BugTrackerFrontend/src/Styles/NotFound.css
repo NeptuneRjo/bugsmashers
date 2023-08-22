@@ -1,0 +1,18 @@
+#not-found {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
+}
+
+#not-found a {
+    text-decoration: none;
+    color: var(--platinum);
+    border-bottom: solid 1px var(--celestial-blue);
+    width: fit-content;
+}
+
+#not-found a:hover {
+    color: var(--white);
+    border-bottom: solid 1px var(--white);
+}
