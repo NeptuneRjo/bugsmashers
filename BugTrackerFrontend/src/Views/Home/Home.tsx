@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { instance } from '../../APIs/Projects';
-import { ProjectTable } from '../../Components/exports';
+import { Loader, ProjectTable } from '../../Components/exports';
 import { Project } from '../../types';
+import "../../Styles/HomeView.css";
+
 
 function Home() {
     const [projects, setProjects] = useState<Project[]>([])
     const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<unknown>(null)
+    const [error, setError] = useState<string | undefined>(undefined)
 
     useEffect(() => {
         ; (async () => {
@@ -17,21 +19,21 @@ function Home() {
                 setProjects(response.data)
             } else {
                 setLoading(false)
-                setError(response.data)
+                setError("Something went wrong")
             }
         })()
     }, [])
 
     if (loading) {
         return (
-            <div>
-                <p>Loading...</p>
-            </div>
+            <Loader />
         )
     }
 
     return (
-        <div>
+        <div id="home">
+            <h2>Projects</h2>
+            {error !== undefined && <span>{error}</span> }
             <ProjectTable projects={projects} />
         </div>
     );

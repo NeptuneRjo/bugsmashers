@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Projects';
+import { Loader } from '../../Components/exports';
 import ProjectModel from '../../Models/ProjectModel';
 import "../../Styles/EditProject.css"
 import { Project } from '../../types';
@@ -11,6 +12,7 @@ function EditProject({ poster }: { poster: string | undefined }) {
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | undefined>(undefined)
 
     const [project, setProject] = useState<Project | undefined>(undefined)
 
@@ -46,6 +48,7 @@ function EditProject({ poster }: { poster: string | undefined }) {
                 navigate(`/project/${projId}`)
             } else {
                 setLoading(false)
+                setError("Failed to update project")
             }
         }
     }
@@ -60,18 +63,20 @@ function EditProject({ poster }: { poster: string | undefined }) {
                 navigate("/")
             } else {
                 setLoading(false)
+                setError("Failed to delete project")
             }
         }
     }
 
     if (loading || project === undefined) {
         return (
-            <div>Loading...</div>
+            <Loader />
         )
     }
 
     return (
         <form onSubmit={(event) => handleUpdate(event)} id="edit-project">
+            {error !== undefined && <span>{error}</span> }
             <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={project.title} onChange={(e) => setProject({ ...project, title: e.target.value })} />

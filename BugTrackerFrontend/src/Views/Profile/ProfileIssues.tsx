@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { instance } from "../../APIs/Issues"
-import { IssueTable } from '../../Components/exports';
+import { IssueTable, Loader } from '../../Components/exports';
 import { Issue } from '../../types';
 function ProfileIssues() {
 
@@ -20,7 +20,7 @@ function ProfileIssues() {
 
     if (loading) {
         return (
-            <div>Loading...</div>
+            <Loader />
         )
     }
 

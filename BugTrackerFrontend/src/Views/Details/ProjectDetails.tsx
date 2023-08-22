@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Project } from '../../types';
 import { instance } from '../../APIs/Projects';
-import { IssueTable } from '../../Components/exports';
+import { IssueTable, Loader } from '../../Components/exports';
 import "../../Styles/ProjectDetails.css"
 
 function ProjectDetails({ poster }: { poster: string | undefined }) {
 
     const { projId } = useParams()
+    const navigate = useNavigate()
 
     const [project, setProject] = useState<Project | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true)
@@ -19,13 +20,15 @@ function ProjectDetails({ poster }: { poster: string | undefined }) {
             if (response.ok && response.data !== undefined) {
                 setProject(response.data)
                 setLoading(false)
+            } else if (response.status === 404) {
+                navigate("/not-found")
             }
         })()
     }, [])
 
     if (loading) {
         return (
-            <div>Loading...</div>
+            <Loader />
         )
     }
 

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { instance } from '../../APIs/Issues';
 import { Issue } from '../../types';
 import "../../Styles/IssueDetails.css"
+import { Loader } from '../../Components/exports';
 
 function IssueDetails({ poster }: { poster: string | undefined }) {
 
     const { issueId } = useParams()
+    const navigate = useNavigate()
 
-    const [issue, setIssue] = useState<Issue | null>(null)
+    const [issue, setIssue] = useState<Issue | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true)
 
     const [content, setContent] = useState<string>("")
@@ -20,6 +22,8 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
             if (response.ok && response.data !== undefined) {
                 setIssue(response.data)
                 setLoading(false)
+            } else if (response.status === 404) {
+                navigate("/not-found")
             }
         })()
     }, [])
@@ -37,7 +41,7 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
 
     if (loading) {
         return (
-            <div>Loading...</div>
+            <Loader />
         )
     }
 
@@ -52,8 +56,8 @@ function IssueDetails({ poster }: { poster: string | undefined }) {
                 </ul>
                 <p>
                     Posted by {issue?.poster}
-                    {(poster !== undefined && poster === issue?.poster) && (
-                        <a href={`/project/${issue.project_id}/issue/${issueId}/edit`}>Edit Issue</a>
+                    {(poster === issue?.poster) && (
+                        <a href={`/project/${issue?.project_id}/issue/${issueId}/edit`}>Edit Issue</a>
                     )}
                 </p>
             </div>

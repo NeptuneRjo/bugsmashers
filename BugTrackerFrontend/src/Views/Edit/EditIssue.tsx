@@ -4,6 +4,7 @@ import { instance } from '../../APIs/Issues';
 import IssueModel from '../../Models/IssueModel';
 import { Issue, Label, Priority, Status } from '../../types';
 import "../../Styles/EditIssue.css"
+import { Loader } from '../../Components/exports';
 
 function EditIssue({ poster }: { poster: string | undefined }) {
 
@@ -12,6 +13,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
 
     const [issue, setIssue] = useState<Issue | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | undefined>(undefined)
 
     useEffect(() => {
         ; (async () => {
@@ -22,6 +24,8 @@ function EditIssue({ poster }: { poster: string | undefined }) {
 
                 setIssue(issue)
                 setLoading(false)
+            } else if (response.status === 404) {
+                navigate("/not-found")
             }
         })()
     }, [])
@@ -39,6 +43,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
                 navigate(`/project/${issue.project_id}/issue/${issueId}`)
             } else {
                 setLoading(false)
+                setError("Failed to update issue")
             }
         }
     }
@@ -53,18 +58,20 @@ function EditIssue({ poster }: { poster: string | undefined }) {
                 navigate(`/project/${issue.project_id}`)
             } else {
                 setLoading(false)
+                setError("Failed to delete issue")
             }
         }
     }
 
     if (loading || issue === undefined) {
         return (
-            <div>Loading...</div>
+            <Loader />
         )
     }
 
     return (
         <form onSubmit={(event) => handleUpdate(event)} id="edit-issue">
+            {error !== undefined && <span>{error}</span> }
             <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={issue.title} onChange={(e) => setIssue({ ...issue, title: e.target.value })} />
