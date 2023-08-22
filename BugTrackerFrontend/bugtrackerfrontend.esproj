@@ -14,10 +14,10 @@
   <ItemGroup>
     <Folder Include="src\Components\Loaders\" />
     <Folder Include="src\Containers\Navbar\" />
-    <Folder Include="src\Styles\" />
     <Folder Include="src\Views\Home\" />
     <Folder Include="src\Views\Create\" />
     <Folder Include="src\Views\Edit\" />
+    <Folder Include="src\Views\NotFound\" />
     <Folder Include="src\Views\Profile\" />
   </ItemGroup>
 </Project>
