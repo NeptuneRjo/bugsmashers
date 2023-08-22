@@ -1,7 +1,7 @@
-import { Comment, IIssueModel, Label, Priority, Status } from "../types"
+import { IIssueModel } from "../types"
 export default class IssueModel implements IIssueModel {
     public title!: string;
-    public description?: string | null | undefined;
+    public description!: string;
     public solved!: boolean;
     public status!: string;
     public label!: string;
@@ -10,6 +10,4 @@ export default class IssueModel implements IIssueModel {
     constructor(params: IIssueModel) {
         Object.assign(this, params)
     }
-    
-
 }
