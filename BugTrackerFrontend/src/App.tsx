@@ -10,7 +10,8 @@ import {
     CreateProject,
     CreateIssue,
     EditIssue,
-    EditProject
+    EditProject,
+    NotFound
 } from './Views/exports';
 import { Navbar } from "./Containers/exports"
 
@@ -53,14 +54,13 @@ function App() {
                             <Route path="/profile/projects" element={<ProfileProjects />} />
                             <Route path="/profile/issues" element={<ProfileIssues />} />
                         </>
-
                     )
-                    : <Route path="/new-project" element={<Navigate to="/" />} />
+                    : <Route element={<Navigate to="/" />} />
                 }
                 <Route path="/project/:projId" element={<ProjectDetails poster={poster} />} />
                 <Route path="/project/:projId/issue/:issueId" element={<IssueDetails poster={poster} />} />
-
-
+                <Route path="/not-found" element={<NotFound />} />
+                <Route path="*" element={<Navigate to="/not-found" />} />
             </Routes>
         </div>
     );
