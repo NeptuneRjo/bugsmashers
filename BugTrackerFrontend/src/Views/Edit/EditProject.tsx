@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { instance } from '../../APIs/Projects';
+import { ServiceError } from '../../APIs/apiService';
+import { ServiceContext } from '../../App';
 import { Loader } from '../../Components/exports';
-import ProjectModel from '../../Models/ProjectModel';
 import "../../Styles/EditProject.css"
-import { Project } from '../../types';
+import { IService, Project } from '../../types';
 
 function EditProject({ poster }: { poster: string | undefined }) {
 
@@ -12,60 +12,58 @@ function EditProject({ poster }: { poster: string | undefined }) {
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [error, setError] = useState<unknown | null>(null)
 
     const [project, setProject] = useState<Project | undefined>(undefined)
 
+    const service = useContext(ServiceContext) as IService
+
     useEffect(() => {
-        ; (async () => {
-            const response = await instance.get(Number(projId))
-
-            if (response.ok && response.data !== undefined) {
-                const project = response.data
-
-                if (poster !== project.poster) {
-                    navigate(`/project/${projId}`)
-                }
-
-                setProject(project)
-
+        service.projects.retrieve(Number(projId))
+            .then((response: Project) => {
+                setProject(response)
                 setLoading(false)
-            }
-        })()
+            })
+            .catch((err: unknown) => {
+                if (
+                    err instanceof ServiceError &&
+                    err.statusCode === 404
+                ) {
+                    navigate("/not-found")
+                }
+                setError(err)
+                setLoading(false)
+            })
     }, [])
 
     const handleUpdate = async (event: any) => {
         event.preventDefault()
 
-        if (project !== undefined) {
-            const projectModel = new ProjectModel({ title: project.title })
+        setLoading(true)
 
-            setLoading(true)
-
-            const response = await instance.update(Number(projId), projectModel)
-
-            if (response.ok && response.data !== undefined) {
-                navigate(`/project/${projId}`)
-            } else {
+        service.projects.update(Number(projId), { title: project!.title })
+            .then((response: Project) => {
+                setProject(response)
                 setLoading(false)
-                setError("Failed to update project")
-            }
-        }
+                navigate(`/project/${response.id}`)
+            })
+            .catch((err: unknown) => {
+                setError(err)
+                setLoading(false)
+            })
     }
 
     const handleDelete = async () => {
-        if (poster !== undefined && poster === project?.poster) {
-            setLoading(true)
+        setLoading(true)
 
-            const response = await instance.delete(Number(projId))
-
-            if (response.ok) {
+        service.projects.delete(Number(projId))
+            .then(() => {
                 navigate("/")
-            } else {
+            })
+            .catch((err: unknown) => {
+                setError(err)
                 setLoading(false)
-                setError("Failed to delete project")
-            }
-        }
+            })
     }
 
     if (loading || project === undefined) {
@@ -74,9 +72,14 @@ function EditProject({ poster }: { poster: string | undefined }) {
         )
     }
 
+    if (error !== null) {
+        return (
+            <div>error</div>
+        )
+    }
+
     return (
         <form onSubmit={(event) => handleUpdate(event)} id="edit-project">
-            {error !== undefined && <span>{error}</span> }
             <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={project.title} onChange={(e) => setProject({ ...project, title: e.target.value })} />

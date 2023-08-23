@@ -1,27 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { Project } from '../../types';
-import { instance } from "../../APIs/Projects"
-import { ProjectTable } from '../../Components/exports';
+import React, { useContext, useEffect, useState } from 'react';
+import { IService, Project } from '../../types';
+import { Loader, ProjectTable } from '../../Components/exports';
+import { ServiceContext } from '../../App';
 
 function ProfileProjects() {
 
     const [loading, setLoading] = useState<boolean>(true)
     const [projects, setProjects] = useState<Project[]>([])
 
-    useEffect(() => {
-        ; (async () => {
-            const response = await instance.getProfile()
+    const [error, setError] = useState<unknown | null>(null)
 
-            if (response.ok && response.data !== undefined) {
-                setProjects(response.data)
+    const service = useContext(ServiceContext) as IService
+
+    useEffect(() => {
+        service.projects.list(true)
+            .then((response: Project[]) => {
+                setProjects(response)
                 setLoading(false)
-            }
-        })()
+            })
+            .catch((err: unknown) => {
+                setError(err)
+                setLoading(false)
+            })
     }, [])
 
     if (loading) {
         return (
-            <div>Loading...</div>
+            <Loader />
+        )
+    }
+
+    if (error !== null) {
+        return (
+            <div>error</div>
         )
     }
 

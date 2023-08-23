@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Project } from '../../types';
-import { instance } from '../../APIs/Projects';
+import { IService, Project } from '../../types';
 import { IssueTable, Loader } from '../../Components/exports';
 import "../../Styles/ProjectDetails.css"
+import { ServiceError } from '../../APIs/apiService';
+import { ServiceContext } from '../../App';
 
 function ProjectDetails({ poster }: { poster: string | undefined }) {
 
@@ -13,22 +14,36 @@ function ProjectDetails({ poster }: { poster: string | undefined }) {
     const [project, setProject] = useState<Project | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true)
 
-    useEffect(() => {
-        ; (async () => {
-            const response = await instance.get(Number(projId))
+    const [error, setError] = useState<unknown | null>(null)
 
-            if (response.ok && response.data !== undefined) {
-                setProject(response.data)
+    const service = useContext(ServiceContext) as IService
+
+    useEffect(() => {
+        service.projects.retrieve(Number(projId))
+            .then((response: Project) => {
+                setProject(response)
                 setLoading(false)
-            } else if (response.status === 404) {
-                navigate("/not-found")
-            }
-        })()
+            })
+            .catch((err: unknown) => {
+                if (err instanceof ServiceError) {
+                    if (err.statusCode === 404) {
+                        navigate("/not-found")
+                    }
+                }
+                setError(err)
+                setLoading(false)
+            })
     }, [])
 
     if (loading) {
         return (
             <Loader />
+        )
+    }
+
+    if (error !== null) {
+        return (
+            <div>error</div>
         )
     }
 

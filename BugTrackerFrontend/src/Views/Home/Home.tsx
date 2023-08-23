@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { instance } from '../../APIs/Projects';
+import React, { useContext, useEffect, useState } from 'react';
 import { Loader, ProjectTable } from '../../Components/exports';
-import { Project } from '../../types';
+import { IService, Project } from '../../types';
 import "../../Styles/HomeView.css";
-
+import { ServiceContext } from "../../App"
 
 function Home() {
     const [projects, setProjects] = useState<Project[]>([])
     const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [error, setError] = useState<unknown | null>(null)
+
+    const service = useContext(ServiceContext) as IService
 
     useEffect(() => {
-        ; (async () => {
-            const response = await instance.getAll()
-
-            if (response.ok && response.data !== undefined) {
+        service.projects.list()
+            .then((response: Project[]) => {
+                setProjects(response)
                 setLoading(false)
-                setProjects(response.data)
-            } else {
+            })
+            .catch((err: unknown) => {
+                setError(err)
                 setLoading(false)
-                setError("Something went wrong")
-            }
-        })()
+            })
     }, [])
 
     if (loading) {
@@ -30,10 +29,15 @@ function Home() {
         )
     }
 
+    if (error !== null) {
+        return (
+            <div>error</div>
+        )
+    }
+
     return (
         <div id="home">
             <h2>Projects</h2>
-            {error !== undefined && <span>{error}</span> }
             <ProjectTable projects={projects} />
         </div>
     );

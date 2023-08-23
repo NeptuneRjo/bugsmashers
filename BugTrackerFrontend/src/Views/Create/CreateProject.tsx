@@ -1,30 +1,32 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { instance } from '../../APIs/Projects';
+import { ServiceContext } from '../../App';
 import { Loader } from '../../Components/exports';
-import ProjectModel from '../../Models/ProjectModel';
 import "../../Styles/CreateProject.css"
+import { IService, Project } from '../../types';
 
 function CreateProject() {
     const navigate = useNavigate()
 
     const [title, setTitle] = useState<string>("")
     const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [error, setError] = useState<unknown | null>(null)
+
+    const service = useContext(ServiceContext) as IService
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
 
-        const projectModel = new ProjectModel({ title })
-        const response = await instance.create(projectModel)
         setLoading(true)
 
-        if (response.ok && response.data !== undefined) {
-            navigate(`/projects/${response.data.id}`)
-        } else {
-            setLoading(false)
-            setError("An error occured while creating the project, please try again.")
-        }
+        service.projects.create({ title })
+            .then((response: Project) => {
+                navigate(`/projects/${response.id}`)
+            })
+            .catch((err: unknown) => {
+                setError(err)
+                setLoading(false)
+            })
     }
 
     if (loading) {
@@ -33,9 +35,14 @@ function CreateProject() {
         )
     }
 
+    if (error !== null) {
+        return (
+            <div>error</div>
+        )
+    } 
+
     return (
         <form onSubmit={(event) => handleSubmit(event)} id="create-project">
-            {error !== undefined && <span>{error}</span> }
             <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={title} onChange={(e) => setTitle(e.target.value)} />
