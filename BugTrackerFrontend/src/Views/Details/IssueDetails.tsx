@@ -1,47 +1,80 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { instance } from '../../APIs/Issues';
+//import { instance } from '../../APIs/Issues';
 import { Issue } from '../../types';
 import "../../Styles/IssueDetails.css"
 import { Loader } from '../../Components/exports';
+import Service, { ServiceError } from '../../APIs/apiService';
 
-function IssueDetails({ poster }: { poster: string | undefined }) {
+function IssueDetails({ poster, service }: { poster: string | undefined, service: Service }) {
 
     const { issueId } = useParams()
     const navigate = useNavigate()
 
     const [issue, setIssue] = useState<Issue | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<unknown | null>(null)
 
     const [content, setContent] = useState<string>("")
 
     useEffect(() => {
-        ; (async () => {
-            const response = await instance.get(Number(issueId))
+        //; (async () => {
+        //    const response = await instance.get(Number(issueId))
 
-            if (response.ok && response.data !== undefined) {
-                setIssue(response.data)
+        //    if (response.ok && typeof response.data !== "string") {
+        //        setIssue(response.data)
+        //        setLoading(false)
+        //    } else if (response.status === 404) {
+        //        navigate("/not-found")
+        //    }
+        //})()
+        service.issues.retrieve(Number(issueId))
+            .then((response: Issue) => {
+                setIssue(response)
                 setLoading(false)
-            } else if (response.status === 404) {
-                navigate("/not-found")
-            }
-        })()
+            })
+            .catch((err: unknown) => {
+                if (err instanceof ServiceError) {
+                    if (err.statusCode === 404) {
+                        navigate("/not-found")
+                    }
+                }
+                setError(err)
+            })
     }, [])
 
     const handleAddComment = async () => {
-        if (poster !== undefined && content.length > 0) {
-            const response = await instance.add(Number(issueId), { content, poster })
+        //if (poster !== undefined && content.length > 0) {
+        //    const response = await instance.add(Number(issueId), { content, poster })
 
-            if (response.ok && response.data !== undefined) {
-                setIssue(response.data)
-                setContent("")
-            }
-        }
+        //    if (response.ok && typeof response.data !== "string") {
+        //        setIssue(response.data)
+        //        setContent("")
+        //    }
+        //}
+        service.issues.comment(Number(issueId), { content })
+            .then((response: Issue) => {
+                setIssue(response)
+            })
+            .catch((err: unknown) => {
+                if (err instanceof ServiceError) {
+                    if (err.statusCode === 404) {
+                        navigate("/not-found")
+                    }
+                }
+                setError(err)
+            })
     }
 
-    if (loading) {
+    if (loading || issue === undefined) {
         return (
             <Loader />
+        )
+    }
+
+    if (error !== null) {
+        return (
+            <div>error</div>
         )
     }
 

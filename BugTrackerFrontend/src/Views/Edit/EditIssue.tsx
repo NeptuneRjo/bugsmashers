@@ -1,66 +1,66 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { instance } from '../../APIs/Issues';
 import IssueModel from '../../Models/IssueModel';
 import { Issue, Label, Priority, Status } from '../../types';
 import "../../Styles/EditIssue.css"
 import { Loader } from '../../Components/exports';
+import Service, { ServiceError } from '../../APIs/apiService';
 
-function EditIssue({ poster }: { poster: string | undefined }) {
+function EditIssue({ poster, service }: { poster: string | undefined, service: Service }) {
 
     const { issueId } = useParams()
     const navigate = useNavigate()
 
     const [issue, setIssue] = useState<Issue | undefined>(undefined)
     const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [error, setError] = useState<unknown | null>(null)
 
     useEffect(() => {
-        ; (async () => {
-            const response = await instance.get(Number(issueId))
-
-            if (response.ok && response.data !== undefined) {
-                const issue = response.data
-
-                setIssue(issue)
+        service.issues.retrieve(Number(issueId))
+            .then((response: Issue) => {
+                setIssue(response)
                 setLoading(false)
-            } else if (response.status === 404) {
-                navigate("/not-found")
-            }
-        })()
+            })
+            .catch((err: unknown) => {
+                if (err instanceof ServiceError) {
+                    if (err.statusCode === 404) {
+                        navigate("/not-found")
+                    }
+                }
+                setError(err)
+            })
     }, [])
 
     const handleUpdate = async (event: any) => {
         event.preventDefault()
 
-        if (issue !== undefined) {
-            const issueModel = new IssueModel({ ...issue })
+        setLoading(true)
 
-            const response = await instance.update(Number(issueId), issueModel)
-            setLoading(true)
+        // handleUpdate is not accessable if issue is undefined
+        // so we can assert that it isn't undefined
+        const model = new IssueModel({ ...issue! }) 
 
-            if (response.ok && response.data !== undefined) {
-                navigate(`/project/${issue.project_id}/issue/${issueId}`)
-            } else {
+        service.issues.update(Number(issueId), model)
+            .then((response: Issue) => {
+                navigate(`/project/${response?.project_id}/issues/${response?.id}`)
+            })
+            .catch((err: unknown) => {
                 setLoading(false)
-                setError("Failed to update issue")
-            }
-        }
+                setError(err)
+            })
     }
 
     const handleDelete = async () => {
-        if (poster !== undefined && poster === issue?.poster) {
-            setLoading(true)
+        setLoading(true)
 
-            const response = await instance.delete(Number(issueId))
-
-            if (response.ok) {
-                navigate(`/project/${issue.project_id}`)
-            } else {
+        service.issues.delete(Number(issueId))
+            .then(() => {
+                navigate(`/project/${issue?.project_id}`)
+            })
+            .catch((err: unknown) => {
+                setError(err)
                 setLoading(false)
-                setError("Failed to delete issue")
-            }
-        }
+            })
     }
 
     if (loading || issue === undefined) {
@@ -69,9 +69,14 @@ function EditIssue({ poster }: { poster: string | undefined }) {
         )
     }
 
+    if (error !== null) {
+        return (
+            <div>error</div>
+        )
+    }
+
     return (
         <form onSubmit={(event) => handleUpdate(event)} id="edit-issue">
-            {error !== undefined && <span>{error}</span> }
             <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={issue.title} onChange={(e) => setIssue({ ...issue, title: e.target.value })} />
