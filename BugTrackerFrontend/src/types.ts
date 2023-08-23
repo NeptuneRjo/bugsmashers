@@ -78,10 +78,36 @@ export interface IProjects {
 }
 
 export interface IIssues {
-    getAll(): Promise<any>
-    getProfile(): Promise<any>
-    get(id: number): Promise<any>
-    update(id: number, model: IIssueModel): Promise<any>
-    delete(id: number): Promise<any>
-    add(id: number, comment: CommentModel): Promise<any>
+    /**
+     * List all issues
+     * Include credentials to list all issues by the current poster
+     * @param {boolean} credentials
+     */
+    list(credentials?: boolean): any
+    /**
+     * Retrieve the issue by id
+     * @param {number} id
+     */
+    retrieve(id: number): any
+    /**
+     * Update the issue by id
+     * @param {number} id
+     * @param {IIssueModel} data
+     */
+    update(id: number, data: IIssueModel): any
+    /**
+     * Delete the issue by id
+     * @param {number} id
+     */
+    delete(id: number): any
+    /**
+     * Add a comment to the issue by id
+     * @param {number} id
+     * @param {CommentModel} data
+     */
+    comment(id: number, data: CommentModel): any
+}
+
+export interface IService {
+    request(endpoint: string, method: string, data?: null | object, withCredentials?: boolean): any
 }
