@@ -1,9 +1,11 @@
 import axios, { AxiosError } from "axios"
+import { ServiceError } from "../errors"
 import { IIssues, IProjects, IService } from "../types"
 import Features from "./features"
 
 export default class Service implements IService {
     private baseURL: string
+
     issues: IIssues
     projects: IProjects
 
@@ -86,21 +88,3 @@ export default class Service implements IService {
     }
 }
 
-export class ServiceError extends Error {
-    statusCode: number | null
-    statusText: string | null
-    data: unknown | null
-
-    constructor(
-        message: string,
-        statusCode: number | null = null,
-        statusText: string | null = null,
-        data: unknown | null
-    ) {
-        super(message)
-        this.name = "ServiceError"
-        this.statusCode = statusCode
-        this.statusText = statusText
-        this.data = data
-    }
-}

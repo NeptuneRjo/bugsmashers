@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ServiceError } from '../../APIs/apiService';
 import { ServiceContext } from '../../App';
 import { Loader } from '../../Components/exports';
+import { ServiceError } from '../../errors';
 import "../../Styles/EditProject.css"
 import { IService, Project } from '../../types';
 

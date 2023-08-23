@@ -4,8 +4,8 @@ import IssueModel from '../../Models/IssueModel';
 import { IService, Issue, Label, Priority, Status } from '../../types';
 import "../../Styles/EditIssue.css"
 import { Loader } from '../../Components/exports';
-import { ServiceError } from '../../APIs/apiService';
 import { ServiceContext } from '../../App';
+import { ServiceError } from '../../errors';
 
 function EditIssue({ poster }: { poster: string | undefined }) {
 

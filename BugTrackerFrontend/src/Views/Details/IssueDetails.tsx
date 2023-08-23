@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { IService, Issue } from '../../types';
 import "../../Styles/IssueDetails.css"
 import { Loader } from '../../Components/exports';
-import { ServiceError } from '../../APIs/apiService';
 import { ServiceContext } from '../../App';
+import { ServiceError } from '../../errors';
 
 function IssueDetails({ poster }: { poster: string | undefined }) {
 
