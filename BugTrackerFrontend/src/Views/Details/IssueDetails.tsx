@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-//import { instance } from '../../APIs/Issues';
-import { Issue } from '../../types';
+import { IService, Issue } from '../../types';
 import "../../Styles/IssueDetails.css"
 import { Loader } from '../../Components/exports';
-import Service, { ServiceError } from '../../APIs/apiService';
+import { ServiceError } from '../../APIs/apiService';
+import { ServiceContext } from '../../App';
 
-function IssueDetails({ poster, service }: { poster: string | undefined, service: Service }) {
+function IssueDetails({ poster }: { poster: string | undefined }) {
 
     const { issueId } = useParams()
     const navigate = useNavigate()
@@ -17,17 +17,9 @@ function IssueDetails({ poster, service }: { poster: string | undefined, service
 
     const [content, setContent] = useState<string>("")
 
-    useEffect(() => {
-        //; (async () => {
-        //    const response = await instance.get(Number(issueId))
+    const service = useContext(ServiceContext) as IService
 
-        //    if (response.ok && typeof response.data !== "string") {
-        //        setIssue(response.data)
-        //        setLoading(false)
-        //    } else if (response.status === 404) {
-        //        navigate("/not-found")
-        //    }
-        //})()
+    useEffect(() => {
         service.issues.retrieve(Number(issueId))
             .then((response: Issue) => {
                 setIssue(response)
@@ -44,14 +36,6 @@ function IssueDetails({ poster, service }: { poster: string | undefined, service
     }, [])
 
     const handleAddComment = async () => {
-        //if (poster !== undefined && content.length > 0) {
-        //    const response = await instance.add(Number(issueId), { content, poster })
-
-        //    if (response.ok && typeof response.data !== "string") {
-        //        setIssue(response.data)
-        //        setContent("")
-        //    }
-        //}
         service.issues.comment(Number(issueId), { content })
             .then((response: Issue) => {
                 setIssue(response)

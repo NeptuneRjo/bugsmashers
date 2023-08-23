@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import IssueModel from '../../Models/IssueModel';
-import { Label, Priority, Status } from '../../types';
-import { instance } from "../../APIs/Projects"
+import { IService, Label, Priority, Project, Status } from '../../types';
 import "../../Styles/CreateIssue.css"
 import { Loader } from '../../Components/exports';
+import { ServiceContext } from '../../App';
 
 function CreateIssue() {
 
@@ -21,25 +21,25 @@ function CreateIssue() {
     })
 
     const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<string | undefined>(undefined)
+    const [error, setError] = useState<unknown | null>(null)
+
+    const service = useContext(ServiceContext) as IService
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()
 
-        const issueModel = new IssueModel({ ...issue })
-
-        const response = await instance.add(Number(projId), issueModel)
         setLoading(true)
 
-        if (response.ok && response.data !== undefined) {
-            const project = response.data
-            const issuesCopy = [...project.issues]
+        service.projects.add(Number(projId), issue)
+            .then((response: Project) => {
+                const issues = [...response.issues]
 
-            navigate(`/project/${project.id}/issue/${issuesCopy.pop()!.id}`)
-        } else {
-            setLoading(false)
-            setError("An error occured while creating the issue. Please try again.")
-        }
+                navigate(`/project/${projId}/issue/${issues.pop()!.id}`)
+            })
+            .catch((err: unknown) => {
+                setError(err)
+                setLoading(false)
+            })
     }
 
     if (loading) {
@@ -48,10 +48,15 @@ function CreateIssue() {
         )
     }
 
+    if (error !== null) {
+        return (
+            <div>error</div>
+        )
+    }
+
     return (
         <form onSubmit={(event) => handleSubmit(event)} id="create-issue">
             <h3>Create a new issue</h3>
-            {error !== undefined && <span>{error}</span> }
             <div>
                 <label htmlFor="title">Title</label>
                 <input required type="text" name="title" value={issue.title} onChange={(e) => setIssue({ ...issue, title: e.target.value })} />

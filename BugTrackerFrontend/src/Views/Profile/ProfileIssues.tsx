@@ -1,23 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import Service, { ServiceError } from '../../APIs/apiService';
+import React, { useState, useEffect, useContext } from 'react';
+import { ServiceContext } from '../../App';
 import { IssueTable, Loader } from '../../Components/exports';
-import { Issue } from '../../types';
-function ProfileIssues({ service }: { service: Service }) {
+import { IService, Issue } from '../../types';
+function ProfileIssues() {
 
     const [loading, setLoading] = useState<boolean>(true)
     const [issues, setIssues] = useState<Issue[]>([])
 
     const [error, setError] = useState<unknown | null>(null)
 
-    useEffect(() => {
-        //; (async () => {
-        //    const response = await instance.getProfile()
+    const service = useContext(ServiceContext) as IService
 
-        //    if (response.ok && typeof response.data !== "string") {
-        //        setIssues(response.data!)
-        //        setLoading(false)
-        //    }
-        //})()
+    useEffect(() => {
         service.issues.list(true)
             .then((response: Issue[]) => {
                 setIssues(response)
