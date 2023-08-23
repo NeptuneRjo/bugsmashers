@@ -83,6 +83,7 @@ namespace BugTrackerMvc.Controllers
 
         // PUT api/<IssuesController>/5
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Put(int id, [FromBody] IssueModel issueModel)
         {
             try
