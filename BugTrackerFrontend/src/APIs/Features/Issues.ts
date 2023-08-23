@@ -24,7 +24,7 @@ export default class Issues implements IIssues {
      * @param {number} id
      */
     retrieve(id: number) {
-        return this.service.request(`issues/${id}`, "get")
+        return this.service.request(`issues/${id}`, "get", null)
     }
 
     /**
