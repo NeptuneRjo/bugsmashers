@@ -68,13 +68,12 @@ export enum Priority {
 }
 
 export interface IProjects {
-    getAll(): Promise<any>
-    getProfile(): Promise<any>
-    get(id: number): Promise<any>
-    create(model: IProjectModel): Promise<any>
-    update(id: number, projectModel: IProjectModel): Promise<any>
-    add(id: number, issueModel: IIssueModel): Promise<any>
-    delete(id: number): Promise<any>
+    list(credentials?: boolean): any
+    retrieve(id: number): any
+    create(model: IProjectModel): any
+    update(id: number, data: IProjectModel): any
+    add(id: number, data: IIssueModel): any
+    delete(id: number): any
 }
 
 export interface IIssues {
@@ -109,5 +108,7 @@ export interface IIssues {
 }
 
 export interface IService {
+    issues: IIssues
+    projects: IProjects
     request(endpoint: string, method: string, data?: null | object, withCredentials?: boolean): any
 }
