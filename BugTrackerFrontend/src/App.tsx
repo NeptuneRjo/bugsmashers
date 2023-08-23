@@ -14,9 +14,15 @@ import {
     NotFound
 } from './Views/exports';
 import { Navbar } from "./Containers/exports"
+import Service from './APIs/apiService';
+import { IService } from "./types"
+
+export const ServiceContext = React.createContext<IService | null>(null)
 
 function App() {
     const [poster, setPoster] = useState<string | undefined>(undefined)
+
+    const service = new Service("https://localhost:7104/")
 
     useEffect(() => {
         ; (async () => {
@@ -39,29 +45,31 @@ function App() {
 
     return (
         <div className="app">
-            <Navbar poster={poster} setPoster={setPoster} />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                {poster !== undefined
-                    ? (
-                        <>
-                            <Route path="/new-project" element={<CreateProject />} />
+            <ServiceContext.Provider value={service}>
+                <Navbar poster={poster} setPoster={setPoster} />
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    {poster !== undefined
+                        ? (
+                            <>
+                                <Route path="/new-project" element={<CreateProject />} />
 
-                            <Route path="/project/:projId/edit" element={<EditProject poster={poster} />} />
-                            <Route path="/project/:projId/new" element={<CreateIssue />} />
-                            <Route path="/project/:projId/issue/:issueId/edit" element={<EditIssue poster={poster} />} />
+                                <Route path="/project/:projId/edit" element={<EditProject poster={poster} />} />
+                                <Route path="/project/:projId/new" element={<CreateIssue />} />
+                                <Route path="/project/:projId/issue/:issueId/edit" element={<EditIssue poster={poster} />} />
 
-                            <Route path="/profile/projects" element={<ProfileProjects />} />
-                            <Route path="/profile/issues" element={<ProfileIssues />} />
-                        </>
-                    )
-                    : <Route element={<Navigate to="/" />} />
-                }
-                <Route path="/project/:projId" element={<ProjectDetails poster={poster} />} />
-                <Route path="/project/:projId/issue/:issueId" element={<IssueDetails poster={poster} />} />
-                <Route path="/not-found" element={<NotFound />} />
-                <Route path="*" element={<Navigate to="/not-found" />} />
-            </Routes>
+                                <Route path="/profile/projects" element={<ProfileProjects />} />
+                                <Route path="/profile/issues" element={<ProfileIssues />} />
+                            </>
+                        )
+                        : <Route element={<Navigate to="/" />} />
+                    }
+                    <Route path="/project/:projId" element={<ProjectDetails poster={poster} />} />
+                    <Route path="/project/:projId/issue/:issueId" element={<IssueDetails poster={poster} />} />
+                    <Route path="/not-found" element={<NotFound />} />
+                    <Route path="*" element={<Navigate to="/not-found" />} />
+                </Routes>
+            </ServiceContext.Provider>
         </div>
     );
 }
