@@ -44,6 +44,10 @@ function App() {
 
     const updatePoster = (update: string | null) => {
         setPoster(update)
+
+        if (update === null) {
+            window.sessionStorage.removeItem("poster")
+        }
     }
 
     return (
@@ -52,7 +56,7 @@ function App() {
                 <Navbar />
                 <Routes>
                     <Route path="/" element={<Home />} />
-                    {poster !== undefined
+                    {poster !== null
                         ? (
                             <>
                                 <Route path="/new-project" element={<CreateProject />} />
