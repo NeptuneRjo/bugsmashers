@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios"
 import { ServiceError } from "../errors"
-import { IIssues, IProjects, IService } from "../types"
+import { IAuth, IIssues, IProjects, IService } from "../types"
 import Features from "./features"
 
 export default class Service implements IService {
@@ -8,6 +8,7 @@ export default class Service implements IService {
 
     issues: IIssues
     projects: IProjects
+    auth: IAuth
 
     constructor(url: string = "") {
         const API_URL = process.env.REACT_APP_API_URL
@@ -25,6 +26,7 @@ export default class Service implements IService {
 
         this.issues = new Features.Issues(this)
         this.projects = new Features.Projects(this)
+        this.auth = new Features.Auth(this)
     }
 
     request(
