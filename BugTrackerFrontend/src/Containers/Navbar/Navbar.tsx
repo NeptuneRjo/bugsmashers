@@ -1,50 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { ServiceContext } from '../../App';
 import "../../Styles/NavbarContainer.css"
+import { ServiceContextType } from '../../types';
 
-function Navbar({ poster, setPoster }: { poster: string | undefined, setPoster: React.Dispatch<React.SetStateAction<string | undefined>> }) {
+type Provider = {
+    name: string
+    display_name: string
+}
 
-    const baseURL = process.env.REACT_APP_BASE_URL
-    const url = baseURL ? baseURL : "https://localhost:7104/"
+function Navbar() {
 
-    const [providers, setProviders] = useState<any[]>([])
+    const [providers, setProviders] = useState<Provider[]>([])
+    const [error, setError] = useState<unknown | null>(null)
+
+    const { service, poster, updatePoster } = useContext(ServiceContext) as ServiceContextType
 
     useEffect(() => {
-        ; (async () => {
-            const options: RequestInit = {
-                method: "GET"
-            }
-            const response = await fetch(`${url}signin`, options)
-
-            if (response.ok) {
-                const json = await response.json()
-                setProviders(json)
-            }
-
-        })()
+        service.auth.list()
+            .then((response: Provider[]) => {
+                setProviders(response)
+            })
+            .catch((err: unknown) => {
+                setError(err)
+            })
     }, [])
 
     const handleSignout = async () => {
-        const options: RequestInit = {
-            method: "GET",
-            credentials: "include"
-        }
-
-        const response = await fetch(`${url}signout`, options)
-
-        if (response.ok) {
-            setPoster(undefined)
-        }
+        service.auth.logout()
+            .then(() => {
+                updatePoster(null)
+            })
+            .catch((err: unknown) => {
+                setError(err)
+            })
     }
 
     return (
         <nav id="nav">
             <h1><a href="/">Bug Smashers</a></h1>
-            {poster === undefined ? (
+            {poster === null ? (
                 <div id="nav-content">
                     <a href="/">Projects</a>
                     {providers.map((provider, key) => (
-                        <form action={`${url}signin`} method="post" key={key}>
+                        <form action={`https://localhost:7104/api/authentication/signin`} method="post" key={key}>
                             <input type="hidden" name="Provider" value={provider.name} />
+                            <input type="hidden" name="RedirectURI" value={""} />
                             <button type="submit">Connect using {provider.display_name}</button>
                         </form>
                     ))}
