@@ -7,10 +7,17 @@ using System.Security.Claims;
 
 namespace BugTrackerMvc.Controllers
 {
-    public class AuthenticationController : Controller
+    public class LoginBody
     {
-        [HttpGet("~/signin")]
-        public async Task<IActionResult> SignIn() {
+        public string Provider { get; set; }
+    }
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthenticationController : ControllerBase
+    {
+        [HttpGet]
+        public async Task<IActionResult> Get() {
             List<Dictionary<string, string>> providers = new();
 
             foreach (var provider in await HttpContext.GetExternalProvidersAsync())
@@ -24,17 +31,17 @@ namespace BugTrackerMvc.Controllers
             return Ok(providers);
         }
 
-        [HttpPost("~/signin")]
-        public async Task<IActionResult> SignIn([FromForm] string provider)
+        [HttpPost("signin")]
+        public async Task<IActionResult> Post([FromForm] LoginBody body)
         {
             // Note: the "provider" parameter corresponds to the external
             // authentication provider choosen by the user agent.
-            if (string.IsNullOrWhiteSpace(provider))
+            if (string.IsNullOrWhiteSpace(body.Provider))
             {
                 return BadRequest();
             }
 
-            if (!await HttpContext.IsProviderSupportedAsync(provider))
+            if (!await HttpContext.IsProviderSupportedAsync(body.Provider))
             {
                 return BadRequest();
             }
@@ -42,15 +49,13 @@ namespace BugTrackerMvc.Controllers
             // Instruct the middleware corresponding to the requested external identity
             // provider to redirect the user agent to its own authorization endpoint.
             // Note: the authenticationScheme parameter must match the value configured in Startup.cs
-            return Challenge(new AuthenticationProperties { RedirectUri = "https://localhost:3000" }, provider);
+            return Challenge(new AuthenticationProperties { RedirectUri = "https://localhost:3000" }, body.Provider);
         }
 
-        [HttpGet("~/user")]
+        [HttpGet("user")]
         [AllowAnonymous]
-        public IActionResult UserStorage()
+        public IActionResult GetUser()
         {
-            //if (!User.Claims.Any()) 
-            //    BadRequest();
             var name = User.FindFirst(ClaimTypes.Name);
 
             if (name != null)
@@ -66,8 +71,8 @@ namespace BugTrackerMvc.Controllers
             return BadRequest("User must be signed in");
         }
 
-        [HttpGet("~/signout")]
-        [HttpPost("~/signout")]
+        [HttpGet("signout")]
+        [HttpPost("signout")]
         public IActionResult SignOutCurrentUser()
         {
             // Instruct the cookies middleware to delete the local cookie created
