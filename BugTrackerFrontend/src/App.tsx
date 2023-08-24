@@ -15,38 +15,41 @@ import {
 } from './Views/exports';
 import { Navbar } from "./Containers/exports"
 import Service from './APIs/apiService';
-import { IService } from "./types"
+import { ServiceContextType } from "./types"
 
-export const ServiceContext = React.createContext<IService | null>(null)
+export const ServiceContext = React.createContext<ServiceContextType | null>(null)
 
 function App() {
-    const [poster, setPoster] = useState<string | undefined>(undefined)
+    const [poster, setPoster] = useState<string | null>(null)
+    const [error, setError] = useState<unknown | null>(null)
 
     const service = new Service("https://localhost:7104/")
 
     useEffect(() => {
-        ; (async () => {
-            const baseURL = process.env.REACT_APP_BASE_URL
-            const url = `${baseURL ? baseURL : "https://localhost:7104/"}user`
+        const sessionPoster = window.sessionStorage.getItem("poster")
 
-            const options: RequestInit = {
-                method: "GET",
-                credentials: "include"
-            }
-
-            const response = await fetch(url, options)
-
-            if (response.ok) {
-                const json = await response.json()
-                setPoster(json.Name)
-            }
-        })()
+        if (sessionPoster === null) {
+            service.auth.retrieve()
+                .then((response: string) => {
+                    setPoster(response)
+                    window.sessionStorage.setItem("poster", response)
+                })
+                .catch((err: unknown) => {
+                    setError(err)
+                })
+        } else {
+            setPoster(sessionPoster)
+        }
     }, [])
+
+    const updatePoster = (update: string | null) => {
+        setPoster(update)
+    }
 
     return (
         <div className="app">
-            <ServiceContext.Provider value={service}>
-                <Navbar poster={poster} setPoster={setPoster} />
+            <ServiceContext.Provider value={{ service, poster, updatePoster }}>
+                <Navbar />
                 <Routes>
                     <Route path="/" element={<Home />} />
                     {poster !== undefined
@@ -54,9 +57,9 @@ function App() {
                             <>
                                 <Route path="/new-project" element={<CreateProject />} />
 
-                                <Route path="/project/:projId/edit" element={<EditProject poster={poster} />} />
+                                <Route path="/project/:projId/edit" element={<EditProject />} />
                                 <Route path="/project/:projId/new" element={<CreateIssue />} />
-                                <Route path="/project/:projId/issue/:issueId/edit" element={<EditIssue poster={poster} />} />
+                                <Route path="/project/:projId/issue/:issueId/edit" element={<EditIssue />} />
 
                                 <Route path="/profile/projects" element={<ProfileProjects />} />
                                 <Route path="/profile/issues" element={<ProfileIssues />} />
@@ -64,8 +67,8 @@ function App() {
                         )
                         : <Route element={<Navigate to="/" />} />
                     }
-                    <Route path="/project/:projId" element={<ProjectDetails poster={poster} />} />
-                    <Route path="/project/:projId/issue/:issueId" element={<IssueDetails poster={poster} />} />
+                    <Route path="/project/:projId" element={<ProjectDetails />} />
+                    <Route path="/project/:projId/issue/:issueId" element={<IssueDetails />} />
                     <Route path="/not-found" element={<NotFound />} />
                     <Route path="*" element={<Navigate to="/not-found" />} />
                 </Routes>
