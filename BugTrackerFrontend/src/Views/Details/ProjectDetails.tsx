@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { IService, Project } from '../../types';
+import { Project, ServiceContextType } from '../../types';
 import { IssueTable, Loader } from '../../Components/exports';
 import "../../Styles/ProjectDetails.css"
 import { ServiceContext } from '../../App';
 import { ServiceError } from '../../errors';
 
-function ProjectDetails({ poster }: { poster: string | undefined }) {
+function ProjectDetails() {
 
     const { projId } = useParams()
     const navigate = useNavigate()
@@ -16,7 +16,7 @@ function ProjectDetails({ poster }: { poster: string | undefined }) {
 
     const [error, setError] = useState<unknown | null>(null)
 
-    const service = useContext(ServiceContext) as IService
+    const { service, poster } = useContext(ServiceContext) as ServiceContextType
 
     useEffect(() => {
         service.projects.retrieve(Number(projId))

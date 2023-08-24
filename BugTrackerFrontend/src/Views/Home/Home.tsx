@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Loader, ProjectTable } from '../../Components/exports';
-import { IService, Project } from '../../types';
+import { Project, ServiceContextType } from '../../types';
 import "../../Styles/HomeView.css";
 import { ServiceContext } from "../../App"
 
@@ -9,7 +9,7 @@ function Home() {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<unknown | null>(null)
 
-    const service = useContext(ServiceContext) as IService
+    const { service } = useContext(ServiceContext) as ServiceContextType
 
     useEffect(() => {
         service.projects.list()

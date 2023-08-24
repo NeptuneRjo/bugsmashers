@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { ServiceContext } from '../../App';
 import { IssueTable, Loader } from '../../Components/exports';
-import { IService, Issue } from '../../types';
+import { Issue, ServiceContextType } from '../../types';
 function ProfileIssues() {
 
     const [loading, setLoading] = useState<boolean>(true)
@@ -9,7 +9,7 @@ function ProfileIssues() {
 
     const [error, setError] = useState<unknown | null>(null)
 
-    const service = useContext(ServiceContext) as IService
+    const { service } = useContext(ServiceContext) as ServiceContextType
 
     useEffect(() => {
         service.issues.list(true)

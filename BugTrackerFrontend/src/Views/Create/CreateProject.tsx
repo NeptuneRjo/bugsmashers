@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ServiceContext } from '../../App';
 import { Loader } from '../../Components/exports';
 import "../../Styles/CreateProject.css"
-import { IService, Project } from '../../types';
+import { IService, Project, ServiceContextType } from '../../types';
 
 function CreateProject() {
     const navigate = useNavigate()
@@ -12,7 +12,7 @@ function CreateProject() {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<unknown | null>(null)
 
-    const service = useContext(ServiceContext) as IService
+    const { service } = useContext(ServiceContext) as ServiceContextType
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()

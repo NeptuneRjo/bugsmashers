@@ -4,9 +4,9 @@ import { ServiceContext } from '../../App';
 import { Loader } from '../../Components/exports';
 import { ServiceError } from '../../errors';
 import "../../Styles/EditProject.css"
-import { IService, Project } from '../../types';
+import { Project, ServiceContextType } from '../../types';
 
-function EditProject({ poster }: { poster: string | undefined }) {
+function EditProject() {
 
     const { projId } = useParams()
     const navigate = useNavigate()
@@ -16,7 +16,7 @@ function EditProject({ poster }: { poster: string | undefined }) {
 
     const [project, setProject] = useState<Project | undefined>(undefined)
 
-    const service = useContext(ServiceContext) as IService
+    const { service } = useContext(ServiceContext) as ServiceContextType
 
     useEffect(() => {
         service.projects.retrieve(Number(projId))

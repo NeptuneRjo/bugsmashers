@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import IssueModel from '../../Models/IssueModel';
-import { IService, Label, Priority, Project, Status } from '../../types';
+import { Label, Priority, Project, ServiceContextType, Status } from '../../types';
 import "../../Styles/CreateIssue.css"
 import { Loader } from '../../Components/exports';
 import { ServiceContext } from '../../App';
@@ -23,7 +23,7 @@ function CreateIssue() {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<unknown | null>(null)
 
-    const service = useContext(ServiceContext) as IService
+    const { service } = useContext(ServiceContext) as ServiceContextType
 
     const handleSubmit = async (event: any) => {
         event.preventDefault()

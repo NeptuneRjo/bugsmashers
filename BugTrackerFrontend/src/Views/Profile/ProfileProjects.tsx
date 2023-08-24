@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { IService, Project } from '../../types';
+import { Project, ServiceContextType } from '../../types';
 import { Loader, ProjectTable } from '../../Components/exports';
 import { ServiceContext } from '../../App';
 
@@ -10,7 +10,7 @@ function ProfileProjects() {
 
     const [error, setError] = useState<unknown | null>(null)
 
-    const service = useContext(ServiceContext) as IService
+    const { service } = useContext(ServiceContext) as ServiceContextType
 
     useEffect(() => {
         service.projects.list(true)

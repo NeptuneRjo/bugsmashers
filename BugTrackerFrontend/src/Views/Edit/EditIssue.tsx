@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import IssueModel from '../../Models/IssueModel';
-import { IService, Issue, Label, Priority, Status } from '../../types';
+import { IService, Issue, Label, Priority, ServiceContextType, Status } from '../../types';
 import "../../Styles/EditIssue.css"
 import { Loader } from '../../Components/exports';
 import { ServiceContext } from '../../App';
 import { ServiceError } from '../../errors';
 
-function EditIssue({ poster }: { poster: string | undefined }) {
+function EditIssue() {
 
     const { issueId } = useParams()
     const navigate = useNavigate()
@@ -16,7 +16,7 @@ function EditIssue({ poster }: { poster: string | undefined }) {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<unknown | null>(null)
 
-    const service = useContext(ServiceContext) as IService
+    const { service, poster } = useContext(ServiceContext) as ServiceContextType
 
     useEffect(() => {
         service.issues.retrieve(Number(issueId))
