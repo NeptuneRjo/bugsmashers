@@ -107,8 +107,21 @@ export interface IIssues {
     comment(id: number, data: CommentModel): any
 }
 
+export interface IAuth {
+    list(): any
+    retrieve(): any
+    logout(): any
+}
+
 export interface IService {
     issues: IIssues
     projects: IProjects
+    auth: IAuth
     request(endpoint: string, method: string, data?: null | object, withCredentials?: boolean): any
+}
+
+export type ServiceContextType = {
+    service: IService
+    poster: string | null
+    updatePoster: (update: string | null) => void
 }
