@@ -52,8 +52,8 @@ function ProjectDetails() {
             <h3>{project?.title.toUpperCase()}</h3>
             <div id="project-details-tools">
                 <p>{project?.issues.length} Issues</p>
-                <a href={`/project/${project?.id}/new`}>Create a new issue</a>
-                {(poster !== undefined && poster === project?.poster) && (
+                {poster !== null && <a href={`/project/${project?.id}/new`}>Create a new issue</a>}
+                {(poster !== null && poster === project?.poster) && (
                     <a href={`/project/${project?.id}/edit`}>Edit project</a>
                 ) }
             </div>
