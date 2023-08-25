@@ -23,7 +23,21 @@ function App() {
     const [poster, setPoster] = useState<string | null>(window.sessionStorage.getItem("poster"))
     const [error, setError] = useState<unknown | null>(null)
 
-    const service = new Service("https://localhost:7104/")
+    let service: Service
+
+    const DEVELOPMENT = process.env.REACT_APP_DEVELOPMENT
+    const API_URL = process.env.REACT_APP_API_URL
+
+    if (
+        DEVELOPMENT !== undefined &&
+        DEVELOPMENT === "true"
+    ) {
+        service = new Service("https://localhost:7104/")
+    } else if (API_URL !== undefined) {
+        service = new Service(API_URL)
+    } else {
+        throw new Error("Set REACT_APP_DEVELOPMENT to true or provide REACT_APP_API_URL")
+    }
 
     useEffect(() => {
         const sessionPoster = window.sessionStorage.getItem("poster")
