@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/bugtracker/static/css/main.f3892495.css",
+    "main.js": "/bugtracker/static/js/main.466f47a4.js",
+    "index.html": "/bugtracker/index.html",
+    "main.f3892495.css.map": "/bugtracker/static/css/main.f3892495.css.map",
+    "main.466f47a4.js.map": "/bugtracker/static/js/main.466f47a4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f3892495.css",
+    "static/js/main.466f47a4.js"
+  ]
+}
