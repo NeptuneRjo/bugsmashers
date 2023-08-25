@@ -10,6 +10,15 @@ type Provider = {
 
 function Navbar() {
 
+    const API_URL = process.env.REACT_APP_API_URL
+    let url: string
+
+    if (API_URL !== undefined) {
+        url = API_URL
+    } else {
+        url = "https://localhost:7104"
+    }
+
     const [providers, setProviders] = useState<Provider[]>([])
     const [error, setError] = useState<unknown | null>(null)
 
@@ -42,7 +51,7 @@ function Navbar() {
                 <div id="nav-content">
                     <a href="/">Projects</a>
                     {providers.map((provider, key) => (
-                        <form action={`https://localhost:7104/api/authentication/signin`} method="post" key={key}>
+                        <form action={`${url}/api/authentication/signin`} method="post" key={key}>
                             <input type="hidden" name="Provider" value={provider.name} />
                             <input type="hidden" name="RedirectURI" value={""} />
                             <button type="submit">Connect using {provider.display_name}</button>
