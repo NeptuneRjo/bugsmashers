@@ -20,12 +20,12 @@ namespace BugTrackerMvc.Repository
             throw new ArgumentNullException(nameof(val), "Cannot be null");
         }
 
-        public void ThrowArgumentExcept()
+        public void ThrowArgumentExcept(dynamic val)
         {
-            throw new ArgumentException("Issues not found");
+            throw new ArgumentException(nameof(val), "Issue(s) not found");
         }
 
-        public async void DeleteIssue(int id)
+        public async void DeleteIssue(int? id)
         {
             if (id == null) ThrowNullExcept(id);
 

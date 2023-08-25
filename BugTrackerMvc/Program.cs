@@ -42,9 +42,7 @@ services.AddDbContext<DataContext>(options =>
 {
     string azureConnectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
     string defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    //options.UseSqlServer(azureConnectionString);
-    options.UseSqlServer(defaultConnectionString);
-    //options.UseInMemoryDatabase("BugTracker");
+    options.UseSqlServer(azureConnectionString);
 });
 
 services.AddAutoMapper(typeof(Program));
@@ -56,7 +54,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("https://localhost:3000");
+                          policy.WithOrigins("https://localhost:3000", "https://bugsmashers.onrender.com");
                           policy.AllowCredentials();
                           policy.WithHeaders("Content-Type");
                           policy.AllowAnyMethod();
