@@ -19,5 +19,6 @@
     <Folder Include="src\Views\Edit\" />
     <Folder Include="src\Views\NotFound\" />
     <Folder Include="src\Views\Profile\" />
+    <Folder Include="__tests__\Services\" />
   </ItemGroup>
 </Project>
