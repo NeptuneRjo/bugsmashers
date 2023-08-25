@@ -2,7 +2,7 @@ import Service from "../../src/Services/apiService"
 import Auth from "../../src/Features/Auth"
 import { jest } from '@jest/globals';
 
-jest.mock("../../src/APIs/apiService")
+jest.mock("../../src/Services/apiService")
 
 let requestMock: jest.Mock
 let mockService: Service

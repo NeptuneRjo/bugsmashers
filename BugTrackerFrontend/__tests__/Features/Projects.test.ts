@@ -3,7 +3,7 @@ import Projects from "../../src/Features/Projects"
 import { jest } from '@jest/globals';
 import { IService } from "../../src/types";
 
-jest.mock("../../src/APIs/apiService")
+jest.mock("../../src/Services/apiService")
 
 let requestMock: jest.Mock<IService['request']>
 let mockService: Service
