@@ -1,6 +1,7 @@
 using BugTrackerMvc.Data;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Repository;
+using BugTrackerMvc.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,8 +12,16 @@ IServiceCollection services = builder.Services;
 
 services.AddControllersWithViews();
 
-services.AddScoped<IIssueRepository, IssueRepository>();
+// Data
 services.AddScoped<IDataContext, DataContext>();
+
+// Repositories
+services.AddScoped<IIssueRepository, IssueRepository>();
+services.AddScoped<IProjectRepository, ProjectRepository>();
+
+// Services
+services.AddScoped<IIssueService, IssueService>();
+services.AddScoped<IProjectService, ProjectService>();
 
 services.AddAuthentication(options =>
 {
@@ -20,8 +29,8 @@ services.AddAuthentication(options =>
 })
     .AddCookie(options =>
     {
-        options.LoginPath = "/signin";
-        options.LogoutPath = "/signout";
+        options.LoginPath = "/api/authentication/signin";
+        options.LogoutPath = "/api/authentication/signout";
     })
     .AddGitHub(options =>
     {
@@ -31,7 +40,27 @@ services.AddAuthentication(options =>
 
 services.AddDbContext<DataContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING"));
+    string azureConnectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+    string defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    //options.UseSqlServer(azureConnectionString);
+    options.UseSqlServer(defaultConnectionString);
+    //options.UseInMemoryDatabase("BugTracker");
+});
+
+services.AddAutoMapper(typeof(Program));
+
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:3000");
+                          policy.AllowCredentials();
+                          policy.WithHeaders("Content-Type");
+                          policy.AllowAnyMethod();
+                      });
 });
 
 var app = builder.Build();
@@ -49,6 +78,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseCors(MyAllowSpecificOrigins);
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -57,3 +88,6 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+// Reference for WebApplicationFactory
+public partial class Program { }

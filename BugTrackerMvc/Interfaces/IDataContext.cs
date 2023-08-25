@@ -7,7 +7,9 @@ namespace BugTrackerMvc.Interfaces
     {
         DbSet<Issue> Issues { get; set; }
         DbSet<Comment> Comments { get; set; }
+        DbSet<Project> Projects { get; set; }
 
         int SaveChanges();
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 }

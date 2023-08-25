@@ -1,227 +1,141 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using BugTrackerMvc.CustomExceptions;
+using BugTrackerMvc.DTOs;
+using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
 using Microsoft.AspNetCore.Authorization;
-using BugTrackerMvc.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BugTrackerMvc.Controllers
 {
-    public class IssuesController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class IssuesController : ControllerBase
     {
-        private IIssueRepository _issueRepository;
+        private readonly IIssueService _service;
 
-        public IssuesController(IIssueRepository issueRepository)
+        public IssuesController(IIssueService service)
         {
-            _issueRepository = issueRepository;
+            _service = service;
         }
 
-        // GET: Issues
-        public async Task<IActionResult> Index() => View(await _issueRepository.GetIssues());
+        // GET: api/<IssuesController>
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Get()
+        {
+            string poster = User.FindFirst(ClaimTypes.Name)?.Value;
 
-        // GET: Issues/Details/5
-        public async Task<IActionResult> Details(int id)
+            if (poster != null)
+            {
+                return Ok(await _service.GetIssues(poster));
+            }
+
+            return Ok(await _service.GetIssues());
+        }
+
+        // GET api/<IssuesController>/5
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                var issue = await _issueRepository.GetIssueById(id);
+                return Ok(await _service.GetIssue(id));
+            }
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
-                var comments = _issueRepository.GetComments(id);
+        [HttpPost("{id}")]
+        [Authorize]
+        public async Task<IActionResult> PostComment(int id, [FromBody] CommentModel commentModel)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-                ViewData["Comments"] = comments;
+            try
+            {
+                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                return View(issue);
+                IssueDto dto = await _service.AddComment(id, poster, commentModel);
+
+                return Ok(dto);
             }
             catch (ArgumentException ex)
             {
-                ViewData["Error"] = ex.Message;
-
-                return View("Error");
+                return BadRequest(ex.Message);
+            }
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
-        // GET: /issues/my-issues
-        [HttpGet("/my-issues")]
+        // PUT api/<IssuesController>/5
+        [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> GetUserIssues()
+        public async Task<IActionResult> Put(int id, [FromBody] IssueModel issueModel)
         {
-            var user = HttpContext.User.Claims.ElementAt(1).Value;
-
-            if (user == null)
-                NotFound();
-
             try
             {
-                var issues = await _issueRepository.GetIssuesByPoster(user);
+                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                if (issues == null)
-                    NotFound();
+                IssueDto dto = await _service.UpdateIssue(id, poster, issueModel);
 
-                return View("Profile", issues);
+                return Ok(dto);
+            }
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
-
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
-
         }
 
-        // GET: Issues/Create
-        [HttpGet]
+        // DELETE api/<IssuesController>/5
+        [HttpDelete("{id}")]
         [Authorize]
-        public IActionResult Create() => View("Create");
-
-        // POST: Issues/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public IActionResult Create([Bind("Id,Title,Description,Solved,Poster,Status,Priority,Label")] Issue issue)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _issueRepository.InsertIssue(issue);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }                
-            }
-            return Redirect($"/issues/details/{issue.Id}");
-        }
-
-        // GET: Issues/Edit/5
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> Edit(int id)
-        {
-            var issue = await _issueRepository.GetIssueById(id);
-
-            if (issue.Poster != HttpContext.User.Claims.ElementAt(1).Value)
-                Unauthorized();
-
-            return  View(await _issueRepository.GetIssueById(id));
-        }
-
-        // POST: Issues/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Solved,Poster,Status,Priority,Label")] Issue issue)
-        {
-            if (id != issue.Id)
-            {
-                return NotFound();
-            }
-
-            if (User?.Claims?.ElementAt(1)?.Value != issue.Poster)
-            {
-                return Unauthorized();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _issueRepository.UpdateIssue(issue);
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!await _issueRepository.IssueExists(id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-            return Redirect($"/issues/details/{issue.Id}");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Comment(int id, Comment comment)
-        {
-            var issue = await _issueRepository.GetIssueById(id);
-
-            if (issue == null)
-            {
-                return NotFound();
-            }
-
-            try
-            {
-                issue.Comments.Add(new Comment()
-                {
-                    Author = comment.Author,
-                    Content = comment.Content,
-                });
-
-                _issueRepository.UpdateIssue(issue);
-
-                return Redirect($"/issues/details/{issue.Id}");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-
-        }
-
-        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            var issue = await _issueRepository.GetIssueById(id);
-
-            if (User.Claims.ElementAt(1)?.Value != issue.Poster)
-            {
-                return Unauthorized();
-            }
-
-            if (issue == null)
-                return NotFound();
-
-            return View(issue);
-        }
-
-        // POST: Issues/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
             try
             {
-                var issue = await _issueRepository.GetIssueById(id);
+                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
 
-                if (User.Claims.ElementAt(1)?.Value != issue.Poster)
-                {
-                    return Unauthorized();
-                }
+                bool deleted = await _service.Delete(id, poster);
 
-                if (issue != null)
-                {
-                    _issueRepository.DeleteIssue(id);
-                }
+                if (!deleted)
+                    return StatusCode(500, "Failed to delete object");
 
-                return Redirect("/");
+                return Ok($"Successfully deleted issue {id}");
+            }
+            catch (ObjectNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(ex.Message);
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(500, ex.Message);
             }
-
         }
     }
 }
