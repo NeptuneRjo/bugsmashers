@@ -1,5 +1,5 @@
-import Service from "../../src/APIs/apiService"
-import Projects from "../../src/APIs/Features/Projects"
+import Service from "../../src/Services/apiService"
+import Projects from "../../src/Features/Projects"
 import { jest } from '@jest/globals';
 import { IService } from "../../src/types";
 
