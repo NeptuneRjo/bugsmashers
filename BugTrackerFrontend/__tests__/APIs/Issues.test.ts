@@ -1,140 +1,83 @@
-import Issues from "../../src/APIs/Issues"
-import { IIssueModel, Label, Priority, Status } from "../../src/types"
+import Service from "../../src/APIs/apiService"
+import Issues from "../../src/APIs/Features/Issues"
+import { jest } from '@jest/globals';
 
-const unmockedFetch = global.fetch
+jest.mock("../../src/APIs/apiService")
 
-const mockFetch = async (data: object, status: number = 200) => {
-    global.fetch = jest
-        .fn()
-        .mockImplementation(
-            jest.fn(() =>
-                Promise.resolve({
-                    json: () => Promise.resolve(data),
-                    status,
-                    ok: status >= 200 && status < 300
-                }),
-            ) as jest.Mock
-        )
-}
+let requestMock: jest.Mock
+let mockService: Service
 
-const MOCK_ISSUE: IIssueModel = {
-    title: "test",
-    description: "test",
-    solved: false,
-    status: Status.backlog,
-    label: Label.bug,
-    priority: Priority.low
-}
+beforeEach(() => {
+    (Service as jest.Mock).mockClear(); // Clear mock implementation
 
+    requestMock = jest.fn();
+    requestMock.mockReturnValue('return');
 
-describe("Issue API Tests", () => {
-    const issues = new Issues("")
+    (Service as jest.Mock).mockImplementation(() => ({
+        request: requestMock,
+    }));
 
-    afterEach(() => {
-        global.fetch = unmockedFetch
+    mockService = new Service('foo');
+});
+
+describe("Issues", () => {
+    describe("list", () => {
+        it("proxies the request method", () => {
+            const issues = new Issues(mockService)
+            const returnValue = issues.list()
+
+            expect(requestMock).toHaveBeenLastCalledWith("issues", "get", null)
+            expect(returnValue).toBe("return")
+        })
     })
 
-    test("passes", () => {
-        expect("test").toEqual("test")
+    describe("retrieve", () => {
+        it("proxies the request method", () => {
+            const issues = new Issues(mockService)
+            const returnValue = issues.retrieve(1)
+
+            expect(requestMock).toHaveBeenLastCalledWith("issues/1", "get", null)
+            expect(returnValue).toBe("return")
+        })
     })
 
-    test("Issues.getAll returns data and 200 OK", async () => {
-        mockFetch([MOCK_ISSUE])
+    describe("update", () => {
+        it("proxies the request method", () => {
+            const issues = new Issues(mockService)
+            const data = {
+                title: "foo",
+                solved: false,
+                status: "foo",
+                label: "foo",
+                priority: "foo"
+            }
+            const returnValue = issues.update(1, data)
 
-        const response = await issues.getAll()
-
-        expect(response.data).toEqual([MOCK_ISSUE])
-        expect(response.status).toEqual(200)
-        expect(response.status).not.toEqual(400)
+            expect(requestMock).toHaveBeenLastCalledWith("issues/1", "put", data, true)
+            expect(returnValue).toBe("return")
+        })
     })
 
-    test("Issues.getAll returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch([MOCK_ISSUE], 400)
+    describe("delete", () => {
+        it("proxies the request method", () => {
+            const issues = new Issues(mockService)
+            const returnValue = issues.delete(1)
 
-        const response = await issues.getAll()
-
-        expect(response.data).toEqual(undefined)
-        expect(response.status).toEqual(400)
-        expect(response.status).not.toEqual(200)
+            expect(requestMock).toHaveBeenLastCalledWith("issues/1", "delete", null, true)
+            expect(returnValue).toBe("return")
+        })
     })
 
-    test("Issues.get returns data and 200 OK", async () => {
-        mockFetch(MOCK_ISSUE)
+    describe("comment", () => {
+        it("proxies the request method", () => {
+            const issues = new Issues(mockService)
+            const data = {
+                content: "foo"
+            }
+            const returnValue = issues.comment(1, data)
 
-        const response = await issues.get(1)
-
-        expect(response.data).toEqual(MOCK_ISSUE)
-        expect(response.status).toEqual(200)
-        expect(response.status).not.toEqual(400)
-    })
-
-    test("Issues.get returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_ISSUE, 400)
-
-        const response = await issues.get(1)
-
-        expect(response.data).toEqual(undefined)
-        expect(response.status).toEqual(400)
-        expect(response.status).not.toEqual(200)
-    })
-
-    test("Issues.update returns data and 200 OK", async () => {
-        mockFetch(MOCK_ISSUE)
-
-        const response = await issues.update(1, MOCK_ISSUE)
-
-        expect(response.data).toEqual(MOCK_ISSUE)
-        expect(response.status).toEqual(200)
-        expect(response.status).not.toEqual(400)
-    })
-
-    test("Issues.update returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_ISSUE, 400)
-
-        const response = await issues.update(1, MOCK_ISSUE)
-
-        expect(response.data).toEqual(undefined)
-        expect(response.status).toEqual(400)
-        expect(response.status).not.toEqual(200)
-    })
-
-    test("Issues.delete returns data and 200 OK", async () => {
-        mockFetch(MOCK_ISSUE)
-
-        const response = await issues.delete(1)
-
-        expect(response.data).toEqual(MOCK_ISSUE)
-        expect(response.status).toEqual(200)
-        expect(response.status).not.toEqual(400)
-    })
-
-    test("Issues.delete returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_ISSUE, 400)
-
-        const response = await issues.delete(1)
-
-        expect(response.data).toEqual(undefined)
-        expect(response.status).toEqual(400)
-        expect(response.status).not.toEqual(200)
-    })
-
-    test("Issues.add returns data and 200 OK", async () => {
-        mockFetch(MOCK_ISSUE)
-
-        const response = await issues.add(1, { content: "test" })
-
-        expect(response.data).toEqual(MOCK_ISSUE)
-        expect(response.status).toEqual(200)
-        expect(response.status).not.toEqual(400)
-    })
-
-    test("Issues.add returns undefined and 400 BAD REQUEST", async () => {
-        mockFetch(MOCK_ISSUE, 400)
-
-        const response = await issues.add(1, { content: "test" })
-
-        expect(response.data).toEqual(undefined)
-        expect(response.status).toEqual(400)
-        expect(response.status).not.toEqual(200)
+            expect(requestMock).toHaveBeenLastCalledWith("issues/1", "post", data, true)
+            expect(returnValue).toBe("return")
+        })
     })
 })
