@@ -45,7 +45,7 @@ function EditIssue() {
 
         service.issues.update(Number(issueId), model)
             .then((response: Issue) => {
-                navigate(`/project/${response?.project_id}/issues/${response?.id}`)
+                navigate(`/project/${response?.project_id}/issue/${response?.id}`)
             })
             .catch((err: unknown) => {
                 setLoading(false)
