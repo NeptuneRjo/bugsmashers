@@ -1,4 +1,4 @@
-import { IAuth, IService } from "../../types";
+import { IAuth, IService } from "../types";
 
 export default class Auth implements IAuth {
     service: IService

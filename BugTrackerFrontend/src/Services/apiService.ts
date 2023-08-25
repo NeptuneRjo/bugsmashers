@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios"
 import { ServiceError } from "../errors"
 import { IAuth, IIssues, IProjects, IService } from "../types"
-import Features from "./features"
+import Features from "../Features/features"
 
 export default class Service implements IService {
     private baseURL: string

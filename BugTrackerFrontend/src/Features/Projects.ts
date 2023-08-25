@@ -1,4 +1,4 @@
-import { IProjects, IIssueModel, IProjectModel, IService } from "../../types"
+import { IProjects, IIssueModel, IProjectModel, IService } from "../types"
 
 export default class Projects implements IProjects {
     service: IService

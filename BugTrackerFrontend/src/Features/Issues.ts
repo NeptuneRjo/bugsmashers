@@ -1,4 +1,4 @@
-import { CommentModel, IIssues, IIssueModel, IService } from "../../types";
+import { CommentModel, IIssues, IIssueModel, IService } from "../types";
 
 export default class Issues implements IIssues {
     service: IService

@@ -14,7 +14,7 @@ import {
     NotFound
 } from './Views/exports';
 import { Navbar } from "./Containers/exports"
-import Service from './APIs/apiService';
+import Service from './Services/apiService';
 import { ServiceContextType } from "./types"
 
 export const ServiceContext = React.createContext<ServiceContextType | null>(null)
