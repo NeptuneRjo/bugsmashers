@@ -1,4 +1,4 @@
-export interface Project {
+export type Project = {
     id: number,
     title: string
     issues: Issue[]
@@ -19,7 +19,7 @@ export interface IIssueModel {
     priority: string
 }
 
-export interface Issue {
+export type Issue = {
     id: number
     title: string
     description: string
@@ -32,14 +32,14 @@ export interface Issue {
     comments: Comment[]
 }
 
-export interface Comment {
+export type Comment = {
     id: number
     content: string
     poster: string
     issue_id: number
 }
 
-export interface CommentModel {
+export type CommentModel = {
     content: string
     poster?: string | null
 }
