@@ -15,12 +15,12 @@ import {
 } from './Views/exports';
 import { Navbar } from "./Containers/exports"
 import Service from './Services/apiService';
-import { ServiceContextType } from "./types"
+import { ServiceContextType, User } from "./types"
 
 export const ServiceContext = React.createContext<ServiceContextType | null>(null)
 
 function App() {
-    const [poster, setPoster] = useState<string | null>(null)
+    const [poster, setPoster] = useState<string | null>(window.sessionStorage.getItem("poster"))
     const [error, setError] = useState<unknown | null>(null)
 
     const service = new Service("https://localhost:7104/")
@@ -30,9 +30,9 @@ function App() {
 
         if (sessionPoster === null) {
             service.auth.retrieve()
-                .then((response: string) => {
-                    setPoster(response)
-                    window.sessionStorage.setItem("poster", response)
+                .then((response: User) => {
+                    setPoster(response.Name)
+                    window.sessionStorage.setItem("poster", response.Name)
                 })
                 .catch((err: unknown) => {
                     setError(err)
@@ -47,6 +47,8 @@ function App() {
 
         if (update === null) {
             window.sessionStorage.removeItem("poster")
+        } else {
+            window.sessionStorage.setItem("poster", update)
         }
     }
 
@@ -71,10 +73,11 @@ function App() {
                         )
                         : <Route element={<Navigate to="/" />} />
                     }
+
                     <Route path="/project/:projId" element={<ProjectDetails />} />
                     <Route path="/project/:projId/issue/:issueId" element={<IssueDetails />} />
                     <Route path="/not-found" element={<NotFound />} />
-                    <Route path="*" element={<Navigate to="/not-found" />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </ServiceContext.Provider>
         </div>
