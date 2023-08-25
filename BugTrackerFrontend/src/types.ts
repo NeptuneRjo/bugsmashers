@@ -10,6 +10,10 @@ export interface IProjectModel {
     title: string
 }
 
+export type User = {
+    Name: string
+}
+
 export interface IIssueModel {
     title: string
     description?: string | null
