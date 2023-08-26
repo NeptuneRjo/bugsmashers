@@ -18,7 +18,7 @@ function Navbar() {
         DEVELOPMENT !== undefined &&
         DEVELOPMENT === "true"
     ) {
-        url = "https://localhost:7104"
+        url = "http://localhost:5193"
     } else if (API_URL !== undefined) {
         url = API_URL
     } else {
