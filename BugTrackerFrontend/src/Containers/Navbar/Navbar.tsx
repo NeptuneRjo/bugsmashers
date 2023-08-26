@@ -9,14 +9,20 @@ type Provider = {
 }
 
 function Navbar() {
-
-    const API_URL = process.env.REACT_APP_API_URL
     let url: string
 
-    if (API_URL !== undefined) {
+    const DEVELOPMENT = process.env.REACT_APP_DEVELOPMENT
+    const API_URL = process.env.REACT_APP_API_URL
+
+    if (
+        DEVELOPMENT !== undefined &&
+        DEVELOPMENT === "true"
+    ) {
+        url = "https://localhost:7104"
+    } else if (API_URL !== undefined) {
         url = API_URL
     } else {
-        url = "https://localhost:7104"
+        throw new Error("Set REACT_APP_DEVELOPMENT to true or provide REACT_APP_API_URL")
     }
 
     const [providers, setProviders] = useState<Provider[]>([])
