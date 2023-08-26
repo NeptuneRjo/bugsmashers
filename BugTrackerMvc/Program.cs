@@ -54,7 +54,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("https://localhost:3000", "https://bugsmashers.onrender.com");
+                          policy.WithOrigins("https://localhost:3000", "https://bugsmashers.onrender.com", "http://localhost:4000", "http://localhost:5193/");
                           policy.AllowCredentials();
                           policy.WithHeaders("Content-Type");
                           policy.AllowAnyMethod();
