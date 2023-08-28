@@ -1,13 +1,10 @@
 ## About
 
-This is a issue/bug tracker built with ASP.NET using MVC.
+BugSmashers is a fullstack issue/bug tracker build with TypeScript-React and ASP.NET Core.
 
-Users can sign in with their GitHub credentials and post issues to the page.
-Posters can edit their issues at any time, and marking as solved will not delete the issue from the board but issues can still be deleted.
+Users can create projects and keep track of issues, similarly to GitHub.
 
-Discussions are open on each issue, and authenticated users can post comments.
-
-Visit the demo at [https://neptunerjo-bugtracker.azurewebsites.net/issues](https://neptunerjo-bugtracker.azurewebsites.net/issues)
+Visit the demo [here](https://bugsmashers.onrender.com/)
 
 ## Project Demos
 
@@ -22,12 +19,12 @@ Visit the demo at [https://neptunerjo-bugtracker.azurewebsites.net/issues](https
 
 ## Reflection
 
-This project serves as a deep-dive learning experience so that I could learn C# and ASP.NET.
+BugSmashers v1 was an ASP.NET MVC application, and it served as a way to learn C# and ASP.NET.
 
-There were various challenges throughout this project, ranging from general learning curves to authentication and deployment.
-I went through a couple of refactors in order to figure out certain aspects of an application, such as seperation of concerns and 
-how ASP.NET works with Views.
+I decided to come back and apply new skills and knowledge, as well as shift the project over to ASP.NET Core API.
 
-Testing in C#/ASP.NET also had a learning curve. Mocking the db so repository functions could be tested was a little tricky,
-but in the end I was able to get pretty decent coverage. I do however still have a lot to learn about unit testing and integration testing is a whole different beast.
+The frontend was built with React-TypeScript. 
+To make things different, I decided to incorporate C# and OOP principals to created a service layer that handled all API functionality in the program.
 
+The biggest challenge of fullstack applications, particularly those that have a backend on a different domain, is cookie authentication.
+The solution to this problem was adding an additional layer to the authentication which would use the cookie created by the social login to generate a JWT that would then be sent to the frontend.
