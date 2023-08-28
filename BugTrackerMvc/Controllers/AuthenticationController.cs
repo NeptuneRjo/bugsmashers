@@ -27,29 +27,6 @@ namespace BugTrackerMvc.Controllers
             _configuration = configuration;
         }
 
-        private string CreateToken()
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
-
-            string username = User.FindFirst(ClaimTypes.Name)?.Value;
-
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim("username", username)
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-            return tokenString;
-        }
-
         [HttpGet]
         public async Task<IActionResult> Get() {
             List<Dictionary<string, string>> providers = new();
@@ -125,6 +102,29 @@ namespace BugTrackerMvc.Controllers
             // after a successful authentication flow (e.g Google or Facebook).
             return SignOut(new AuthenticationProperties {  },
                 CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+
+        private string CreateToken()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
+
+            string username = User.FindFirst(ClaimTypes.Name)?.Value;
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim("username", username)
+                }),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return tokenString;
         }
     }
 }
