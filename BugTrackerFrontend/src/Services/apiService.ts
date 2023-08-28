@@ -71,8 +71,6 @@ export default class Service implements IService {
             headers: { ...headers, ...extraHeaders },
         })
 
-        console.log(endpoint, baseURL)
-
         return (
             promise
                 .then((response) => {
