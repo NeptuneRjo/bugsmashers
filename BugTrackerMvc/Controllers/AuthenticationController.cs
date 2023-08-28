@@ -69,7 +69,7 @@ namespace BugTrackerMvc.Controllers
         {
             string token = CreateToken();
 
-            string redirectUrl = "https://localhost:3000/login?token=" + token;
+            string redirectUrl = "https://bugsmashers.onrender.com/login?token=" + token;
 
             return Redirect(redirectUrl);
         }
