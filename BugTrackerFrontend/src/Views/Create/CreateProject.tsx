@@ -21,7 +21,7 @@ function CreateProject() {
 
         service.projects.create({ title })
             .then((response: Project) => {
-                navigate(`/projects/${response.id}`)
+                navigate(`/project/${response.id}`)
             })
             .catch((err: unknown) => {
                 setError(err)
