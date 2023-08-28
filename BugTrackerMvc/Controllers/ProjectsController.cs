@@ -2,6 +2,7 @@
 using BugTrackerMvc.DTOs;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -58,7 +59,7 @@ namespace BugTrackerMvc.Controllers
 
         // POST api/<ProjectsController>
         [HttpPost]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post(ProjectModel projectModel)
         {
             if (!ModelState.IsValid)
@@ -66,7 +67,7 @@ namespace BugTrackerMvc.Controllers
 
             try
             {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+                string poster = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
                 ProjectDto dto = await _service.CreateProject(poster, projectModel);
 
@@ -84,7 +85,7 @@ namespace BugTrackerMvc.Controllers
 
         // POST api/<ProjectsController>/5
         [HttpPost("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PostIssue(int id, [FromBody] IssueModel issueModel)
         {
             if (!ModelState.IsValid)
@@ -92,7 +93,7 @@ namespace BugTrackerMvc.Controllers
 
             try
             {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+                string poster = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
                 ProjectDto dto = await _service.AddIssue(id, poster, issueModel);
 
@@ -114,7 +115,7 @@ namespace BugTrackerMvc.Controllers
 
         // PUT api/<ProjectsController>/5
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Put(int id, [FromBody] ProjectModel projectModel)
         {
             if (!ModelState.IsValid)
@@ -122,7 +123,7 @@ namespace BugTrackerMvc.Controllers
 
             try
             {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+                string poster = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
                 ProjectDto dto = await _service.UpdateProject(id, poster, projectModel);
 
@@ -144,12 +145,12 @@ namespace BugTrackerMvc.Controllers
 
         // DELETE api/<ProjectsController>/5
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+                string poster = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
                 bool deleted = await _service.DeleteProject(id, poster);
 

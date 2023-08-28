@@ -2,6 +2,7 @@
 using BugTrackerMvc.DTOs;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -53,7 +54,7 @@ namespace BugTrackerMvc.Controllers
         }
 
         [HttpPost("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PostComment(int id, [FromBody] CommentModel commentModel)
         {
             if (!ModelState.IsValid)
@@ -61,7 +62,7 @@ namespace BugTrackerMvc.Controllers
 
             try
             {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+                string poster = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
                 IssueDto dto = await _service.AddComment(id, poster, commentModel);
 
@@ -83,12 +84,12 @@ namespace BugTrackerMvc.Controllers
 
         // PUT api/<IssuesController>/5
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Put(int id, [FromBody] IssueModel issueModel)
         {
             try
             {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+                string poster = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
                 IssueDto dto = await _service.UpdateIssue(id, poster, issueModel);
 
@@ -110,12 +111,12 @@ namespace BugTrackerMvc.Controllers
 
         // DELETE api/<IssuesController>/5
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                string poster = User.FindFirst(ClaimTypes.Name)?.Value;
+                string poster = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
                 bool deleted = await _service.Delete(id, poster);
 
