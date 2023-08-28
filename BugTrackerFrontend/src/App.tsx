@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route, Navigate } from "react-router-dom"
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
 import './App.css';
 import {
     Home,
@@ -32,21 +32,31 @@ function App() {
         DEVELOPMENT !== undefined &&
         DEVELOPMENT === "true"
     ) {
-        service = new Service("http://localhost:5193/")
+        service = new Service("https://localhost:7104/")
     } else if (API_URL !== undefined) {
         service = new Service(API_URL)
     } else {
         throw new Error("Set REACT_APP_DEVELOPMENT to true or provide REACT_APP_API_URL")
     }
 
+    const navigate = useNavigate()
+
     useEffect(() => {
+        const urlSearchParams = new URLSearchParams(window.location.search)
+        const token = urlSearchParams.get("token")
+
+        if (token) {
+            sessionStorage.setItem("token", token)
+            navigate("/")
+        }
+
         const sessionPoster = window.sessionStorage.getItem("poster")
 
         if (sessionPoster === null) {
             service.auth.retrieve()
                 .then((response: User) => {
-                    setPoster(response.Name)
-                    window.sessionStorage.setItem("poster", response.Name)
+                    setPoster(response.username)
+                    window.sessionStorage.setItem("poster", response.username)
                 })
                 .catch((err: unknown) => {
                     setError(err)

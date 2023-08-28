@@ -39,6 +39,19 @@ export default class Service implements IService {
             "Content-Type": "application/json"
         }
 
+        let extraHeaders = {}
+        const token = window.sessionStorage.getItem("token")
+
+        if (withCredentials) {
+            if (token === undefined) {
+                throw new Error("No Authorization token defined")
+            }
+
+            extraHeaders = {
+                "Authorization": `Bearer ${token}`
+            }
+        }
+
         // Let axios serialize get request payloads as json
         const params = method === "get" ? data : null
         const requestBody = method === "get" ? null : data
@@ -55,9 +68,10 @@ export default class Service implements IService {
             baseURL: baseURL + "api/",
             params,
             data: requestBody,
-            headers,
-            withCredentials
+            headers: { ...headers, ...extraHeaders },
         })
+
+        console.log(endpoint, baseURL)
 
         return (
             promise
