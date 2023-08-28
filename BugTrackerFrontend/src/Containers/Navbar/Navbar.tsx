@@ -18,7 +18,7 @@ function Navbar() {
         DEVELOPMENT !== undefined &&
         DEVELOPMENT === "true"
     ) {
-        url = "http://localhost:5193"
+        url = "https://localhost:7104"
     } else if (API_URL !== undefined) {
         url = API_URL
     } else {
@@ -40,16 +40,6 @@ function Navbar() {
             })
     }, [])
 
-    const handleSignout = async () => {
-        service.auth.logout()
-            .then(() => {
-                updatePoster(null)
-            })
-            .catch((err: unknown) => {
-                setError(err)
-            })
-    }
-
     return (
         <nav id="nav">
             <h1><a href="/">Bug Smashers</a></h1>
@@ -70,7 +60,7 @@ function Navbar() {
                     <a href="/profile/projects">My Projects</a>                
                     <a href="/profile/issues">My Issues</a> 
                     <a href="/new-project">Create Project</a>
-                    <button onClick={() => handleSignout()}>Signout</button>
+                    <button onClick={() => updatePoster(null)}>Signout</button>
                 </div>
 
             )}

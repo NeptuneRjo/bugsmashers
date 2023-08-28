@@ -1,9 +1,13 @@
 using BugTrackerMvc.Data;
+using BugTrackerMvc.Extensions;
 using BugTrackerMvc.Interfaces;
 using BugTrackerMvc.Repository;
 using BugTrackerMvc.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
@@ -25,18 +29,32 @@ services.AddScoped<IProjectService, ProjectService>();
 
 services.AddAuthentication(options =>
 {
-    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddCookie(options =>
-    {
-        options.LoginPath = "/api/authentication/signin";
-        options.LogoutPath = "/api/authentication/signout";
-    })
-    .AddGitHub(options =>
-    {
+   .AddCookie()
+   .AddJwtBearer(options =>
+   {
+       SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]));
+
+       options.RequireHttpsMetadata = false;
+       options.SaveToken = true;
+       options.TokenValidationParameters = new TokenValidationParameters
+       {
+           ValidateIssuerSigningKey = true,
+           IssuerSigningKey = key,
+           ValidateIssuer = false,
+           ValidateAudience = false
+       };
+   })
+   .AddGitHub(options =>
+   {
         options.ClientId = builder.Configuration["GitHub:ClientId"];
         options.ClientSecret = builder.Configuration["GitHub:ClientSecret"];
-    });
+   });
+
+services.AddAuthorization();
 
 services.AddDbContext<DataContext>(options =>
 {
@@ -56,8 +74,8 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("https://localhost:3000", "https://bugsmashers.onrender.com", "http://localhost:4000", "http://localhost:5193/");
                           policy.AllowCredentials();
-                          policy.WithHeaders("Content-Type");
                           policy.AllowAnyMethod();
+                          policy.AllowAnyHeader();
                       });
 });
 

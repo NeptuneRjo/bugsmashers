@@ -11,7 +11,7 @@ export interface IProjectModel {
 }
 
 export type User = {
-    Name: string
+    username: string
 }
 
 export interface IIssueModel {
