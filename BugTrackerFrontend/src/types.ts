@@ -72,18 +72,45 @@ export enum Priority {
 }
 
 export interface IProjects {
+    /**
+     * List all of the projects
+     * Include credentials to get projects by the current authenticated user
+     * @param credentials
+     */
     list(credentials?: boolean): any
+    /**
+     * Retrieve the project by its id
+     * @param id
+     */
     retrieve(id: number): any
+    /**
+     * Create a new project
+     * @param model
+     */
     create(model: IProjectModel): any
+    /**
+     * Update a project
+     * @param id
+     * @param data
+     */
     update(id: number, data: IProjectModel): any
+    /**
+     * Create a new issue on a project by its id
+     * @param id
+     * @param data
+     */
     add(id: number, data: IIssueModel): any
+    /**
+     * Delete a project
+     * @param id
+     */
     delete(id: number): any
 }
 
 export interface IIssues {
     /**
      * List all issues
-     * Include credentials to list all issues by the current poster
+     * Include credentials to get issues by the current authenticated user
      * @param {boolean} credentials
      */
     list(credentials?: boolean): any
@@ -112,7 +139,13 @@ export interface IIssues {
 }
 
 export interface IAuth {
+    /**
+     * List all authentication providers
+     */
     list(): any
+    /**
+     * Retrieve the current authenticated user
+     */
     retrieve(): any
     logout(): any
 }
