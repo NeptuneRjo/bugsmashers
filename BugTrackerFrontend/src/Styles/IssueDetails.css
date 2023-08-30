@@ -7,6 +7,18 @@
     height: fit-content;
 }
 
+#issue-details a {
+    text-decoration: none;
+    color: var(--platinum);
+    border-bottom: solid 1px var(--celestial-blue);
+    width: fit-content;
+}
+
+#issue-details a:hover {
+    color: var(--white);
+    border-bottom: solid 1px var(--white);
+}
+
 #issue-details h2 {
     padding: 0 1rem;
 }
