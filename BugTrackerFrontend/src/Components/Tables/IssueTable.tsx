@@ -17,6 +17,15 @@ function IssueTable({ issues }: { issues: Issue[] }) {
     useEffect(() => {
         let ref = [...issues]
 
+        // Case-sensitive
+        if (status.toLowerCase() !== "done") {
+            ref = ref.filter((e) => e.status.toLowerCase() !== "done")
+        }
+
+        if (status.toLowerCase() !== "cancelled") {
+            ref = ref.filter((e) => e.status.toLowerCase() !== "cancelled")
+        }
+
         ref = search(ref, ["status"], status)
         ref = search(ref, ["label"], label)
         ref = search(ref, ["priority"], priority)
@@ -72,7 +81,7 @@ function IssueTable({ issues }: { issues: Issue[] }) {
                         </ul>
                         <span>Opened by {issue.poster}</span>
                     </div>
-                )) }
+                ))}
             </div>
         </div>
     )
