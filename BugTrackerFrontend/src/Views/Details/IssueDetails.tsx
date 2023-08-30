@@ -102,6 +102,7 @@ function IssueDetails() {
                     ))
                 )}
             </div>
+            <a href={`/project/${issue.project_id}`}>Back to project</a>
         </div>
     )
 }
