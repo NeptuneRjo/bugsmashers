@@ -60,7 +60,7 @@ services.AddDbContext<DataContext>(options =>
 {
     string azureConnectionString = builder.Configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
     string defaultConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(azureConnectionString);
+    options.UseSqlServer(defaultConnectionString);
 });
 
 services.AddAutoMapper(typeof(Program));
