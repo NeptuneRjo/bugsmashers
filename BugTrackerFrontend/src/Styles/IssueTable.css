@@ -1,8 +1,8 @@
 #issues {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    max-height: 70vh;
+    height: 60vh;
+    max-height: 60vh;
     width: 60vw;
     margin: 5rem 0;
     padding: 8px;
@@ -12,6 +12,20 @@
 #issues-tools {
     padding: 1rem;
     border-bottom: solid 1px var(--platinum-faded);
+    display: flex;
+    align-items: flex-end;
+    gap: .5rem;
+}
+
+#issues-tools div {
+    display: flex;
+    flex-direction: column;
+}
+
+#issues-tools select {
+    background-color: var(--platinum);
+    border: solid 1px var(--platinum);
+    padding: 8px;
 }
 
 #issues-grid {
