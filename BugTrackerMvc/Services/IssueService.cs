@@ -44,7 +44,10 @@ namespace BugTrackerMvc.Services
         public async Task<IssueDto> CreateIssue(string poster, IssueModel issueModel)
         {
             Issue issue = _mapper.Map<Issue>(issueModel);
-            
+
+            issue.CreatedAt = DateTime.UtcNow;
+            issue.LastUpdated = DateTime.UtcNow;
+
             issue.Comments = new List<Comment>();
 
             if (issue.Poster == null)
@@ -95,6 +98,11 @@ namespace BugTrackerMvc.Services
                 issueModel.Poster = poster;
 
             issue = _mapper.Map(issueModel, issue);
+
+            if (issue.CreatedAt == DateTime.Parse("0001-01-01T00:00:00"))
+                issue.CreatedAt = DateTime.UtcNow;
+
+            issue.LastUpdated = DateTime.UtcNow;
 
             _repository.Update(issue);
 
