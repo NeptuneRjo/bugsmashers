@@ -2,7 +2,7 @@
 
 namespace BugTracker.DAL.Repositories.IRepositories
 {
-    public interface IIssueRepository
+    public interface IIssueRepository : IGenericRepository<Issue>
     {
         void InsertIssue(Issue Issue);
         void UpdateIssue(Issue issue);

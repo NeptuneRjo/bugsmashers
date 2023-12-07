@@ -2,7 +2,7 @@
 
 namespace BugTracker.DAL.Repositories.IRepositories
 {
-    public interface IGenericRepository<TEntity> where TEntity : class
+    public interface IGenericRepository<TEntity>
     {
         Task<ICollection<TEntity>> GetAll();
         Task<ICollection<TEntity>> GetAllByQuery(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
