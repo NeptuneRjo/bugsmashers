@@ -22,7 +22,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseCors();
+app.UseCors("_myAllowSpecificOrigins");
 
 app.UseAuthentication();
 app.UseAuthorization();
