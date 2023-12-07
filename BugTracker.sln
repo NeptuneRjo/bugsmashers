@@ -3,12 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTrackerMvc", "BugTrackerMvc\BugTrackerMvc.csproj", "{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTrackerMvcTesting", "BugTrackerMvcTesting\BugTrackerMvcTesting.csproj", "{09FA478C-CD2C-4364-B204-A1CA90BC1A41}"
-	ProjectSection(ProjectDependencies) = postProject
-		{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29} = {08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}
-	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "bugtrackerfrontend", "BugTrackerFrontend\bugtrackerfrontend.esproj", "{4C59DBB5-9797-46C3-9F4A-C89F82220FDC}"
 EndProject
@@ -16,13 +11,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTracker.API", "BugTracke
 	ProjectSection(ProjectDependencies) = postProject
 		{26B46614-AF6A-43A9-BBD4-F98A8A02D4CD} = {26B46614-AF6A-43A9-BBD4-F98A8A02D4CD}
 		{9A944BCC-0AE1-42A5-9459-D3B70CCAE1A5} = {9A944BCC-0AE1-42A5-9459-D3B70CCAE1A5}
+		{ABA9A0AE-E75D-4ECD-A8C9-3922723EE82B} = {ABA9A0AE-E75D-4ECD-A8C9-3922723EE82B}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTracker.BLL", "BugTracker.BLL\BugTracker.BLL.csproj", "{9A944BCC-0AE1-42A5-9459-D3B70CCAE1A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTracker.DAL", "BugTracker.DAL\BugTracker.DAL.csproj", "{26B46614-AF6A-43A9-BBD4-F98A8A02D4CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTracker.DAL", "BugTracker.DAL\BugTracker.DAL.csproj", "{26B46614-AF6A-43A9-BBD4-F98A8A02D4CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BugTracker.DTO", "BugTracker.DTO\BugTracker.DTO.csproj", "{ABA9A0AE-E75D-4ECD-A8C9-3922723EE82B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTracker.DTO", "BugTracker.DTO\BugTracker.DTO.csproj", "{ABA9A0AE-E75D-4ECD-A8C9-3922723EE82B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,10 +26,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08D3B4CF-8E42-4EE0-9F55-D9C4A6DD6A29}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
