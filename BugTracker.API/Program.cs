@@ -2,12 +2,12 @@ using BugTracker.BLL;
 using BugTracker.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
 var services = builder.Services;
 
 services.RegisterBLLDependencies(builder.Configuration);
 services.RegisterDALDependencies(builder.Configuration);
+
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
