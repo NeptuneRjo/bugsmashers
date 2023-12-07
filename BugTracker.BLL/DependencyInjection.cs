@@ -19,6 +19,8 @@ namespace BugTracker.BLL
 
             services.AddAutoMapper(typeof(AutoMapperProfiles));
 
+            services.AddControllers();
+
             // Authentication Policies
             services.AddAuthentication(options =>
             {
