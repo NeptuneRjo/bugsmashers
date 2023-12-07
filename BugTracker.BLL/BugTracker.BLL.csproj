@@ -14,4 +14,9 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BugTracker.DAL\BugTracker.DAL.csproj" />
+    <ProjectReference Include="..\BugTracker.DTO\BugTracker.DTO.csproj" />
+  </ItemGroup>
+
 </Project>
