@@ -4,8 +4,6 @@ BugSmashers is a fullstack issue/bug tracker build with TypeScript-React and ASP
 
 Users can create projects and keep track of issues, similarly to GitHub.
 
-Visit the demo [here](https://bugsmashers.onrender.com/)
-
 ## Project Demos
 
 ![Demo](./demo.gif)
