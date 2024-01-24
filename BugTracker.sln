@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTrackerMvcTesting", "BugTrackerMvcTesting\BugTrackerMvcTesting.csproj", "{09FA478C-CD2C-4364-B204-A1CA90BC1A41}"
-EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "bugtrackerfrontend", "BugTrackerFrontend\bugtrackerfrontend.esproj", "{4C59DBB5-9797-46C3-9F4A-C89F82220FDC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTracker.API", "BugTracker.API\BugTracker.API.csproj", "{873ACDBA-1596-4162-B0D1-A04C41276E31}"
@@ -20,16 +18,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTracker.DAL", "BugTracke
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTracker.DTO", "BugTracker.DTO\BugTracker.DTO.csproj", "{ABA9A0AE-E75D-4ECD-A8C9-3922723EE82B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BugTracker.Test", "BugTracker.Test\BugTracker.Test.csproj", "{7431A3EA-2E9D-4ACB-8739-DE5F68E5B9C2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09FA478C-CD2C-4364-B204-A1CA90BC1A41}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C59DBB5-9797-46C3-9F4A-C89F82220FDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C59DBB5-9797-46C3-9F4A-C89F82220FDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C59DBB5-9797-46C3-9F4A-C89F82220FDC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
@@ -52,6 +48,10 @@ Global
 		{ABA9A0AE-E75D-4ECD-A8C9-3922723EE82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABA9A0AE-E75D-4ECD-A8C9-3922723EE82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABA9A0AE-E75D-4ECD-A8C9-3922723EE82B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7431A3EA-2E9D-4ACB-8739-DE5F68E5B9C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7431A3EA-2E9D-4ACB-8739-DE5F68E5B9C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7431A3EA-2E9D-4ACB-8739-DE5F68E5B9C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7431A3EA-2E9D-4ACB-8739-DE5F68E5B9C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

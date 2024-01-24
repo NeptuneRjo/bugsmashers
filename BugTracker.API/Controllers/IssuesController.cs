@@ -64,7 +64,7 @@ namespace BugTracker.API.Controllers
             {
                 string poster = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "username")?.Value;
 
-                IssueDto dto = await _service.AddComment(id, poster, commentModel);
+                IssueDto dto = await _service.AddComment(id, poster, commentModel.Content);
 
                 return Ok(dto);
             }

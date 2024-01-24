@@ -26,5 +26,12 @@ namespace BugTracker.DAL.Entities
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdated { get; set; }
+
+        public Issue()
+        {
+            Comments = new List<Comment>();
+            CreatedAt = DateTime.Now;
+            LastUpdated = DateTime.Now;
+        }
     }
 }

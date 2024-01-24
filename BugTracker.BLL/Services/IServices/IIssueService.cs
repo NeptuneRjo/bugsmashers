@@ -17,7 +17,7 @@ namespace BugTracker.BLL.Services.IServices
         Task<ICollection<IssueDto>> GetIssues(string poster);
         Task<IssueDto> CreateIssue(string poster, IssueModel issueModel);
         Task<IssueDto> UpdateIssue(int id, string poster, IssueModel issueModel);
-        Task<IssueDto> AddComment(int id, string poster, CommentModel commentModel);
+        Task<IssueDto> AddComment(int id, string poster, string content);
         Task<bool> Delete(int id, string poster);
     }
 }

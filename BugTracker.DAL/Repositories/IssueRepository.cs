@@ -91,18 +91,19 @@ namespace BugTracker.DAL.Repositories
 
         public async Task<Issue> AddComment(int issueId, Comment comment)
         {
-            Issue issue = await _context.Issues.Include(e => e.Comments).FirstAsync(e => e.Id == issueId);
+            Issue issue = await _context.Issues
+                .Include(e => e.Comments)
+                .FirstOrDefaultAsync(e => e.Id == issueId);
 
-            comment.Issue = issue;
-
-            if (comment.IssueId == null)
+            if (issue != null)
+            {
+                comment.Issue = issue;
                 comment.IssueId = issue.Id;
 
-            await _context.Comments.AddAsync(comment);
+                issue.Comments.Add(comment);
 
-            issue.Comments.Add(comment);
-
-            _context.SaveChanges();
+                _context.SaveChanges();
+            }
 
             return issue;
         }

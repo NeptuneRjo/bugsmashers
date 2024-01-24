@@ -18,50 +18,51 @@ namespace BugTracker.BLL.Services
             _repository = repository;
         }
 
-        public async Task<IssueDto> AddComment(int id, string poster, CommentModel commentModel)
+        //private readonly Expression<Func<Issue, object>>[] includes =
+        //{
+        //    issue => issue.Comments,
+        //};
+
+        //private async Task<Issue> GetIssueById(int id)
+        //{
+        //    Issue issue = await _repository.GetByQuery(issue => issue.Id == id, includes);
+        
+        //    if (issue == null)
+        //    {
+        //        throw new KeyNotFoundException($"Issue with the id {id} was not found");
+        //    }
+
+        //    return issue;
+        //}
+
+        public async Task<IssueDto> AddComment(int id, string poster, string content)
         {
-            Issue issue = await _repository.GetByQuery(e => e.Id == id, e => e.Comments);
+            Comment comment = new()
+            {
+                Content = content,
+                Poster = poster,
+            };
+
+            Issue issue = await _repository.AddComment(id, comment);
 
             if (issue == null)
-                throw new KeyNotFoundException($"No issue with the id of {id} was found");
+            {
+                throw new KeyNotFoundException($"No issue with the id {id} was found.");
+            }
 
-            if (commentModel.Poster == null)
-                commentModel.Poster = poster;
-
-            if (commentModel.Poster != poster)
-                throw new ArgumentException("Model/Authorization parameters do not match");
-
-            Comment comment = _mapper.Map<Comment>(commentModel);
-
-            comment.Issue = issue;
-
-            issue = await _repository.AddComment(issue.Id, comment);
-
-            IssueDto dto = _mapper.Map<IssueDto>(issue);
-
-            return dto;
+            return _mapper.Map<IssueDto>(issue); ;
         }
 
         public async Task<IssueDto> CreateIssue(string poster, IssueModel issueModel)
         {
-            Issue issue = _mapper.Map<Issue>(issueModel);
+            Issue issue = new();
 
-            issue.CreatedAt = DateTime.UtcNow;
-            issue.LastUpdated = DateTime.UtcNow;
+            issue = _mapper.Map(issueModel, issue);
+            issue.Poster = poster;
 
-            issue.Comments = new List<Comment>();
+            Issue addedIssue = await _repository.Add(issue);
 
-            if (issue.Poster == null)
-                issue.Poster = poster;
-
-            if (issue.Poster != poster)
-                throw new UnauthorizedAccessException("Credentials do not match");
-
-            await _repository.Add(issue);
-
-            IssueDto dto = _mapper.Map<IssueDto>(issue);
-
-            return dto;
+            return _mapper.Map<IssueDto>(addedIssue);
         }
 
         public async Task<bool> Delete(int id, string poster)
@@ -95,8 +96,8 @@ namespace BugTracker.BLL.Services
             if (issue.Poster != poster)
                 throw new UnauthorizedAccessException("Credentials do not match");
 
-            if (issueModel.Poster == null)
-                issueModel.Poster = poster;
+            //if (issueModel.Poster == null)
+            //    issueModel.Poster = poster;
 
             issue = _mapper.Map(issueModel, issue);
 

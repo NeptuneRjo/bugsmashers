@@ -29,13 +29,6 @@ namespace BugTracker.BLL.Services
             if (project == null)
                 throw new KeyNotFoundException($"No project with the id of {id} was found");
 
-
-            if (model.Poster == null)
-                model.Poster = poster;
-
-            if (model.Poster != poster)
-                throw new ArgumentException("Model/Authorization parameters do not match");
-
             Issue issue = _mapper.Map<Issue>(model);
 
             issue = await _repository.AddIssue(id, issue);

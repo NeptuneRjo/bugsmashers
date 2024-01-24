@@ -1,8 +1,13 @@
-﻿namespace BugTracker.DAL.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BugTracker.DAL.Models
 {
     public class CommentModel
     {
+        [Required]
         public string Content { get; set; }
-        public string? Poster { get; set; }
+
+        [Required]
+        public string Poster { get; set; }
     }
 }
