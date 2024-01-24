@@ -32,7 +32,7 @@ function App() {
         DEVELOPMENT !== undefined &&
         DEVELOPMENT === "true"
     ) {
-        service = new Service("https://localhost:7104/")
+        service = new Service("http://localhost:5288/")
     } else if (API_URL !== undefined) {
         service = new Service(API_URL)
     } else {
