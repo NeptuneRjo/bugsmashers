@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /BugTrackerMvc/appsettings.json
 /ProxyServer/.env
+/BugTracker.API/appsettings.json
